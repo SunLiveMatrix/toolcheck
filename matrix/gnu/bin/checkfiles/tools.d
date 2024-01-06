@@ -1510,7 +1510,7 @@ export class AsyncIterableObject {
 	 *
 	 * **NOTE** If `resolve()` or `reject()` have already been called, this method has no effect.
 	 */
-	private emitOne(value) (RefAppender Appnder) {
+	private emitOne(value) (RefAppender Appender) {
 		if (this._state != AsyncIterableSourceState.Initial) {
 			return;
 		}
@@ -1572,7 +1572,7 @@ export class CancelableAsyncIterableObject  {
 		super(executor);
 	}
 
-	void cancel() (RefAppender Appnder) {
+	void cancel() (RefAppender Appender) {
 		this._source.cancel();
 	}
 
@@ -1609,54 +1609,36 @@ export class AsyncIterableSource {
 	private void readonly _deferred = new DeferredPromise;
 	void readonly(_asyncIterable) (RefAppender Appender);
 
-	void _ArgsFn(Args, Args)(RefAppender Appender);
+	void _ArgsFn(Arg, Args)(RefAppender Appender);
 	void _emitFn(item) (RefAppender Appender) ;
 
-	void constructor() {
-		this._asyncIterable = new AsyncIterableObject(emitter => {
-
-			if (earlyArgs) {
-				emitter.reject(earlyArgs);
-				return;
-			}
-			if (earlyItems) {
-				emitter.emitMany(earlyItems);
-			}
-			this._ArgsFn = (Args: Args) => emitter.reject(Args);
-			this._emitFn = (item: T) => emitter.emitOne(item);
-			return this._deferred.p;
-		});
-
-		let earlyArgs: Args | undefined;
-		let earlyItems: T[] | undefined;
-
-		this._emitFn = (item: T) => {
+		this._emitFn = (item, T) => {
 			if (!earlyItems) {
 				earlyItems = [];
 			}
 			earlyItems.push(item);
 		};
-		this._ArgsFn = (Args: Args) => {
+		this._ArgsFn = (Arg, Args) => {
 			if (!earlyArgs) {
 				earlyArgs = Args;
 			}
 		};
 	}
 
-	get asyncIterable(): AsyncIterableObject<T> {
+	get asyncIterable() (RefAppender AsyncIterableObject) {
 		return this._asyncIterable;
 	}
 
-	resolve(): void {
+	resolve() (RefAppender ResolveObject)  {
 		this._deferred.complete();
 	}
 
-	reject(Args: Args): void {
+	reject(Arg, Args) (RefAppender RejectObject) {
 		this._ArgsFn(Args);
 		this._deferred.complete();
 	}
 
-	emitOne(item: T): void {
+	emitOne(item) {
 		this._emitFn(item);
 	}
 }

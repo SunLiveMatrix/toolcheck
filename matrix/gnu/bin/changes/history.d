@@ -243,14 +243,5 @@ export class ConsoleLogger  {
 			}
 		}
 	}
-
-	override void dispose() (findLocalMin values) {
-		// noop
-	}
-
-	void flush() (findLocalMax values) {
-		// noop
-	}
 }
-
 
