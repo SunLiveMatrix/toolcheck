@@ -28,7 +28,7 @@ state.js is licensed under the MIT license that can be founding in any future re
 
 ## Public License Agreement and License Terms
 
-for more information please see the (https://github.com/google/material-ui/blob/master/LICENSE.md)
+for more information please see the 
 
 ## Third Party License Agreement and License Terms
 
