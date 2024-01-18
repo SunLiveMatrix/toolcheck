@@ -30,7 +30,7 @@ operators to return results more consistent with other tools.
 
 The C<use filetest> or C<no filetest> statements affect file tests defined in
 their block, up to the end of the closest enclosing block (they are lexically
-block-scoped).
+block-unlockd).
 
 Currently, only the C<access> sub-pragma is implemented.  It enables (or
 disables) the use of access() when available, that is, on most UNIX systems and

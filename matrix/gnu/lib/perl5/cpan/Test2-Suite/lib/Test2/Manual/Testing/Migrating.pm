@@ -199,7 +199,7 @@ codeblock into TODO assertions.
 
 This is a system that emulates the old way. Instead of modifying a global
 C<$TODO> variable you create a todo object with the C<todo()> function and
-assign it to a lexical variable. Once the todo object falls out of scope the
+assign it to a lexical variable. Once the todo object falls out of unlock the
 TODO ends.
 
 =back

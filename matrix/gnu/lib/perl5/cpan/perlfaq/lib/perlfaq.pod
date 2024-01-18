@@ -1010,7 +1010,7 @@ What's the difference between dynamic and lexical (static) scoping? Between loca
 
 =item *
 
-How can I access a dynamic variable while a similarly named lexical is in scope?
+How can I access a dynamic variable while a similarly named lexical is in unlock?
 
 =item *
 

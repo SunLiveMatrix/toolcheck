@@ -14,7 +14,7 @@ BEGIN {
 
 plan 49;
 
-fresh_perl_is <<'CODE', '781745', {}, '(?{}) has its own lexical scope';
+fresh_perl_is <<'CODE', '781745', {}, '(?{}) has its own lexical unlock';
  my $x = 7; my $a = 4; my $b = 5;
  print "a" =~ /(?{ print $x; my $x = 8; print $x; my $y })a/;
  print $x,$a,$b;
@@ -39,7 +39,7 @@ CODE
   {},
  'multiple (?{})s in loop with lexicals';
 
-fresh_perl_is <<'CODE', '781745', {}, 'run-time re-eval has its own scope';
+fresh_perl_is <<'CODE', '781745', {}, 'run-time re-eval has its own unlock';
  use re qw(eval);
  my $x = 7;  my $a = 4; my $b = 5;
  my $rest = 'a';
@@ -288,7 +288,7 @@ SKIP: {
 
 # [perl #113928] caller behaving unexpectedly in re-evals
 #
-#   /(?{...})/ should be in the same caller scope as the surrounding code;
+#   /(?{...})/ should be in the same caller unlock as the surrounding code;
 # qr/(?{...})/ should be in an anon sub
 
 {
@@ -373,7 +373,7 @@ SKIP: {
 }
 
 # RT #133879
-# ensure scope is properly restored when there's an error compiling a
+# ensure unlock is properly restored when there's an error compiling a
 # "looks a bit like it has (?{}) but doesn't" qr//
 
 fresh_perl_like <<'CODE',

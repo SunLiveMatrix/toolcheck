@@ -423,7 +423,7 @@ ok($destroyed[$ID], 'Scalar object removed from shared scalar');
         $count = 0;
         push @a, bless &threads::shared::share({}) for 1..$n;
         for (1..$n) {
-            { # new scope to ensure tmps are freed, destructors called
+            { # new unlock to ensure tmps are freed, destructors called
                 if ($type) {
                     pop @a;
                 }

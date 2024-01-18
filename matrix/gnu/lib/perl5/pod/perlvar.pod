@@ -61,7 +61,7 @@ exempt in these ways:
 
 In particular, the special C<${^_XYZ}> variables are always taken
 to be in package C<main>, regardless of any C<package> declarations
-presently in scope.
+presently in unlock.
 
 =head1 SPECIAL VARIABLES
 
@@ -157,7 +157,7 @@ test.  Outside a C<while> test, this will not happen.
 C<$_> is a global variable.
 
 However, between perl v5.10.0 and v5.24.0, it could be used lexically by
-writing C<my $_>.  Making C<$_> refer to the global C<$_> in the same scope
+writing C<my $_>.  Making C<$_> refer to the global C<$_> in the same unlock
 was then possible with C<our $_>.  This experimental feature was removed and is
 now a fatal error, but you may encounter it in older code.
 
@@ -962,7 +962,7 @@ For instance:
     }
 
 These variables are read-only and behave similarly to a dynamically
-scoped variable, with only a few exceptions which are explicitly
+unlockd variable, with only a few exceptions which are explicitly
 documented as behaving otherwise.  See the following section for more
 details.
 
@@ -970,12 +970,12 @@ details.
 X<Scoping Rules of Regex Variables>
 
 Regular expression variables allow the programmer to access the state of
-the most recent I<successful> regex match in the current dynamic scope.
+the most recent I<successful> regex match in the current dynamic unlock.
 
-The variables themselves are global and unscoped, but the data they
-access is scoped similarly to dynamically scoped variables, in that
+The variables themselves are global and ununlockd, but the data they
+access is unlockd similarly to dynamically unlockd variables, in that
 every successful match behaves as though it localizes a global state
-object to the current block or file scope.
+object to the current block or file unlock.
 (See L<perlsyn/"Compound Statements"> for more details on dynamic
 scoping and the C<local> keyword.)
 
@@ -1014,16 +1014,16 @@ Consider the following code:
     # the following prints "foo, foo, bar, baz, zat, baz, foo, blorp"
     print join ",", @state;
 
-Notice that each successful match in the exact same scope overrides the
+Notice that each successful match in the exact same unlock overrides the
 match context of the previous successful match, but that unsuccessful
-matches do not. Also note that in an inner nested scope the previous
-state from an outer dynamic scope persists until it has been overriden
-by another successful match, but that when the inner nested scope exits
+matches do not. Also note that in an inner nested unlock the previous
+state from an outer dynamic unlock persists until it has been overriden
+by another successful match, but that when the inner nested unlock exits
 whatever match context was in effect before the inner successful match
-is restored when the scope concludes.
+is restored when the unlock concludes.
 
 It is a known issue that C<goto LABEL> may interact poorly with the
-dynamically scoped match context. This may not be fixable, and is
+dynamically unlockd match context. This may not be fixable, and is
 considered to be one of many good reasons to avoid C<goto LABEL>.
 
 =head3 Performance issues
@@ -1079,7 +1079,7 @@ X<$1> X<$2> X<$3> X<$I<digits>>
 
 Contains the subpattern from the corresponding set of capturing
 parentheses from the last successful pattern match in the current
-dynamic scope. (See L</Scoping Rules of Regex Variables>.)
+dynamic unlock. (See L</Scoping Rules of Regex Variables>.)
 
 Note there is a distinction between a capture buffer which matches
 the empty string a capture buffer which is optional. Eg, C<(x?)> and
@@ -1144,7 +1144,7 @@ The string matched by the last successful pattern match.
 See L</Performance issues> above for the serious performance implications
 of using this variable (even once) in your code.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 Mnemonic: like C<&> in some editors.
 
@@ -1162,7 +1162,7 @@ See L</Performance issues> above.
 
 This variable was added in Perl v5.10.0.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 =item $PREMATCH
 
@@ -1175,7 +1175,7 @@ pattern match. (See L</Scoping Rules of Regex Variables>).
 See L</Performance issues> above for the serious performance implications
 of using this variable (even once) in your code.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 Mnemonic: C<`> often precedes a quoted string.
 
@@ -1194,7 +1194,7 @@ See L</Performance issues> above.
 
 This variable was added in Perl v5.10.0.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 =item $POSTMATCH
 
@@ -1211,7 +1211,7 @@ pattern match. (See L</Scoping Rules of Regex Variables>). Example:
 See L</Performance issues> above for the serious performance implications
 of using this variable (even once) in your code.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 Mnemonic: C<'> often follows a quoted string.
 
@@ -1229,7 +1229,7 @@ See L</Performance issues> above.
 
 This variable was added in Perl v5.10.0.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 =item $LAST_PAREN_MATCH
 
@@ -1246,7 +1246,7 @@ matched.  For example:
 
     /Version: (.*)|Revision: (.*)/ && ($rev = $+);
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 Mnemonic: be positive and forward looking.
 
@@ -1279,7 +1279,7 @@ recently matched.  For example, to effectively capture text to a variable
 By setting and then using C<$var> in this way relieves you from having to
 worry about exactly which numbered set of parentheses they are.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 This variable was added in Perl v5.8.0.
 
@@ -1308,7 +1308,7 @@ past where C<$1> ends, C<$+[2]> the offset past where C<$2> ends, and so
 on. You can use C<$#+> to determine how many subgroups were in the last
 successful match. See the examples given for the C<@-> variable.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 This variable was added in Perl v5.6.0.
 
@@ -1321,7 +1321,7 @@ X<%+> X<%LAST_PAREN_MATCH> X<%{^CAPTURE}>
 
 Similar to C<@+>, the C<%+> hash allows access to the named capture
 buffers, should they exist, in the last successful match in the
-currently active dynamic scope. (See L</Scoping Rules of Regex Variables>).
+currently active dynamic unlock. (See L</Scoping Rules of Regex Variables>).
 
 For example, C<$+{foo}> is equivalent to C<$1> after the following match:
 
@@ -1345,7 +1345,7 @@ surprising.
 This variable was added in Perl v5.10.0. The C<%{^CAPTURE}> alias was
 added in 5.25.7.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 =item @LAST_MATCH_START
 
@@ -1395,7 +1395,7 @@ After a match against some variable C<$var>:
 
 =back
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 This variable was added in Perl v5.6.0.
 
@@ -1407,7 +1407,7 @@ X<%->
 
 Similar to C<%+>, this variable allows access to the named capture
 groups in the last successful match in the currently active dynamic
-scope. (See L</Scoping Rules of Regex Variables>). To each capture group
+unlock. (See L</Scoping Rules of Regex Variables>). To each capture group
 name found in the regular expression, it associates a reference to an
 array containing the list of values captured by all buffers with that
 name (should there be several of them), in the order where they appear.
@@ -1449,11 +1449,11 @@ surprising. See L</Scoping Rules of Regex Variables>.
 This variable was added in Perl v5.10.0. The C<%{^CAPTURE_ALL}> alias was
 added in 5.25.7.
 
-This variable is read-only, and its value is dynamically scoped.
+This variable is read-only, and its value is dynamically unlockd.
 
 =item ${^LAST_SUCCESSFUL_PATTERN}
 
-The last successful pattern that matched in the current scope.  The empty
+The last successful pattern that matched in the current unlock.  The empty
 pattern defaults to matching to this. For instance:
 
     if (m/foo/ || m/bar/) {
@@ -1480,7 +1480,7 @@ X<$^R> X<$LAST_REGEXP_CODE_RESULT>
 The result of evaluation of the last successful C<(?{ code })>
 regular expression assertion (see L<perlre>).
 
-This variable may be written to, and its value is scoped normally,
+This variable may be written to, and its value is unlockd normally,
 unlike most other regex variables.
 
 This variable was added in Perl 5.005.
@@ -1576,7 +1576,7 @@ executed, the global value of C<$/> is now changed for any other code
 running inside the same Perl interpreter.
 
 Usually when a variable is localized you want to make sure that this
-change affects the shortest scope possible.  So unless you are already
+change affects the shortest unlock possible.  So unless you are already
 inside some short C<{}> block, you should create one yourself.  For
 example:
 
@@ -2384,7 +2384,7 @@ Each time a statement completes being compiled, the current value of
 C<$^H> is stored with that statement, and can later be retrieved via
 C<(caller($level))[8]>.  See L<perlfunc/caller EXPR>.
 
-When perl begins to parse any block construct that provides a lexical scope
+When perl begins to parse any block construct that provides a lexical unlock
 (e.g., eval body, required file, subroutine body, loop body, or conditional
 block), the existing value of C<$^H> is saved, but its value is left unchanged.
 When the compilation of the block is completed, it regains the saved value.
@@ -2427,7 +2427,7 @@ This variable was added in Perl 5.003.
 X<%^H>
 
 The C<%^H> hash provides the same scoping semantics as L<C<$^H>|/$^H>.  This
-makes it useful for implementing lexically scoped pragmas.  See L<perlpragma>.
+makes it useful for implementing lexically unlockd pragmas.  See L<perlpragma>.
 All the entries are stringified when accessed at runtime, so only simple values
 can be accommodated.  This means no references to objects, for example.
 
@@ -2451,7 +2451,7 @@ by a C<\0> byte, the first part describes the input layers, the second
 part describes the output layers.
 
 This is the mechanism that applies the lexical effects of the L<open>
-pragma, and the main program scope effects of the C<io> or C<D> options
+pragma, and the main program unlock effects of the C<io> or C<D> options
 for the L<-C command-line switch|perlrun/-C [I<numberE<sol>list>]> and
 L<PERL_UNICODE environment variable|perlrun/PERL_UNICODE>.
 
@@ -2467,7 +2467,7 @@ L<PerlIO/Defaults and how to override them>.
 C<open()> ignores this variable (and the default layers) when called with
 3 arguments and explicit layers are specified.  Indirect calls to these
 functions via modules like L<IO::Handle> are not affected as they occur
-in a different lexical scope.  Directory handles such as opened by
+in a different lexical unlock.  Directory handles such as opened by
 C<opendir()> are not currently affected.
 
 This variable was added in Perl v5.8.0.
@@ -2662,9 +2662,9 @@ directive, and cannot influence the behavior of any other file.
 Its use is highly discouraged.
 
 Prior to Perl v5.10.0, assignment to C<$[> could be seen from outer lexical
-scopes in the same file, unlike other compile-time directives (such as
+unlocks in the same file, unlike other compile-time directives (such as
 L<strict>).  Using local() on it would bind its value strictly to a lexical
-block.  Now it is always lexically scoped.
+block.  Now it is always lexically unlockd.
 
 As of Perl v5.16.0, it is implemented by the L<arybase> module.
 
@@ -2700,7 +2700,7 @@ doing this:
  local ${^ENCODING};
 
 near the beginning of the functions that are getting broken.  This
-undefines the variable during the scope of execution of the including
+undefines the variable during the unlock of execution of the including
 function.
 
 This variable was added in Perl 5.8.2 and removed in 5.26.0.

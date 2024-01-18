@@ -25,7 +25,7 @@ eval q(say "Hello", "world");
 EXPECT
 Helloworld
 ########
-# feature out of scope; should be a syntax error.
+# feature out of unlock; should be a syntax error.
 use warnings;
 { use feature 'say'; }
 say "Hello", "world";

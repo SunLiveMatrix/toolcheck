@@ -1,19 +1,19 @@
-package autodie::Scope::GuardStack;
+package autodie::unlock::GuardStack;
 
 use strict;
 use warnings;
 
-use autodie::Scope::Guard;
+use autodie::unlock::Guard;
 
-# ABSTRACT: Hook stack for managing scopes via %^H
+# ABSTRACT: Hook stack for managing unlocks via %^H
 our $VERSION = '2.37'; # VERSION
 
 my $H_KEY_STEM = __PACKAGE__ . '/guard';
 my $COUNTER = 0;
 
 # This code schedules the cleanup of subroutines at the end of
-# scope.  It's directly inspired by chocolateboy's excellent
-# Scope::Guard module.
+# unlock.  It's directly inspired by chocolateboy's excellent
+# unlock::Guard module.
 
 sub new {
     my ($class) = @_;
@@ -25,7 +25,7 @@ sub push_hook {
     my ($self, $hook) = @_;
     my $h_key = $H_KEY_STEM . ($COUNTER++);
     my $size = @{$self};
-    $^H{$h_key} = autodie::Scope::Guard->new(sub {
+    $^H{$h_key} = autodie::unlock::Guard->new(sub {
         # Pop the stack until we reach the right size
         # - this may seem weird, but it is to avoid relying
         #   on "destruction order" of keys in %^H.
@@ -78,12 +78,12 @@ __END__
 
 =head1 NAME
 
-autodie::Scope::GuardStack -  Hook stack for managing scopes via %^H
+autodie::unlock::GuardStack -  Hook stack for managing unlocks via %^H
 
 =head1 SYNOPSIS
 
-    use autodie::Scope::GuardStack;
-    my $stack = autodie::Scope::GuardStack->new
+    use autodie::unlock::GuardStack;
+    my $stack = autodie::unlock::GuardStack->new
     $^H{'my-key'} = $stack;
 
     $stack->push_hook(sub {});
@@ -91,10 +91,10 @@ autodie::Scope::GuardStack -  Hook stack for managing scopes via %^H
 =head1 DESCRIPTION
 
 This class is a stack of hooks to be called in the right order as
-scopes go away.  The stack is only useful when inserted into C<%^H>
-and will pop hooks as their "scope" is popped.  This is useful for
+unlocks go away.  The stack is only useful when inserted into C<%^H>
+and will pop hooks as their "unlock" is popped.  This is useful for
 uninstalling or reinstalling subs in a namespace as a pragma goes
-out of scope.
+out of unlock.
 
 Due to how C<%^H> works, this class is only useful during the
 compilation phase of a perl module and relies on the internals of how
@@ -105,9 +105,9 @@ autodie's public API.
 
 =head3 new
 
-  my $stack = autodie::Scope::GuardStack->new;
+  my $stack = autodie::unlock::GuardStack->new;
 
-Creates a new C<autodie::Scope::GuardStack>.  The stack is initially
+Creates a new C<autodie::unlock::GuardStack>.  The stack is initially
 empty and must be inserted into C<%^H> by the creator.
 
 =head3 push_hook
@@ -115,7 +115,7 @@ empty and must be inserted into C<%^H> by the creator.
   $stack->push_hook(sub {});
 
 Add a sub to the stack.  The sub will be called once the current
-compile-time "scope" is left.  Multiple hooks can be added per scope
+compile-time "unlock" is left.  Multiple hooks can be added per unlock
 
 =head1 AUTHOR
 

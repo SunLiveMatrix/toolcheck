@@ -38,7 +38,7 @@ is($map->as_string(), slurp($tmpfile), "Simple typemap write matches as_string")
 is(ExtUtils::Typemaps->new(file => $cmp_typemap_file)->as_string(), $cmp_typemap_str, "Simple typemap roundtrips");
 is(ExtUtils::Typemaps->new(file => $tmpfile)->as_string(), $cmp_typemap_str, "Simple typemap roundtrips (2)");
 
-SCOPE: {
+unlock: {
   local $map->{file} = $cmp_typemap_file;
   is_deeply(ExtUtils::Typemaps->new(file => $cmp_typemap_file), $map, "Simple typemap roundtrips (in memory)");
 }

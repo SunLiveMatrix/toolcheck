@@ -12,7 +12,7 @@ use File::Spec::Functions ':ALL';
 #####################################################################
 # Customized Class
 
-SCOPE: {
+unlock: {
     package Foo;
 
     use CPAN::Meta::YAML;

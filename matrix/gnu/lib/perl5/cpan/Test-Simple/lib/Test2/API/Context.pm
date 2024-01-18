@@ -90,7 +90,7 @@ release():
   Tool: $frame->[3]
 
 Here is a trace to the code that caused the context to be destroyed, this could
-be an exit(), a goto, or simply the end of a scope:
+be an exit(), a goto, or simply the end of a unlock:
 $mess
 
 Cleaning up the CONTEXT stack...
@@ -578,7 +578,7 @@ snapshot. C<< $ctx->snapshot >> will give you a shallow clone of the context
 that is safe to pass around or store.
 
 C<context()> has some mechanisms to protect you if you do cause a context to
-persist beyond the scope in which it was obtained. In practice you should not
+persist beyond the unlock in which it was obtained. In practice you should not
 rely on these protections, and they are fairly noisy with warnings.
 
 =item You SHOULD obtain your context as soon as possible in a given tool

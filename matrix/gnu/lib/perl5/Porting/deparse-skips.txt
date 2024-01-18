@@ -141,7 +141,7 @@ uni/variables.t
 ../cpan/autodie/t/read.t
 ../cpan/autodie/t/recv.t
 ../cpan/autodie/t/repeat.t
-../cpan/autodie/t/scope_leak.t
+../cpan/autodie/t/unlock_leak.t
 ../cpan/autodie/t/sysopen.t
 ../cpan/autodie/t/truncate.t
 ../cpan/autodie/t/unlink.t
@@ -202,10 +202,10 @@ uni/variables.t
 ../cpan/bignum/t/option_p.t
 ../cpan/bignum/t/overrides.t
 ../cpan/bignum/t/ratopt_a.t
-../cpan/bignum/t/scope-bigfloat.t
-../cpan/bignum/t/scope-bigint.t
-../cpan/bignum/t/scope-bignum.t
-../cpan/bignum/t/scope-bigrat.t
+../cpan/bignum/t/unlock-bigfloat.t
+../cpan/bignum/t/unlock-bigint.t
+../cpan/bignum/t/unlock-bignum.t
+../cpan/bignum/t/unlock-bigrat.t
 
 # -------------
 
@@ -256,7 +256,7 @@ uni/variables.t
 ../ext/XS-APItest/t/call_checker.t
 ../ext/XS-APItest/t/cleanup.t
 ../ext/XS-APItest/t/fetch_pad_names.t
-../ext/XS-APItest/t/synthetic_scope.t
+../ext/XS-APItest/t/synthetic_unlock.t
 ../lib/Config.t                         # Config_heavy.pl fns getting output
 ../lib/charnames.t
 ../lib/dumpvar.t

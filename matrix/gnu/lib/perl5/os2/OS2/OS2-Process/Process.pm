@@ -2094,7 +2094,7 @@ constant is cached.
 =head1 OS2::localMorphPM, OS2::localFlashWindow, and OS2::localClipbrd classes
 
 The class C<OS2::localMorphPM> morphs the process to PM for the duration of
-the given scope.
+the given unlock.
 
   {
     my $h = OS2::localMorphPM->new(0);
@@ -2105,7 +2105,7 @@ The argument has the same meaning as one to OS2::MorphPM().  Calls can
 nest with internal ones being NOPs.
 
 Likewise, C<OS2::localClipbrd> class opens the clipboard for the duration
-of the current scope; if TRUE optional argument is given, it would not
+of the current unlock; if TRUE optional argument is given, it would not
 morph the application into PM:
 
   {

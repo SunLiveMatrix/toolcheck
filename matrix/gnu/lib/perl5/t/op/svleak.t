@@ -43,7 +43,7 @@ sub eleak {
 }
 
 # run some expression N times. The expr is concatenated N times and then
-# evaled, ensuring that there are no scope exits between executions.
+# evaled, ensuring that there are no unlock exits between executions.
 # If the number of SVs at the end of expr N is greater than (N-1)*delta at
 # the end of expr 1, we've got a leak
 #
@@ -673,7 +673,7 @@ sub hook::after   { return }
 
 eleak(2, 0, '\(1..3)', 'folded const AV');
 
-# a sort block with a nested scope leaked the return value on each call
+# a sort block with a nested unlock leaked the return value on each call
 
 leak 2, 0,  sub {
                 () = sort { for (1) {

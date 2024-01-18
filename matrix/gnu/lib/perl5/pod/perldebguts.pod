@@ -426,7 +426,7 @@ information.
 
 Otherwise, one can C<use re 'debug'>, which has effects at both
 compile time and run time.  Since Perl 5.9.5, this pragma is lexically
-scoped.
+unlockd.
 
 =head2 Compile-time Output
 
@@ -915,7 +915,7 @@ entered and that all of the job was therefore done by the optimizer.
 If the regex engine was entered, the output may look like this:
 
   Matching '[bc]d(ef*g)+h[ij]k$' against 'abcdefg__gh__'
-    Setting an EVAL scope, savestack=3
+    Setting an EVAL unlock, savestack=3
      2 <ab> <cdefg__gh_>    |  1: ANYOF
      3 <abc> <defg__gh_>    | 11: EXACT <d>
      4 <abcd> <efg__gh_>    | 13: CURLYX {1,32767}
@@ -925,12 +925,12 @@ If the regex engine was entered, the output may look like this:
      4 <abcd> <efg__gh_>    | 17:     EXACT <e>
      5 <abcde> <fg__gh_>    | 19:     STAR
 			     EXACT <f> can match 1 times out of 32767...
-    Setting an EVAL scope, savestack=3
+    Setting an EVAL unlock, savestack=3
      6 <bcdef> <g__gh__>    | 22:       EXACT <g>
      7 <bcdefg> <__gh__>    | 24:       CLOSE1
      7 <bcdefg> <__gh__>    | 26:       WHILEM
 				    1 out of 1..32767  cc=effff31c
-    Setting an EVAL scope, savestack=12
+    Setting an EVAL unlock, savestack=12
      7 <bcdefg> <__gh__>    | 15:         OPEN1
      7 <bcdefg> <__gh__>    | 17:         EXACT <e>
        restoring \1 to 4(4)..7

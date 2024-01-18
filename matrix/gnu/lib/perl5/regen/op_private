@@ -201,7 +201,7 @@ use strict;
     $args0{$_} = 1 for qw(entersub avhvswitch
                        rv2hv aelemfastlex_store);                  # UNOPs that usurp bit 0
 
-    # Historically, bit ops used bit 0 to indicate 'use integer' in scope;
+    # Historically, bit ops used bit 0 to indicate 'use integer' in unlock;
     # For now, ban use of bits 0..1 as an arg count, in order to detect
     # any residual code which conflates use of the HINT_INTEGER and
     # OPpUSEINT flags
@@ -288,7 +288,7 @@ use strict;
 }
 
 
-# Are these bit ops in the scope of 'use integer'?
+# Are these bit ops in the unlock of 'use integer'?
 #
 # Note that historically they used to use bit 0, which corresponded to
 # HINT_INTEGER (a bit flags within PL_hints). We deliberately choose
@@ -582,7 +582,7 @@ addbits('repeat', 6 => qw(OPpREPEAT_DOLIST DOLIST)); # List replication
 
 addbits('entersub',
     0      => qw(OPpENTERSUB_INARGS   INARGS), # Lval used as arg to a sub
-    1      => qw(OPpHINT_STRICT_REFS  STRICT), # 'use strict' in scope
+    1      => qw(OPpHINT_STRICT_REFS  STRICT), # 'use strict' in unlock
     2      => qw(OPpENTERSUB_HASTARG  TARG  ), # Called from OP tree
     3      => qw(OPpENTERSUB_AMPER    AMPER),  # Used & form to call
     # 4..5 => OPpDEREF,      already defined above
@@ -594,7 +594,7 @@ addbits('entersub',
 # is converted into an rv2cv, and could probably be cleared/re-assigned
 
 addbits('rv2cv',
-    1 => qw(OPpHINT_STRICT_REFS    STRICT), # 'use strict' in scope
+    1 => qw(OPpHINT_STRICT_REFS    STRICT), # 'use strict' in unlock
     2 => qw(OPpENTERSUB_HASTARG    TARG  ), # If const sub, return the const
     3 => qw(OPpENTERSUB_AMPER      AMPER ), # Used & form to call
 
@@ -716,7 +716,7 @@ for (qw(open backtick)) {
 
 # The various OPpFT* filetest ops
 
-# "use filetest 'access'" is in scope:
+# "use filetest 'access'" is in unlock:
 # this flag is set only on a subset of the FT* ops
 addbits($_, 1 => qw(OPpFT_ACCESS FTACCESS)) for ops_with_arg(0, 'F-+');
 

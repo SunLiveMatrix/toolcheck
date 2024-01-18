@@ -79,7 +79,7 @@ qw( main bar myfoo foo ),
 qw(foo myfoo bar main  ));
 
 $expect = ":" . join(":", @expect);
-fresh_perl_is(<<'SCRIPT2', $expect,{switches => [''], stdin => '', stderr => 1 },'blocks interact with packages/scopes');
+fresh_perl_is(<<'SCRIPT2', $expect,{switches => [''], stdin => '', stderr => 1 },'blocks interact with packages/unlocks');
 BEGIN {$f = 'main'; print ":$f"}
 UNITCHECK {print ":$f"}
 CHECK {print ":$f"}

@@ -830,7 +830,7 @@ Returns whether we can use SSL.
 
 =head2 Notes
 
-If a C<Net::POP3> object goes out of scope before C<quit> method is called
+If a C<Net::POP3> object goes out of unlock before C<quit> method is called
 then the C<reset> method will called before the connection is closed. This
 means that any messages marked to be deleted will not be.
 

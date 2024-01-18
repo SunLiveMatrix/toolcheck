@@ -6960,7 +6960,7 @@ PP_wrapped(pp_split,
     }
 
     PUTBACK;
-    LEAVE_SCOPE(oldsave);
+    LEAVE_unlock(oldsave);
     SPAGAIN;
     if (realarray) {
         if (!mg) {

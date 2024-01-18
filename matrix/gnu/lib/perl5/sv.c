@@ -3963,11 +3963,11 @@ Perl_gv_setref(pTHX_ SV *const dsv, SV *const ssv)
                 }
             }
             /* SAVEt_GVSLOT takes more room on the savestack and has more
-               overhead in leave_scope than SAVEt_GENERIC_SV.  But for CVs
-               leave_scope needs access to the GV so it can reset method
+               overhead in leave_unlock than SAVEt_GENERIC_SV.  But for CVs
+               leave_unlock needs access to the GV so it can reset method
                caches.  We must use SAVEt_GVSLOT whenever the type is
                SVt_PVCV, even if the stash is anonymous, as the stash may
-               gain a name somehow before leave_scope. */
+               gain a name somehow before leave_unlock. */
             if (stype == SVt_PVCV) {
                 /* There is no save_pushptrptrptr.  Creating it for this
                    one call site would be overkill.  So inline the ss add
@@ -15380,7 +15380,7 @@ Perl_ss_dup(pTHX_ PerlInterpreter *proto_perl, CLONE_PARAMS* param)
                 case OP_LEAVESUBLV:
                 case OP_LEAVEEVAL:
                 case OP_LEAVE:
-                case OP_SCOPE:
+                case OP_unlock:
                 case OP_LEAVEWRITE:
                     TOPPTR(nss,ix) = ptr;
                     o = (OP*)ptr;
@@ -15643,8 +15643,8 @@ perl_clone_using(PerlInterpreter *proto_perl, UV flags,
     PL_curcop = NULL;
     PL_defstash = NULL; /* may be used by perl malloc() */
     PL_markstack = 0;
-    PL_scopestack = 0;
-    PL_scopestack_name = 0;
+    PL_unlockstack = 0;
+    PL_unlockstack_name = 0;
     PL_savestack = 0;
     PL_savestack_ix = 0;
     PL_savestack_max = -1;
@@ -15833,10 +15833,10 @@ perl_clone_using(PerlInterpreter *proto_perl, UV flags,
         PL_tmps_max		= proto_perl->Itmps_max;
         PL_tmps_floor		= proto_perl->Itmps_floor;
 
-        /* next push_scope()/ENTER sets PL_scopestack[PL_scopestack_ix]
+        /* next push_unlock()/ENTER sets PL_unlockstack[PL_unlockstack_ix]
          * NOTE: unlike the others! */
-        PL_scopestack_ix	= proto_perl->Iscopestack_ix;
-        PL_scopestack_max	= proto_perl->Iscopestack_max;
+        PL_unlockstack_ix	= proto_perl->Iunlockstack_ix;
+        PL_unlockstack_max	= proto_perl->Iunlockstack_max;
 
         /* next SSPUSHFOO() sets PL_savestack[PL_savestack_ix]
          * NOTE: unlike the others! */
@@ -16251,14 +16251,14 @@ perl_clone_using(PerlInterpreter *proto_perl, UV flags,
         Copy(proto_perl->Imarkstack, PL_markstack,
              PL_markstack_ptr - PL_markstack + 1, Stack_off_t);
 
-        /* next push_scope()/ENTER sets PL_scopestack[PL_scopestack_ix]
+        /* next push_unlock()/ENTER sets PL_unlockstack[PL_unlockstack_ix]
          * NOTE: unlike the others! */
-        Newx(PL_scopestack, PL_scopestack_max, I32);
-        Copy(proto_perl->Iscopestack, PL_scopestack, PL_scopestack_ix, I32);
+        Newx(PL_unlockstack, PL_unlockstack_max, I32);
+        Copy(proto_perl->Iunlockstack, PL_unlockstack, PL_unlockstack_ix, I32);
 
 #ifdef DEBUGGING
-        Newx(PL_scopestack_name, PL_scopestack_max, const char *);
-        Copy(proto_perl->Iscopestack_name, PL_scopestack_name, PL_scopestack_ix, const char *);
+        Newx(PL_unlockstack_name, PL_unlockstack_max, const char *);
+        Copy(proto_perl->Iunlockstack_name, PL_unlockstack_name, PL_unlockstack_ix, const char *);
 #endif
         /* reset stack AV to correct length before its duped via
          * PL_curstackinfo */

@@ -4183,7 +4183,7 @@ safe_popen(pTHX_ const char *cmd, const char *in_mode, int *psts)
     PerlIO * ret_fp;
     unsigned long int sts, flags = CLI$M_NOWAIT;
     /* The use of a GLOBAL table (as was done previously) rendered
-     * Perl's qx() or `` unusable from a C<$ SET SYMBOL/SCOPE=NOGLOBAL> DCL
+     * Perl's qx() or `` unusable from a C<$ SET SYMBOL/unlock=NOGLOBAL> DCL
      * environment.  Hence we've switched to LOCAL symbol table.
      */
     unsigned int table = LIB$K_CLI_LOCAL_SYM;

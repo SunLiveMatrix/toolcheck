@@ -697,7 +697,7 @@ MICROCORE_SRC	=		\
 		..\regcomp_study.c	\
 		..\regexec.c	\
 		..\run.c	\
-		..\scope.c	\
+		..\unlock.c	\
 		..\sv.c		\
 		..\taint.c	\
 		..\time64.c	\
@@ -745,7 +745,7 @@ CORE_NOCFG_H	=		\
 		..\regcomp.h	\
 		..\regcomp_internal.h	\
 		..\regexp.h	\
-		..\scope.h	\
+		..\unlock.h	\
 		..\sv.h		\
 		..\thread.h	\
 		..\unixish.h	\

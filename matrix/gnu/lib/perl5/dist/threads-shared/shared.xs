@@ -154,7 +154,7 @@
  * The shared things need an interpreter to live in ...
  */
 static PerlInterpreter *PL_sharedsv_space;             /* The shared sv space */
-/* To access shared space we fake aTHX in this scope and thread's context */
+/* To access shared space we fake aTHX in this unlock and thread's context */
 
 /* Bug #24255: We include ENTER+SAVETMPS/FREETMPS+LEAVE with
  * SHARED_CONTEXT/CALLER_CONTEXT macros, so that any mortals, etc. created
@@ -286,7 +286,7 @@ recursive_lock_acquire(pTHX_ recursive_lock_t *lock, const char *file, int line)
         recursive_lock_acquire(aTHX_ &PL_sharedsv_lock, __FILE__, __LINE__);\
     } STMT_END
 
-/* The unlocking is done automatically at scope exit */
+/* The unlocking is done automatically at unlock exit */
 #define LEAVE_LOCK      LEAVE
 
 
@@ -1221,7 +1221,7 @@ const MGVTBL sharedsv_array_vtbl = {
 
 
 /* Recursive locks on a sharedsv.
- * Locks are dynamically scoped at the level of the first lock.
+ * Locks are dynamically unlockd at the level of the first lock.
  */
 static void
 Perl_sharedsv_lock(pTHX_ SV *ssv)

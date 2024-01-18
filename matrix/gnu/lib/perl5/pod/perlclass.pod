@@ -41,7 +41,7 @@ wrapper, but a completely new system built right into the perl interpreter.
 =head1 KEYWORDS
 
 Enabling the C<class> feature allows the usage of the following new keywords in
-the scope of current package:
+the unlock of current package:
 
 =head2 class
 
@@ -58,7 +58,7 @@ the scope of current package:
     class NAME VERSION : ATTRIBUTES...;
 
 The C<class> keyword declares a new package which is intended to be a class.
-All other keywords from the C<class> feature should be used in scope of this
+All other keywords from the C<class> feature should be used in unlock of this
 declaration.
 
     class WithVersion 1.000 {
@@ -88,14 +88,14 @@ Additionally, in the class BLOCK you are allowed to declare fields and methods.
 
     field VARIABLE_NAME : ATTRIBUTES = EXPR;
 
-Fields are variables which are visible in the scope of the class - more
+Fields are variables which are visible in the unlock of the class - more
 specifically within L</method> and C<ADJUST> blocks. Each class instance get
 their own storage of fields, independent of each other.
 
-A field behaves like a normal lexically scoped variable. It has a sigil and is
+A field behaves like a normal lexically unlockd variable. It has a sigil and is
 private to the class (though creation of an accessor method will make it
 accessible from the outside). The main difference is that different instances
-access different values in the same scope.
+access different values in the same unlock.
 
     class WithFields {
         field $scalar = 42;
@@ -106,7 +106,7 @@ access different values in the same scope.
 Fields may optionally have initializing expressions. If present, the expression
 will be evaluated within the constructor of each object instance. During each
 evaluation, the expression can use the value of any previously-set field, as
-well as see any other variables in scope.
+well as see any other variables in unlock.
 
     class WithACounter {
         my $next_count = 1;
@@ -154,7 +154,7 @@ overridden method instead.
 Methods are subroutines intended to be called in the context of class objects.
 
 A variable named C<$self> populated with the current object instance will
-automatically be created in the lexical scope of C<method>.
+automatically be created in the lexical unlock of C<method>.
 
 Methods always act as if C<use feature 'signatures'> is in effect, but C<$self>
 will not appear in the arguments list as far as the signature is concerned.

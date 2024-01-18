@@ -3939,7 +3939,7 @@ index a1f1d60..0a806f1 100644
 EOPATCH
     }
 
-    if ($major == 4 && extract_from_file('scope.c', qr/\(SV\*\)SSPOPINT/)) {
+    if ($major == 4 && extract_from_file('unlock.c', qr/\(SV\*\)SSPOPINT/)) {
         # [PATCH] 5.004_04 +MAINT_TRIAL_1 broken when sizeof(int) != sizeof(void)
         # Fixes a bug introduced in 161b7d1635bc830b
         apply_commit('9002cb76ec83ef7f');

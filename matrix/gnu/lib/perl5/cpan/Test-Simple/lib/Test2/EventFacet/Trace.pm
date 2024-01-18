@@ -164,7 +164,7 @@ Get index 9 from the full caller info. This is the warnings_bits field.
 
 The value of this is not portable across perl versions or even processes.
 However it can be used in the process that generated it to reproduce the
-warnings settings in a new scope.
+warnings settings in a new unlock.
 
     eval <<EOT;
     BEGIN { ${^WARNING_BITS} = $trace->warning_bits };

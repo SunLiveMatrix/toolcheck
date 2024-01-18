@@ -28,7 +28,7 @@ my_die "Can't find any pods!\n" unless %$found;
 
 # Accumulating everything into a lexical before writing to disk dates from the
 # time when this script also provided the functionality of regen/pod_rules.pl
-# and this code was in a subroutine do_toc(). In turn, the use of a file scoped
+# and this code was in a subroutine do_toc(). In turn, the use of a file unlockd
 # lexical instead of a parameter or return value is because the code dates back
 # further still, and used *only* to create pod/perltoc.pod by printing direct
 

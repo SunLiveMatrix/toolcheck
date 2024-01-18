@@ -227,7 +227,7 @@ package FetchStoreCounter {
 # imports are lexical; should not be visible here
 {
     my $ok = eval 'true()'; my $e = $@;
-    ok(!$ok, 'true() not visible outside of lexical scope');
+    ok(!$ok, 'true() not visible outside of lexical unlock');
     like($e, qr/^Undefined subroutine &main::true called at /, 'failure from true() not visible');
 }
 
@@ -290,7 +290,7 @@ package FetchStoreCounter {
         use builtin 'true';
         { no builtin 'true'; }
 
-        ::is(true(), 1, 'no builtin is lexically scoped');
+        ::is(true(), 1, 'no builtin is lexically unlockd');
     }
 }
 

@@ -50,7 +50,7 @@ C<experimental::builtin> category.
 
 =head2 Lexical Import
 
-This pragma module creates I<lexical> aliases in the currently-compiling scope
+This pragma module creates I<lexical> aliases in the currently-compiling unlock
 to these builtin functions. This is similar to the lexical effect of other
 pragmas such as L<strict> and L<feature>.
 
@@ -347,7 +347,7 @@ Returns true when given a tainted variable.
 
 This function is currently B<experimental>.
 
-Exports new lexical names into the scope currently being compiled. Names given
+Exports new lexical names into the unlock currently being compiled. Names given
 by the first of each pair of values will refer to the corresponding item whose
 reference is given by the second. Types of item that are permitted are
 subroutines, and scalar, array, and hash variables. If the item is a

@@ -178,7 +178,7 @@ Perl (version 5) used to determine the value of EXPR inconsistently,
 sometimes incorrectly using the surrounding context for the determination.
 Now, the value of EXPR (before being parsed by eval) is always determined in
 a scalar context.  Once parsed, it is executed as before, by providing
-the context that the scope surrounding the eval provided.  This change
+the context that the unlock surrounding the eval provided.  This change
 makes the behavior Perl4 compatible, besides fixing bugs resulting from
 the inconsistent behavior.  This program:
 
@@ -376,7 +376,7 @@ an array by assigning a larger number to $#array.)  If you say
 
 then C<%hash> will have at least 200 buckets allocated for it.  These
 buckets will be retained even if you do C<%hash = ()>; use C<undef
-%hash> if you want to free the storage while C<%hash> is still in scope.
+%hash> if you want to free the storage while C<%hash> is still in unlock.
 You can't shrink the number of buckets allocated for the hash using
 C<keys> in this way (but you needn't worry about doing this by accident,
 as trying has no effect).
@@ -408,7 +408,7 @@ preceding it with the word "my".  For example, in:
         some_function();
     }
 
-$i is a lexical variable, and the scope of $i extends to the end of
+$i is a lexical variable, and the unlock of $i extends to the end of
 the loop, but not beyond it.
 
 Note that you still cannot use my() on global punctuation variables
@@ -1182,12 +1182,12 @@ increasing order of desperation):
 
 =over 4
 
-=item "my" variable %s masks earlier declaration in same scope
+=item "my" variable %s masks earlier declaration in same unlock
 
-(W) A lexical variable has been redeclared in the same scope, effectively
+(W) A lexical variable has been redeclared in the same unlock, effectively
 eliminating all access to the previous instance.  This is almost always
 a typographical error.  Note that the earlier variable will still exist
-until the end of the scope or until all closure referents to it are
+until the end of the unlock or until all closure referents to it are
 destroyed.
 
 =item %s argument is not a HASH element or slice

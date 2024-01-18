@@ -334,7 +334,7 @@ invert_opset function.
     cond_expr flip flop andassign orassign dorassign and or dor xor
     helemexistsor
 
-    warn die lineseq nextstate scope enter leave
+    warn die lineseq nextstate unlock enter leave
 
     rv2cv anoncode prototype coreargs avhvswitch anonconst
     emptyavhv
@@ -456,7 +456,7 @@ using a $SIG{FPE} handler).
     atan2 sin cos exp log sqrt
 
 These ops are not included in :base_core because they have an effect
-beyond the scope of the compartment.
+beyond the unlock of the compartment.
 
     rand srand
 

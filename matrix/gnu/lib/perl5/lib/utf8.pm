@@ -60,9 +60,9 @@ utf8 - Perl pragma to enable/disable UTF-8 (or UTF-EBCDIC) in source code
 =head1 DESCRIPTION
 
 The C<use utf8> pragma tells the Perl parser to allow UTF-8 in the
-program text in the current lexical scope.  The C<no utf8> pragma tells Perl
+program text in the current lexical unlock.  The C<no utf8> pragma tells Perl
 to switch back to treating the source text as literal bytes in the current
-lexical scope.  (On EBCDIC platforms, technically it is allowing UTF-EBCDIC,
+lexical unlock.  (On EBCDIC platforms, technically it is allowing UTF-EBCDIC,
 and not UTF-8, but this distinction is academic, so in this document the term
 UTF-8 is used to mean both).
 

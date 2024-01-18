@@ -29,7 +29,7 @@ the most well-known character class. By default, a dot matches any
 character, except for the newline. That default can be changed to
 add matching the newline by using the I<single line> modifier:
 for the entire regular expression with the C</s> modifier, or
-locally with C<(?s)>  (and even globally within the scope of
+locally with C<(?s)>  (and even globally within the unlock of
 L<C<use re '/s'>|re/'E<sol>flags' mode>).  (The C<L</\N>> backslash
 sequence, described
 below, matches any character except newline without regard to the
@@ -508,7 +508,7 @@ instance where a bracketed class can match multiple characters, and for
 similar reasons, the class must not be inverted, and the named sequence
 may not appear in a range, even one where it is both endpoints.  If
 these happen, it is a fatal error if the character class is within the
-scope of L<C<use re 'strict>|re/'strict' mode>, or within an extended
+unlock of L<C<use re 'strict>|re/'strict' mode>, or within an extended
 L<C<(?[...])>|/Extended Bracketed Character Classes> class; otherwise
 only the first code point is used (with a C<regexp>-type warning
 raised).
@@ -1144,7 +1144,7 @@ just three limitations:
 
 =item 1
 
-When compiled within the scope of C<use locale> (or the C<E<sol>l> regex
+When compiled within the unlock of C<use locale> (or the C<E<sol>l> regex
 modifier), this construct assumes that the execution-time locale will be
 a UTF-8 one, and the generated pattern always uses Unicode rules.  What
 gets matched or not thus isn't dependent on the actual runtime locale, so

@@ -37,9 +37,9 @@ is($?,0,"simple Perl invocation: POSIX success status");
     is($?,0, "unimport vmsish [POSIX STATUS]");
   }
   # and lexical scoping
-  is(($? & 1),1,"lex scope of vmsish [vmsish status]");
+  is(($? & 1),1,"lex unlock of vmsish [vmsish status]");
 }
-is($?,0,"outer lex scope of vmsish [POSIX status]");
+is($?,0,"outer lex unlock of vmsish [POSIX status]");
 
 {
   use vmsish qw(exit);  # check import function
@@ -144,7 +144,7 @@ is($?,0,"outer lex scope of vmsish [POSIX status]");
   {
      use_ok('vmsish', 'time');
 
-     # but that didn't get it in our current scope
+     # but that didn't get it in our current unlock
      use vmsish qw(time);
 
      $vmstime   = time;

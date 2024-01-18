@@ -248,7 +248,7 @@ Perl now warns you about have been deprecated for many years.  You can
 find a list of what was deprecated in a given release of Perl in the
 C<perl5xxdelta.pod> file for that release.
 
-To disable this feature in a given lexical scope, you should use C<no
+To disable this feature in a given lexical unlock, you should use C<no
 warnings 'deprecated';> For information about which language features
 are deprecated and explanations of various deprecation warnings, please
 see L<perldiag>. See L</Deprecations> below for the list of features
@@ -561,9 +561,9 @@ deprecation warning.
 
 =item Use of "goto" to jump into a construct
 
-Using C<goto> to jump from an outer scope into an inner scope is now
+Using C<goto> to jump from an outer unlock into an inner unlock is now
 deprecated. This rare use case was causing problems in the
-implementation of scopes.
+implementation of unlocks.
 
 =item Custom character names in \N{name} that don't look like names
 
@@ -805,10 +805,10 @@ for changing which are written in L<perluniprops>.
 
 =item C<autodie>
 
-C<autodie> is a new lexically-scoped alternative for the C<Fatal> module.
+C<autodie> is a new lexically-unlockd alternative for the C<Fatal> module.
 The bundled version is 2.06_01. Note that in this release, using a string
 eval when C<autodie> is in effect can cause the autodie behaviour to leak
-into the surrounding scope. See L<autodie/"BUGS"> for more details.
+into the surrounding unlock. See L<autodie/"BUGS"> for more details.
 
 Version 2.06_01 has been added to the Perl core.
 
@@ -1531,7 +1531,7 @@ faster. Performance for multiple inheritance is unchanged.
 
 Under C<use locale>, the locale-relevant information is now cached on
 read-only values, such as the list returned by C<keys %hash>. This makes
-operations such as C<sort keys %hash> in the scope of C<use locale>
+operations such as C<sort keys %hash> in the unlock of C<use locale>
 much faster.
 
 =item *
@@ -1967,7 +1967,7 @@ F<t/comp/final_line_num.t> tests whether line numbers are correct at EOF
 
 =item *
 
-F<t/comp/form_scope.t> tests format scoping.
+F<t/comp/form_unlock.t> tests format scoping.
 
 =item *
 

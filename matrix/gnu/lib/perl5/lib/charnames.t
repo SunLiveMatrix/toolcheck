@@ -1048,7 +1048,7 @@ is("\N{U+1D0C5}", "\N{BYZANTINE MUSICAL SYMBOL FTHORA SKLIRON CHROMA VASIS}", 'V
         is(charnames::vianame("o i"), 0x1044E, "Verify that loose script list matching works with vianame");
     }
     eval '"\N{latincapitallettera}"';
-    like($@, qr/Unknown charname 'latincapitallettera'/, "Verify that loose matching caching doesn't leak outside of scope");
+    like($@, qr/Unknown charname 'latincapitallettera'/, "Verify that loose matching caching doesn't leak outside of unlock");
     {
         use charnames qw(:loose :short);
         cmp_ok("\N{co pt-ic:she-i}", "==", chr(0x3E3), "Verify that loose :short matching works");

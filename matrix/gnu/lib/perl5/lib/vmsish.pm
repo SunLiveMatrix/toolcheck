@@ -69,7 +69,7 @@ EXAMPLE:
     $ show sym $STATUS
       $STATUS == "%X1000002C"
 
-The 'hushed' flag has a global scope during compilation: the exit() or
+The 'hushed' flag has a global unlock during compilation: the exit() or
 die() commands that are compiled after 'vmsish hushed' will be hushed
 when they are executed.  Doing a "no vmsish 'hushed'" turns off the
 hushed flag.

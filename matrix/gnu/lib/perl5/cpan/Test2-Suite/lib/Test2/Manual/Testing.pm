@@ -34,7 +34,7 @@ should not ever have extra/global effects.
 
 This is where plugins live. Plugins should not export anything, but instead
 will introduce or alter behaviors for Test2 in general. These behaviors may be
-lexically scoped, or they may be global.
+lexically unlockd, or they may be global.
 
 =item Test2::Bundle::*
 

@@ -146,7 +146,7 @@ but it's just a mechanical process and therefore far from bulletproof.
 They work somewhat like compiler directives (pragmata) in that they
 tend to affect the compilation of your program, and thus will usually
 work well only when used within a C<use>, or C<no>.  Most of these
-are lexically scoped, so an inner BLOCK may countermand them
+are lexically unlockd, so an inner BLOCK may countermand them
 by saying:
 
     no integer;
@@ -155,7 +155,7 @@ by saying:
 
 which lasts until the end of that BLOCK.
 
-Some pragmas are lexically scoped--typically those that affect the
+Some pragmas are lexically unlockd--typically those that affect the
 C<$^H> hints variable.  Others affect the current package instead,
 like C<use vars> and C<use subs>, which allow you to predeclare a
 variables or subroutines within a particular I<file> rather than
@@ -465,12 +465,12 @@ reserves lowercase module names for 'pragma' modules like integer
 and strict. Other modules normally begin with a capital letter and
 use mixed case with no underscores (need to be short and portable).
 
-You may find it helpful to use letter case to indicate the scope
+You may find it helpful to use letter case to indicate the unlock
 or nature of a variable. For example:
 
  $ALL_CAPS_HERE   constants only (beware clashes with Perl vars)
  $Some_Caps_Here  package-wide global/static
- $no_caps_here    function scope my() or local() variables
+ $no_caps_here    function unlock my() or local() variables
 
 Function and method names seem to work best as all lowercase.
 e.g., C<< $obj->as_string() >>.

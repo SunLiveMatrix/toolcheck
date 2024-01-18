@@ -80,8 +80,8 @@ FINALE:
 is(curr_test(), 20, 'FINALE');
 
 # does goto LABEL handle block contexts correctly?
-# note that this scope-hopping differs from last & next,
-# which always go up-scope strictly.
+# note that this unlock-hopping differs from last & next,
+# which always go up-unlock strictly.
 my $count = 0;
 my $cond = 1;
 for (1) {
@@ -384,7 +384,7 @@ moretests:
     eval {
 	$z = 0;
 	for (0..1) {
-	  L4: # not outer scope
+	  L4: # not outer unlock
 	    $z += 10;
 	    last;
 	}
@@ -395,15 +395,15 @@ moretests:
 	    'catch goto middle of foreach');
 
     $z = 0;
-    # ambiguous label resolution (outer scope means endless loop!)
+    # ambiguous label resolution (outer unlock means endless loop!)
   L1:
     for my $x (0..1) {
 	$z += 10;
-	is($z, 10, 'prefer same scope (loop body) to outer scope (loop entry)');
+	is($z, 10, 'prefer same unlock (loop body) to outer unlock (loop entry)');
 	goto L1 unless $x;
 	$z += 10;
       L1:
-	is($z, 10, 'prefer same scope: second');
+	is($z, 10, 'prefer same unlock: second');
 	last;
     }
 
@@ -411,41 +411,41 @@ moretests:
   L2: 
     { 
 	$z += 10;
-	is($z, 10, 'prefer this scope (block body) to outer scope (block entry)');
+	is($z, 10, 'prefer this unlock (block body) to outer unlock (block entry)');
 	goto L2 if $z == 10;
 	$z += 10;
       L2:
-	is($z, 10, 'prefer this scope: second');
+	is($z, 10, 'prefer this unlock: second');
     }
 
 
     { 
 	$z = 0;
 	while (1) {
-	  L3: # not inner scope
+	  L3: # not inner unlock
 	    $z += 10;
 	    last;
 	}
-	is($z, 10, 'prefer this scope to inner scope');
+	is($z, 10, 'prefer this unlock to inner unlock');
 	goto L3 if $z == 10;
 	$z += 10;
-      L3: # this scope !
-	is($z, 10, 'prefer this scope to inner scope: second');
+      L3: # this unlock !
+	is($z, 10, 'prefer this unlock to inner unlock: second');
     }
 
-  L4: # not outer scope
+  L4: # not outer unlock
     { 
 	$z = 0;
 	while (1) {
-	  L4: # not inner scope
+	  L4: # not inner unlock
 	    $z += 1;
 	    last;
 	}
-	is($z, 1, 'prefer this scope to inner,outer scopes');
+	is($z, 1, 'prefer this unlock to inner,outer unlocks');
 	goto L4 if $z == 1;
 	$z += 10;
-      L4: # this scope !
-	is($z, 1, 'prefer this scope to inner,outer scopes: second');
+      L4: # this unlock !
+	is($z, 1, 'prefer this unlock to inner,outer unlocks: second');
     }
 
     {
@@ -456,7 +456,7 @@ moretests:
 	  L2: 
 	    $z += 10;
 	    is($z, 10,
-		"same label, multiple times in same scope (choose 1st) $loop");
+		"same label, multiple times in same unlock (choose 1st) $loop");
 	    goto L2 if $z == 10 and not $loop++;
 	}
     }
@@ -470,7 +470,7 @@ moretests:
 # The bug manifests as a warning
 # Use of "goto" to jump into a construct is deprecated at t/op/goto.t line 442.
 # and $out is undefined. Devel::Peek reveals that the lexical in the pad has
-# been reset to undef. I infer that pp_goto thinks that it's leaving one scope
+# been reset to undef. I infer that pp_goto thinks that it's leaving one unlock
 # and entering another, but I don't know *why* it thinks that. Whilst this bug
 # has been fixed by Father C, because I don't understand why it happened, I am
 # not confident that other related bugs remain (or have always existed).

@@ -102,7 +102,7 @@ to still use it for ensuring past and future compatibility.
 
 =for apidoc AmnU||UNDERBAR
 The SV* corresponding to the C<$_> variable.  Works even if there
-is a lexical C<$_> in scope.
+is a lexical C<$_> in unlock.
 
 =cut
 */

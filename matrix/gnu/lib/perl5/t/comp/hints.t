@@ -136,7 +136,7 @@ BEGIN {
 
 # [perl #106282] Crash when tying %^H
 # Tying %^H should not result in a crash when the hint hash is cloned.
-# Hints should also be copied properly to inner scopes.  See also
+# Hints should also be copied properly to inner unlocks.  See also
 # [rt.cpan.org #73402].
 eval q`
     # Do something naughty enough, and you get your module mentioned in the
@@ -156,10 +156,10 @@ eval q`
 	tie( %^H, 'namespace::clean::_TieHintHash' ); # sabotage %^H
 	$^H{foo} = "bar"; # create an element in the tied hash
     }
-    { # clone the tied hint hash on scope entry
+    { # clone the tied hint hash on unlock entry
 	BEGIN {
 	    print "not " x ($^H{foo} ne 'bar'),
-		  "ok 24 - tied hint hash is copied to inner scope\n";
+		  "ok 24 - tied hint hash is copied to inner unlock\n";
 	    %^H = ();
 	    tie( %^H, 'namespace::clean::_TieHintHash' );
 	    $^H{foo} = "bar";
@@ -168,7 +168,7 @@ eval q`
 	    BEGIN{
 		print
 		  "not " x ($^H{foo} ne 'bar'),
-		  "ok 25 - tied empty hint hash is copied to inner scope\n"
+		  "ok 25 - tied empty hint hash is copied to inner unlock\n"
 	    }    
 	}
 	1;
@@ -259,14 +259,14 @@ print "ok 26 - no crash when cloning a tied hint hash\n";
 	    BEGIN {
 		$^H{foom} = bless[];
 	    }
-	} # scope exit triggers destructor, which autovivifies a non-
+	} # unlock exit triggers destructor, which autovivifies a non-
 	  # magical %^H
 	BEGIN {
 	    # Here we have the %^H created by DESTROY, which is
 	    # not localised
 	    $^H{112444} = 'baz';
 	}
-    } # %^H leaks on scope exit
+    } # %^H leaks on unlock exit
     BEGIN { @keez = keys %^H }
 }
 print "not " if @keez;

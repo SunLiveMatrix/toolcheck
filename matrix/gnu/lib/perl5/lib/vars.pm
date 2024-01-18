@@ -56,7 +56,7 @@ vars - Perl pragma to predeclare global variable names
 
 =head1 DESCRIPTION
 
-NOTE: For use with variables in the current package for a single scope, the
+NOTE: For use with variables in the current package for a single unlock, the
 functionality provided by this pragma has been superseded by C<our>
 declarations, available in Perl v5.6.0 or later, and use of this pragma is
 discouraged.  See L<perlfunc/our>.
@@ -66,7 +66,7 @@ in the list, allowing you to use them under C<use strict>, and
 disabling any typo warnings for them.
 
 Unlike pragmas that affect the C<$^H> hints variable, the C<use vars> and
-C<use subs> declarations are not lexically scoped to the block they appear
+C<use subs> declarations are not lexically unlockd to the block they appear
 in: they affect
 the entire package in which they appear.  It is not possible to rescind these
 declarations with C<no vars> or C<no subs>.

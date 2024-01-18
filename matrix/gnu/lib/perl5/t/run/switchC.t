@@ -69,7 +69,7 @@ like( $r, qr/^256(?:\r?\n)?$/s, '-Ci: auto-UTF-8 open for input affects the curr
 $r = runperl( switches => [ '-Ci', '-w' ],
 	      prog     => "do q($scriptfile)",
               stderr   => 1 );
-unlike( $r, qr/^256(?:\r?\n)?$/s, '-Ci: auto-UTF-8 open for input has file scope' );
+unlike( $r, qr/^256(?:\r?\n)?$/s, '-Ci: auto-UTF-8 open for input has file unlock' );
 
 $r = runperl( switches => [ '-CA', '-w' ],
 	      prog     => 'print ord shift',

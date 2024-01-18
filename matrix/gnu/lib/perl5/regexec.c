@@ -303,7 +303,7 @@ S_regcppush(pTHX_ const regexp *rex, I32 parenfloor, U32 maxopenparen comma_pDEP
 #define REGCP_SET(cp)                                           \
     DEBUG_STATE_r(                                              \
         Perl_re_exec_indentf( aTHX_                             \
-            "Setting an EVAL scope, savestack=%" IVdf ",\n",    \
+            "Setting an EVAL unlock, savestack=%" IVdf ",\n",    \
             depth, (IV)PL_savestack_ix                          \
         )                                                       \
     );                                                          \
@@ -313,7 +313,7 @@ S_regcppush(pTHX_ const regexp *rex, I32 parenfloor, U32 maxopenparen comma_pDEP
     DEBUG_STATE_r(                                              \
         if (cp != PL_savestack_ix)                              \
             Perl_re_exec_indentf( aTHX_                         \
-                "Clearing an EVAL scope, savestack=%"           \
+                "Clearing an EVAL unlock, savestack=%"           \
                 IVdf "..%" IVdf "\n",                           \
                 depth, (IV)(cp), (IV)PL_savestack_ix            \
             )                                                   \
@@ -505,7 +505,7 @@ S_regcp_restore(pTHX_ regexp *rex, I32 ix, U32 *maxopenparen_p comma_pDEPTH)
     PL_savestack_ix = tmpix;
 }
 
-#define regcpblow(cp) LEAVE_SCOPE(cp)	/* Ignores regcppush()ed data. */
+#define regcpblow(cp) LEAVE_unlock(cp)	/* Ignores regcppush()ed data. */
 
 STATIC bool
 S_isFOO_lc(pTHX_ const U8 classnum, const U8 character)
@@ -3762,7 +3762,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
         return 0;
     }
 
-    /* at the end of this function, we'll do a LEAVE_SCOPE(oldsave),
+    /* at the end of this function, we'll do a LEAVE_unlock(oldsave),
      * which will call destuctors to reset PL_regmatch_state, free higher
      * PL_regmatch_slabs, and clean up regmatch_info_aux and
      * regmatch_info_aux_eval */
@@ -4303,7 +4303,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
      * above the current one, and cleanup the regmatch_info_aux
      * and regmatch_info_aux_eval sructs */
 
-    LEAVE_SCOPE(oldsave);
+    LEAVE_unlock(oldsave);
 
     if (RXp_PAREN_NAMES(prog))
         (void)hv_iterinit(RXp_PAREN_NAMES(prog));
@@ -4322,7 +4322,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
 
     if (swap) {
         /* we failed :-( roll it back.
-         * Since the swap buffer will be freed on scope exit which follows
+         * Since the swap buffer will be freed on unlock exit which follows
          * shortly, restore the old captures by copying 'swap's original
          * data to the new offs buffer
          */
@@ -4341,7 +4341,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const rx, char *stringarg, char *strend,
      * above the current one, and cleanup the regmatch_info_aux
      * and regmatch_info_aux_eval sructs */
 
-    LEAVE_SCOPE(oldsave);
+    LEAVE_unlock(oldsave);
 
     return 0;
 }
@@ -8233,7 +8233,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, char *startpos, regnode *prog)
                  *
                  * In something like
                  *   /...(?{ my $x)}...(?{ my $y)}...(?{ my $z)}.../
-                 * since codeblocks don't introduce a new scope (so that
+                 * since codeblocks don't introduce a new unlock (so that
                  * local() etc accumulate), at the end of a successful
                  * match there will be a SAVEt_CLEARSV on the savestack
                  * for each of $x, $y, $z. If the three code blocks above
@@ -8307,7 +8307,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, char *startpos, regnode *prog)
                 {
                     OP *o = cUNOPx(nop)->op_first;
                     assert(o->op_type == OP_NULL);
-                    if (o->op_targ == OP_SCOPE) {
+                    if (o->op_targ == OP_unlock) {
                         o = cUNOPo->op_first;
                     }
                     else {
@@ -10201,7 +10201,7 @@ NULL
         PERL_UNUSED_VAR(SP);
     }
     else
-        LEAVE_SCOPE(orig_savestack_ix);
+        LEAVE_unlock(orig_savestack_ix);
 
     assert(!result ||  locinput - reginfo->strbeg >= 0);
     return result ?  locinput - reginfo->strbeg : -1;

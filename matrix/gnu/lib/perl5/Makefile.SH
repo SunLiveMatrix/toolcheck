@@ -534,7 +534,7 @@ h = \
     handy.h hv.h hv_func.h iperlsys.h keywords.h l1_char_class_tab.h \
     mg.h mydtrace.h op.h op_reg_common.h opcode.h pad.h patchlevel.h \
     perl.h perlapi.h perly.h pp.h proto.h regcomp.h regcomp_internal.h \
-    regexp.h scope.h sv.h thread.h unixish.h utf8.h util.h warnings.h \
+    regexp.h unlock.h sv.h thread.h unixish.h utf8.h util.h warnings.h \
     $(CONFIGH)
 
 c_base = \
@@ -543,7 +543,7 @@ c_base = \
     numeric.c op.c pad.c peep.c perl.c perlio.c perly.c \
     pp.c pp_ctl.c pp_hot.c pp_pack.c pp_sort.c pp_sys.c \
     reentr.c regcomp.c regcomp_debug.c regcomp_invlist.c regcomp_study.c \
-    regcomp_trie.c regexec.c run.c scope.c sv.c taint.c time64.c toke.c \
+    regcomp_trie.c regexec.c run.c unlock.c sv.c taint.c time64.c toke.c \
     universal.c utf8.c util.c \
     $(mallocsrc)
 
@@ -573,7 +573,7 @@ common_objs = \
     pp_hot$(OBJ_EXT) pp_pack$(OBJ_EXT) pp_sort$(OBJ_EXT) pp_sys$(OBJ_EXT) \
     reentr$(OBJ_EXT) regcomp$(OBJ_EXT) regcomp_debug$(OBJ_EXT) \
     regcomp_invlist$(OBJ_EXT) regcomp_study$(OBJ_EXT) regcomp_trie$(OBJ_EXT) \
-    regexec$(OBJ_EXT) run$(OBJ_EXT) scope$(OBJ_EXT) sv$(OBJ_EXT) \
+    regexec$(OBJ_EXT) run$(OBJ_EXT) unlock$(OBJ_EXT) sv$(OBJ_EXT) \
     taint$(OBJ_EXT) time64$(OBJ_EXT) toke$(OBJ_EXT) utf8$(OBJ_EXT) \
     util$(OBJ_EXT) \
     $(mallocobj) $(ARCHOBJS)
@@ -1414,7 +1414,7 @@ _cleaner2:
 	-rm -f dist/Time-HiRes/xdefine
 	rm -f so_locations $(LIBPERL_NONSHR)
 	-rmdir lib/version lib/threads lib/inc/ExtUtils lib/inc lib/encoding
-	-rmdir lib/autodie/exception lib/autodie/Scope lib/autodie lib/XS
+	-rmdir lib/autodie/exception lib/autodie/unlock lib/autodie lib/XS
 	-rmdir lib/Win32API lib/VMS lib/Unicode/Collate/Locale
 	-rmdir lib/Unicode/Collate/CJK lib/Unicode/Collate lib/Tie/Hash
 	-rmdir lib/Thread lib/Text lib/Test2/Workflow/Task lib/Test2/Workflow
@@ -1476,14 +1476,14 @@ lint: $(c)
 	rm -f *.ln
 	lint $(lintflags) -DPERL_CORE -D_REENTRANT -DDEBUGGING -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 $(c)
 
-cscopeflags = -Rb  # Recursive, build-only.
+cunlockflags = -Rb  # Recursive, build-only.
 
-.PHONY:	cscope
-# To query the cscope.out "cscope -dLnsymbol" where n = 0 means uses,
+.PHONY:	cunlock
+# To query the cunlock.out "cunlock -dLnsymbol" where n = 0 means uses,
 # 1 = definitions, 2 = callees, 3 = callers, for example
-# "cscope -dL1Perl_mg_set" or run cscope interactively (no arguments).
-cscope.out cscope: $(c) $(h)
-	cscope $(cscopeflags)
+# "cunlock -dL1Perl_mg_set" or run cunlock interactively (no arguments).
+cunlock.out cunlock: $(c) $(h)
+	cunlock $(cunlockflags)
 
 # Need to unset during recursion to go out of loop.
 # The README below ensures that the dependency list is never empty and

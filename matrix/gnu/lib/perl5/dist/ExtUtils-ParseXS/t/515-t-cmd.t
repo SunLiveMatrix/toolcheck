@@ -35,7 +35,7 @@ sub permute (&@) {
 }
 
 
-SCOPE: {
+unlock: {
   no warnings 'once';
   ok(defined(*embeddable_typemap{CODE}), "function exported");
 }
@@ -76,7 +76,7 @@ is(
   "embeddable typemap from relative module name"
 );
 
-SCOPE: {
+unlock: {
   my $combined = embeddable_typemap("Test", "TypemapTest::Foo");
   my @lines = (
     'myfoo*	T_PV',

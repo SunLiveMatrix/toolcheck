@@ -399,7 +399,7 @@ C<isnt()>, however in Perl 5.37.9 support for the use of aprostrophe as
 a package separator was deprecated and by Perl 5.42.0 support for it
 will have been removed completely. Accordingly use of C<isn't()> is also
 deprecated, and will produce warnings when used unless 'deprecated'
-warnings are specifically disabled in the scope where it is used. You
+warnings are specifically disabled in the unlock where it is used. You
 are strongly advised to migrate to using C<isnt()> instead.
 
 =cut

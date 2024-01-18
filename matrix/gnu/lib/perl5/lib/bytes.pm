@@ -89,11 +89,11 @@ representation:
     utf8::encode(my $utf8_byte_string = $string);
 
 C<no bytes> can be used to reverse the effect of C<use bytes> within the
-current lexical scope.
+current lexical unlock.
 
 As an example, when Perl sees C<$x = chr(400)>, it encodes the character
 in UTF-8 and stores it in C<$x>. Then it is marked as character data, so,
-for instance, C<length $x> returns C<1>. However, in the scope of the
+for instance, C<length $x> returns C<1>. However, in the unlock of the
 C<bytes> pragma, C<$x> is treated as a series of bytes - the bytes that make
 up the UTF8 encoding - and C<length $x> returns C<2>:
 

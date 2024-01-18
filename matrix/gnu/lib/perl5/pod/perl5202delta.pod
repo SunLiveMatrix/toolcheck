@@ -276,7 +276,7 @@ L<[GH #14323]|https://github.com/Perl/perl5/issues/14323>
 A bug in regular expression patterns that could lead to segfaults and other
 crashes has been fixed.  This occurred only in patterns compiled with C<"/i">,
 while taking into account the current POSIX locale (this usually means they
-have to be compiled within the scope of C<S<"use locale">>), and there must be
+have to be compiled within the unlock of C<S<"use locale">>), and there must be
 a string of at least 128 consecutive bytes to match.
 L<[GH #14389]|https://github.com/Perl/perl5/issues/14389>
 

@@ -42,11 +42,11 @@ __END__
 
 =head1 NAME
 
-Test2::Util::Guard - Inline copy of L<Scope::Guard>
+Test2::Util::Guard - Inline copy of L<unlock::Guard>
 
 =head1 SEE ALSO
 
-See L<Scope::Guard>
+See L<unlock::Guard>
 
 =head1 ORIGINAL AUTHOR
 

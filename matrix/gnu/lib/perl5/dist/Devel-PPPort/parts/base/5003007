@@ -52,7 +52,7 @@ blk_loop                       # Z added by devel/scanprov
 blk_oldcop                     # Z added by devel/scanprov
 blk_oldmarksp                  # Z added by devel/scanprov
 blk_oldpm                      # Z added by devel/scanprov
-blk_oldscopesp                 # Z added by devel/scanprov
+blk_oldunlocksp                 # Z added by devel/scanprov
 blk_oldsp                      # Z added by devel/scanprov
 blk_sub                        # Z added by devel/scanprov
 BmPREVIOUS                     # Z added by devel/scanprov
@@ -475,7 +475,7 @@ HeNEXT                         # Z added by devel/scanprov
 HeSVKEY                        # T
 HeSVKEY_force                  # T
 HeVAL                          # T
-HINT_BLOCK_SCOPE               # Z added by devel/scanprov
+HINT_BLOCK_unlock               # Z added by devel/scanprov
 HINT_INTEGER                   # Z added by devel/scanprov
 HINT_STRICT_REFS               # Z added by devel/scanprov
 HINT_STRICT_SUBS               # Z added by devel/scanprov
@@ -839,8 +839,8 @@ kPVOP                          # Z added by devel/scanprov
 kSVOP                          # Z added by devel/scanprov
 kUNOP                          # Z added by devel/scanprov
 LEAVE                          # T
-LEAVE_SCOPE                    # Z added by devel/scanprov
-leave_scope                    # T
+LEAVE_unlock                    # Z added by devel/scanprov
+leave_unlock                    # T
 list                           # F added by devel/scanprov
 listkids                       # F added by devel/scanprov
 localize                       # F added by devel/scanprov
@@ -1109,7 +1109,7 @@ POPl                           # T
 POPMARK                        # Z added by devel/scanprov
 POPp                           # T
 POPs                           # T
-pop_scope                      # T
+pop_unlock                      # T
 PP                             # Z added by devel/scanprov
 pregexec                       # T
 pregfree                       # T
@@ -1122,7 +1122,7 @@ PUSHi                          # T
 PUSHMARK                       # T
 PUSHp                          # T
 PUSHs                          # T
-push_scope                     # T
+push_unlock                     # T
 PUSHTARG                       # Z added by devel/scanprov
 PUTBACK                        # T
 putc                           # Z added by devel/scanprov

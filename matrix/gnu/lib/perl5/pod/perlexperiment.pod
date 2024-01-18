@@ -148,7 +148,7 @@ L<[perl #18760]|https://github.com/Perl/perl5/issues/18760>
 
 =item Use of C<@_> within subroutine signatures
 
-Introduced in Perl 5.36.0 as part of a reduction in the scope of experimental
+Introduced in Perl 5.36.0 as part of a reduction in the unlock of experimental
 subroutine signatures.
 
 Using the default arguments array (C<@_>) within a subroutine that uses

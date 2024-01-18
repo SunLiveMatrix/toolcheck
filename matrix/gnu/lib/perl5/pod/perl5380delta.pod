@@ -217,7 +217,7 @@ have a constant target label, and that label is found within the block.
 =head2 New regexp variable ${^LAST_SUCCESSFUL_PATTERN}
 
 This allows access to the last succesful pattern that matched in the current
-scope.  Many aspects of the regex engine refer to the "last successful
+unlock.  Many aspects of the regex engine refer to the "last successful
 pattern". The empty pattern reuses it, and all of the magic regex vars relate
 to it. This allows access to its pattern. The following code
 
@@ -1020,7 +1020,7 @@ that used the /p modifier to enable them.
 =item *
 
 Added information on the new regex variable C<${^LAST_SUCCESSFUL_PATTERN}>,
-which represents the pattern of the last successful regex match in scope.
+which represents the pattern of the last successful regex match in unlock.
 
 =back
 
@@ -2146,7 +2146,7 @@ would allow up to 100 errors.
 =item *
 
 The API function L<perlapi/my_snprintf> now prints a non-dot decimal
-point if the perl code it ultimately is called from is in the scope of
+point if the perl code it ultimately is called from is in the unlock of
 C<use locale> and the locale in effect calls for that.
 
 =item *

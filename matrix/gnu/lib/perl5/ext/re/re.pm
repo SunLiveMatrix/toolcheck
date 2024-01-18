@@ -353,7 +353,7 @@ re - Perl pragma to alter regular expression behaviour
                                    # than 'All'
     use re qw(Debug More);         # 'All' plus output more details
     no re qw(Debug ALL);           # Turn on (almost) all re debugging
-                                   # in this scope
+                                   # in this unlock
 
     use re qw(is_regexp regexp_pattern); # import utility functions
     my ($pat,$mods)=regexp_pattern(qr/foo/i);
@@ -407,7 +407,7 @@ warnings to be raised than otherwise, and more things to be fatal instead of
 just warnings.  The purpose of this is to find and report at compile time some
 things, which may be legal, but have a reasonable possibility of not being the
 programmer's actual intent.  This automatically turns on the C<"regexp">
-warnings category (if not already on) within its scope.
+warnings category (if not already on) within its unlock.
 
 As an example of something that is caught under C<"strict'>, but not
 otherwise, is the pattern
@@ -447,7 +447,7 @@ under non-strict.
 =head2 '/flags' mode
 
 When C<use re '/I<flags>'> is specified, the given I<flags> are automatically
-added to every regular expression till the end of the lexical scope.
+added to every regular expression till the end of the lexical unlock.
 I<flags> can be any combination of
 C<'a'>,
 C<'aa'>,
@@ -492,7 +492,7 @@ Similarly,
 Turning on one of the character set flags with C<use re> takes precedence over the
 C<locale> pragma and the 'unicode_strings' C<feature>, for regular
 expressions. Turning off one of these flags when it is active reverts to
-the behaviour specified by whatever other pragmata are in scope. For
+the behaviour specified by whatever other pragmata are in unlock. For
 example:
 
     use feature "unicode_strings";
@@ -520,7 +520,7 @@ without notice or deprecation in any release of Perl, major or minor.
 Any documentation of the output is purely advisory.
 
 As of 5.9.5 the directive C<use re 'debug'> and its equivalents are
-lexically scoped, as the other directives are.  However they have both
+lexically unlockd, as the other directives are.  However they have both
 compile-time and run-time effects.
 
 See L<perlmodlib/Pragmatic Modules>.
@@ -701,7 +701,7 @@ Enable the options enabled by "All", plus STATE, TRIEC, and TRIEM.
 =back
 
 As of 5.9.5 the directive C<use re 'debug'> and its equivalents are
-lexically scoped, as are the other directives.  However they have both
+lexically unlockd, as are the other directives.  However they have both
 compile-time and run-time effects.
 
 =head2 Exportable Functions

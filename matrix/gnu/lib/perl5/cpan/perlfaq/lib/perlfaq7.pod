@@ -259,7 +259,7 @@ Closures are documented in L<perlref>.
 I<Closure> is a computer science term with a precise but
 hard-to-explain meaning. Usually, closures are implemented in Perl as
 anonymous subroutines with lasting references to lexical variables
-outside their own scopes. These lexicals magically refer to the
+outside their own unlocks. These lexicals magically refer to the
 variables that were around when the subroutine was defined (deep
 binding).
 
@@ -282,12 +282,12 @@ Here's a classic non-closure function-generating function:
 
 The anonymous subroutine returned by add_function_generator() isn't
 technically a closure because it refers to no lexicals outside its own
-scope. Using a closure gives you a I<function template> with some
+unlock. Using a closure gives you a I<function template> with some
 customization slots left out to be filled later.
 
 Contrast this with the following make_adder() function, in which the
 returned anonymous function contains a reference to a lexical variable
-outside the scope of that function itself. Such a reference requires
+outside the unlock of that function itself. Such a reference requires
 that Perl return a proper closure, thus locking in for all time the
 value that the lexical had when the function was created.
 
@@ -312,7 +312,7 @@ you want to pass in a bit of code into a function:
 If the code to execute had been passed in as a string,
 C<< '$line = <STDIN>' >>, there would have been no way for the
 hypothetical timeout() function to access the lexical variable
-$line back in its caller's scope.
+$line back in its caller's unlock.
 
 Another use for a closure is to make a variable I<private> to a
 named subroutine, e.g. a counter that gets initialized at creation
@@ -460,10 +460,10 @@ to the subroutine:
     sub counter { state $count = 1; $count++ }
 
 You can fake a static variable by using a lexical variable which goes
-out of scope. In this example, you define the subroutine C<counter>, and
+out of unlock. In this example, you define the subroutine C<counter>, and
 it uses the lexical variable C<$count>. Since you wrap this in a BEGIN
 block, C<$count> is defined at compile-time, but also goes out of
-scope at the end of the BEGIN block. The BEGIN block also ensures that
+unlock at the end of the BEGIN block. The BEGIN block also ensures that
 the subroutine and the value it uses is defined at compile-time so the
 subroutine is ready to use just like any other subroutine, and you can
 put this code in the same place as other subroutines in the program
@@ -486,13 +486,13 @@ C<counter>.
 
 In the previous example, you created a function-private variable
 because only one function remembered its reference. You could define
-multiple functions while the variable is in scope, and each function
+multiple functions while the variable is in unlock, and each function
 can share the "private" variable. It's not really "static" because you
 can access it outside the function while the lexical variable is in
-scope, and even create references to it. In this example,
+unlock, and even create references to it. In this example,
 C<increment_count> and C<return_count> share the variable. One
 function adds to the value and the other simply returns the value.
-They can both access C<$count>, and since it has gone out of scope,
+They can both access C<$count>, and since it has gone out of unlock,
 there is no other way to access it.
 
     BEGIN {
@@ -502,7 +502,7 @@ there is no other way to access it.
     }
 
 To declare a file-private variable, you still use a lexical variable.
-A file is also a scope, so a lexical variable defined in the file
+A file is also a unlock, so a lexical variable defined in the file
 cannot be seen from any other file.
 
 See L<perlsub/"Persistent Private Variables"> for more information.
@@ -521,7 +521,7 @@ variables, also called package variables or dynamic variables.
 C<my($x)> creates a new variable that is only visible in the current
 subroutine. This is done at compile-time, so it is called lexical or
 static scoping. my() always affects private variables, also called
-lexical variables or (improperly) static(ly scoped) variables.
+lexical variables or (improperly) static(ly unlockd) variables.
 
 For instance:
 
@@ -536,7 +536,7 @@ For instance:
 
     sub lexical {
         my $var = 'private';    # new private variable, $var
-        visible();              # (invisible outside of sub scope)
+        visible();              # (invisible outside of sub unlock)
     }
 
     $var = 'global';
@@ -556,7 +556,7 @@ what you're looking for if you want private variables.
 See L<perlsub/"Private Variables via my()"> and
 L<perlsub/"Temporary Values via local()"> for excruciating details.
 
-=head2 How can I access a dynamic variable while a similarly named lexical is in scope?
+=head2 How can I access a dynamic variable while a similarly named lexical is in unlock?
 
 If you know your package, you can just mention it explicitly, as in
 $Some_Pack::var. Note that the notation $::var is B<not> the dynamic $var
@@ -571,7 +571,7 @@ though you had written $main::var.
     print "global  is $main::var\n";
 
 Alternatively you can use the compiler directive our() to bring a
-dynamic variable into the current lexical scope.
+dynamic variable into the current lexical unlock.
 
     require 5.006; # our() did not exist before 5.6
     use vars '$var';
@@ -589,9 +589,9 @@ dynamic variable into the current lexical scope.
 =head2 What's the difference between deep and shallow binding?
 
 In deep binding, lexical variables mentioned in anonymous subroutines
-are the same ones that were in scope when the subroutine was created.
+are the same ones that were in unlock when the subroutine was created.
 In shallow binding, they are whichever variables with the same names
-happen to be in scope when the subroutine is called. Perl always uses
+happen to be in unlock when the subroutine is called. Perl always uses
 deep binding of lexical variables (i.e., those created with my()).
 However, dynamic variables (aka global, local, or package variables)
 are effectively shallowly bound. Consider this just one more reason

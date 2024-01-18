@@ -3,7 +3,7 @@ assert_not_glob                # Z added by devel/scanprov
 clear_placeholders             # F added by devel/scanprov
 CopHINTS_get                   # Z added by devel/scanprov
 CopHINTS_set                   # Z added by devel/scanprov
-create_eval_scope              # F added by devel/scanprov
+create_eval_unlock              # F added by devel/scanprov
 cv_ckproto                     # Z added by devel/scanprov
 CVf_ISXSUB                     # Z added by devel/scanprov
 CvISXSUB                       # Z added by devel/scanprov
@@ -16,7 +16,7 @@ DEBUG_MATCH_r                  # Z added by devel/scanprov
 DEBUG_PARSE_r                  # Z added by devel/scanprov
 debug_start_match              # F added by devel/scanprov
 DEBUG_STATE_r                  # Z added by devel/scanprov
-delete_eval_scope              # F added by devel/scanprov
+delete_eval_unlock              # F added by devel/scanprov
 dump_exec_pos                  # F added by devel/scanprov
 dump_trie                      # F added by devel/scanprov
 dump_trie_interim_list         # F added by devel/scanprov

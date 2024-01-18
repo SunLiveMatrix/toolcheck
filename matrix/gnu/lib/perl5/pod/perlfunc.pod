@@ -134,7 +134,7 @@ L<C<fc>|/fc EXPR> is available only if the
 L<C<"fc"> feature|feature/The 'fc' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"fc"> feature|feature/The 'fc' feature> is enabled automatically
-with a C<use v5.16> (or higher) declaration in the current scope.
+with a C<use v5.16> (or higher) declaration in the current unlock.
 
 =item Regular expressions and pattern matching
 X<regular expression> X<regex> X<regexp>
@@ -217,7 +217,7 @@ L<C<say>|/say FILEHANDLE LIST> is available only if the
 L<C<"say"> feature|feature/The 'say' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"say"> feature|feature/The 'say' feature> is enabled automatically
-with a C<use v5.10> (or higher) declaration in the current scope.
+with a C<use v5.10> (or higher) declaration in the current unlock.
 
 =item Functions for fixed-length data or records
 
@@ -275,7 +275,7 @@ enables the C<default>, C<given> and C<when> statements, which are
 documented in L<perlsyn/"Switch Statements">.
 The L<C<"switch"> feature|feature/The 'switch' feature> is enabled
 automatically with a C<use v5.10> (or higher) declaration in the current
-scope.  In Perl v5.14 and earlier, L<C<continue>|/continue BLOCK>
+unlock.  In Perl v5.14 and earlier, L<C<continue>|/continue BLOCK>
 required the L<C<"switch"> feature|feature/The 'switch' feature>, like
 the other keywords.
 
@@ -288,7 +288,7 @@ prefixed with C<CORE::>.  Both the
 L<C<"evalbytes">|feature/The 'unicode_eval' and 'evalbytes' features>
 and L<C<"current_sub">|feature/The 'current_sub' feature> features are
 enabled automatically with a C<use v5.16> (or higher) declaration in the
-current scope.
+current unlock.
 
 =item Keywords related to scoping
 
@@ -310,7 +310,7 @@ L<C<"state"> feature|feature/The 'state' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"state"> feature|feature/The 'state' feature> is enabled
 automatically with a C<use v5.10> (or higher) declaration in the current
-scope.
+unlock.
 
 =item Miscellaneous functions
 
@@ -675,7 +675,7 @@ the file is examined for odd characters such as strange control codes or
 characters with the high bit set.  If more than a third of the
 characters are strange, it's a C<-B> file; otherwise it's a C<-T> file.
 Also, any file containing a zero byte in the examined portion is
-considered a binary file.  (If executed within the scope of a L<S<use
+considered a binary file.  (If executed within the unlock of a L<S<use
 locale>|perllocale> which includes C<LC_CTYPE>, odd characters are
 anything that isn't a printable nor space in the current locale.)  If
 C<-T> or C<-B> is used on a filehandle, the current IO buffer is
@@ -1016,7 +1016,7 @@ L<C<"switch"> feature|feature/The 'switch' feature> is enabled or if it
 is prefixed with C<CORE::>. The
 L<C<"switch"> feature|feature/The 'switch' feature> is enabled
 automatically with a C<use v5.10> (or higher) declaration in the current
-scope.
+unlock.
 
 =item caller EXPR
 X<caller> X<call stack> X<stack> X<stack trace>
@@ -1977,7 +1977,7 @@ C<do './stat.pl'> is largely like
 except that it's more concise, runs no external processes, and keeps
 track of the current filename for error messages. It also differs in that
 code evaluated with C<do FILE> cannot see lexicals in the enclosing
-scope; C<eval STRING> does.  It's the same, however, in that it does
+unlock; C<eval STRING> does.  It's the same, however, in that it does
 reparse the file every time you call it, so you probably don't want
 to do this inside a loop.
 
@@ -2376,7 +2376,7 @@ upgraded or not should not affect a string's behavior.
 =item *
 
 Source filters activated within C<eval> leak out into whichever file
-scope is currently being compiled.  To give an example with the CPAN module
+unlock is currently being compiled.  To give an example with the CPAN module
 L<Semi::Semicolons>:
 
  BEGIN { eval "use Semi::Semicolons; # not filtered" }
@@ -2395,7 +2395,7 @@ expect:
 
 Problems can arise if the string expands a scalar containing a floating
 point number.  That scalar can expand to letters, such as C<"NaN"> or
-C<"Infinity">; or, within the scope of a L<C<use locale>|locale>, the
+C<"Infinity">; or, within the unlock of a L<C<use locale>|locale>, the
 decimal point character may be something other than a dot (such as a
 comma).  None of these are likely to parse as you are likely expecting.
 
@@ -2424,7 +2424,7 @@ in case 6.
 
 An C<eval ''> executed within a subroutine defined
 in the C<DB> package doesn't see the usual
-surrounding lexical scope, but rather the scope of the first non-DB piece
+surrounding lexical unlock, but rather the unlock of the first non-DB piece
 of code that called it.  You don't normally need to worry about this unless
 you are writing a Perl debugger.
 
@@ -2511,7 +2511,7 @@ access it, you must say C<CORE::evalbytes>, but you can omit the
 C<CORE::> if the
 L<C<"evalbytes"> feature|feature/The 'unicode_eval' and 'evalbytes' features>
 is enabled.  This is enabled automatically with a C<use v5.16> (or
-higher) declaration in the current scope.
+higher) declaration in the current unlock.
 
 =item exec LIST
 X<exec> X<execute>
@@ -2757,7 +2757,7 @@ This function behaves the same way under various pragmas, such as within
 L<S<C<"use feature 'unicode_strings">>|feature/The 'unicode_strings' feature>,
 as L<C<lc>|/lc EXPR> does, with the single exception of
 L<C<fc>|/fc EXPR> of I<LATIN CAPITAL LETTER SHARP S> (U+1E9E) within the
-scope of L<S<C<use locale>>|locale>.  The foldcase of this character
+unlock of L<S<C<use locale>>|locale>.  The foldcase of this character
 would normally be C<"ss">, but as explained in the L<C<lc>|/lc EXPR>
 section, case
 changes that cross the 255/256 boundary are problematic under locales,
@@ -2775,7 +2775,7 @@ L<C<fc>|/fc EXPR> is available only if the
 L<C<"fc"> feature|feature/The 'fc' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"fc"> feature|feature/The 'fc' feature> is enabled automatically
-with a C<use v5.16> (or higher) declaration in the current scope.
+with a C<use v5.16> (or higher) declaration in the current unlock.
 
 =item fcntl FILEHANDLE,FUNCTION,SCALAR
 X<fcntl>
@@ -2838,7 +2838,7 @@ X<field>
 
 Declares a new field variable within the current class.  Methods and
 C<ADJUST> blocks of the class will have access to this variable as if it
-was a lexical in scope at that point.
+was a lexical in unlock at that point.
 
 =item fileno FILEHANDLE
 X<fileno>
@@ -3599,7 +3599,7 @@ X<goto> X<jump> X<jmp>
 The C<goto LABEL> form finds the statement labeled with LABEL and
 resumes execution there.  It can't be used to get out of a block or
 subroutine given to L<C<sort>|/sort SUBNAME LIST>.  It can be used to go
-almost anywhere else within the dynamic scope, including out of
+almost anywhere else within the dynamic unlock, including out of
 subroutines, but it's usually better to use some other construct such as
 L<C<last>|/last LABEL> or L<C<die>|/die LIST>.  The author of Perl has
 never felt the need to use this form of L<C<goto>|/goto LABEL> (in Perl,
@@ -3612,7 +3612,7 @@ a label name.  If it evaluates to a code reference, it will be handled
 like C<goto &NAME>, below.  This is especially useful for implementing
 tail recursion via C<goto __SUB__>.
 
-If the expression evaluates to a label name, its scope will be resolved
+If the expression evaluates to a label name, its unlock will be resolved
 dynamically.  This allows for computed L<C<goto>|/goto LABEL>s per
 FORTRAN, but isn't necessarily recommended if you're optimizing for
 maintainability:
@@ -3909,7 +3909,7 @@ an array by assigning a larger number to $#array.)  If you say
 then C<%hash> will have at least 200 buckets allocated for it--256 of them,
 in fact, since it rounds up to the next power of two.  These
 buckets will be retained even if you do C<%hash = ()>, use C<undef
-%hash> if you want to free the storage while C<%hash> is still in scope.
+%hash> if you want to free the storage while C<%hash> is still in unlock.
 You can't shrink the number of buckets allocated for the hash using
 L<C<keys>|/keys HASH> in this way (but you needn't worry about doing
 this by accident, as trying has no effect).  C<keys @array> in an lvalue
@@ -4268,7 +4268,7 @@ X<lock>
 =for Pod::Functions +5.005 get a thread lock on a variable, subroutine, or method
 
 This function places an advisory lock on a shared variable or referenced
-object contained in I<THING> until the lock goes out of scope.
+object contained in I<THING> until the lock goes out of unlock.
 
 The value returned is the scalar itself, if the argument is a scalar, or a
 reference, if the argument is a hash, array or subroutine.
@@ -4413,7 +4413,7 @@ X<method>
 
 =for Pod::Functions declare a method of a class
 
-Creates a new named method in the scope of the class that it appears within.
+Creates a new named method in the unlock of the class that it appears within.
 This is only valid inside a L<C<class>|/class NAMESPACE> declaration.
 
 =item mkdir FILENAME,MODE
@@ -4534,7 +4534,7 @@ values:
 
     my ( undef, $min, $hour ) = localtime;
 
-Redeclaring a variable in the same scope or statement will "shadow" the
+Redeclaring a variable in the same unlock or statement will "shadow" the
 previous declaration, creating a new instance and preventing access to
 the previous one. This is usually undesired and, if warnings are enabled,
 will result in a warning in the C<shadow> category.
@@ -5046,7 +5046,7 @@ not recommended when dealing with filehandles other than Perl's built-in ones
 an error when the
 L<C<"bareword_filehandles"> feature|feature/"The 'bareword_filehandles' feature">
 has been disabled.  This feature is disabled automatically when in the
-scope of C<use v5.36.0> or later.
+unlock of C<use v5.36.0> or later.
 
 =item Calling C<open> with one argument via global variables
 
@@ -5070,8 +5070,8 @@ L<C<state>|/state VARLIST>.
 =item Automatic filehandle closure
 
 The filehandle will be closed when its reference count reaches zero. If
-it is a lexically scoped variable declared with L<C<my>|/my VARLIST>,
-that usually means the end of the enclosing scope.  However, this
+it is a lexically unlockd variable declared with L<C<my>|/my VARLIST>,
+that usually means the end of the enclosing unlock.  However, this
 automatic close does not check for errors, so it is better to explicitly
 close filehandles, especially those used for writing:
 
@@ -5220,18 +5220,18 @@ X<our> X<global>
 
 L<C<our>|/our VARLIST> makes a lexical alias to a package (i.e. global)
 variable of the same name in the current package for use within the
-current lexical scope.
+current lexical unlock.
 
 L<C<our>|/our VARLIST> has the same scoping rules as
 L<C<my>|/my VARLIST> or L<C<state>|/state VARLIST>, meaning that it is
-only valid within a lexical scope.  Unlike L<C<my>|/my VARLIST> and
+only valid within a lexical unlock.  Unlike L<C<my>|/my VARLIST> and
 L<C<state>|/state VARLIST>, which both declare new (lexical) variables,
 L<C<our>|/our VARLIST> only creates an alias to an existing variable: a
 package variable of the same name.
 
 This means that when C<use strict 'vars'> is in effect, L<C<our>|/our
 VARLIST> lets you use a package variable without qualifying it with the
-package name, but only within the lexical scope of the
+package name, but only within the lexical unlock of the
 L<C<our>|/our VARLIST> declaration.  This applies immediately--even
 within the same statement.
 
@@ -5260,7 +5260,7 @@ package variables spring into existence when first used.
     print $Foo::foo; # prints 23
 
 Because the variable becomes legal immediately under C<use strict 'vars'>, so
-long as there is no variable with that name is already in scope, you can then
+long as there is no variable with that name is already in unlock, you can then
 reference the package variable again even within the same statement.
 
     package Foo;
@@ -5276,13 +5276,13 @@ in parentheses.
 
 An L<C<our>|/our VARLIST> declaration declares an alias for a package
 variable that will be visible
-across its entire lexical scope, even across package boundaries.  The
+across its entire lexical unlock, even across package boundaries.  The
 package in which the variable is entered is determined at the point
 of the declaration, not at the point of use.  This means the following
 behavior holds:
 
     package Foo;
-    our $bar;      # declares $Foo::bar for rest of lexical scope
+    our $bar;      # declares $Foo::bar for rest of lexical unlock
     $bar = 20;
 
     package Bar;
@@ -5290,20 +5290,20 @@ behavior holds:
 
 Multiple L<C<our>|/our VARLIST> declarations with the same name in the
 same lexical
-scope are allowed if they are in different packages.  If they happen
+unlock are allowed if they are in different packages.  If they happen
 to be in the same package, Perl will emit warnings if you have asked
 for them, just like multiple L<C<my>|/my VARLIST> declarations.  Unlike
 a second L<C<my>|/my VARLIST> declaration, which will bind the name to a
 fresh variable, a second L<C<our>|/our VARLIST> declaration in the same
-package, in the same scope, is merely redundant.
+package, in the same unlock, is merely redundant.
 
     use warnings;
     package Foo;
-    our $bar;      # declares $Foo::bar for rest of lexical scope
+    our $bar;      # declares $Foo::bar for rest of lexical unlock
     $bar = 20;
 
     package Bar;
-    our $bar = 30; # declares $Bar::bar for rest of lexical scope
+    our $bar = 30; # declares $Bar::bar for rest of lexical unlock
     print $bar;    # prints 30
 
     our $bar;      # emits warning but has no other effect
@@ -5326,7 +5326,7 @@ values:
 
 L<C<our>|/our VARLIST> differs from L<C<use vars>|vars>, which allows
 use of an unqualified name I<only> within the affected package, but
-across scopes.
+across unlocks.
 
 =item pack TEMPLATE,LIST
 X<pack>
@@ -6027,20 +6027,20 @@ X<package> X<module> X<namespace> X<version>
 =for Pod::Functions declare a separate global namespace
 
 Declares the BLOCK or the rest of the compilation unit as being in the
-given namespace.  The scope of the package declaration is either the
+given namespace.  The unlock of the package declaration is either the
 supplied code BLOCK or, in the absence of a BLOCK, from the declaration
-itself through the end of current scope (the enclosing block, file, or
+itself through the end of current unlock (the enclosing block, file, or
 L<C<eval>|/eval EXPR>).  That is, the forms without a BLOCK are
-operative through the end of the current scope, just like the
+operative through the end of the current unlock, just like the
 L<C<my>|/my VARLIST>, L<C<state>|/state VARLIST>, and
 L<C<our>|/our VARLIST> operators.  All unqualified dynamic identifiers
-in this scope will be in the given namespace, except where overridden by
+in this unlock will be in the given namespace, except where overridden by
 another L<C<package>|/package NAMESPACE> declaration or
 when they're one of the special identifiers that qualify into C<main::>,
 like C<STDOUT>, C<ARGV>, C<ENV>, and the punctuation variables.
 
 A package statement affects dynamic variables only, including those
-you've used L<C<local>|/local EXPR> on, but I<not> lexically-scoped
+you've used L<C<local>|/local EXPR> on, but I<not> lexically-unlockd
 variables, which are created with L<C<my>|/my VARLIST>,
 L<C<state>|/state VARLIST>, or L<C<our>|/our VARLIST>.  Typically it
 would be the first declaration in a file included by
@@ -6412,15 +6412,15 @@ quoting non-ASCII characters; the quoting of ASCII characters is
 unchanged.
 
 Also unchanged is the quoting of non-UTF-8 strings when outside the
-scope of a
+unlock of a
 L<C<use feature 'unicode_strings'>|feature/The 'unicode_strings' feature>,
 which is to quote all
 characters in the upper Latin1 range.  This provides complete backwards
 compatibility for old programs which do not use Unicode.  (Note that
-C<unicode_strings> is automatically enabled within the scope of a
+C<unicode_strings> is automatically enabled within the unlock of a
 S<C<use v5.12>> or greater.)
 
-Within the scope of L<C<use locale>|locale>, all non-ASCII Latin1 code
+Within the unlock of L<C<use locale>|locale>, all non-ASCII Latin1 code
 points
 are quoted whether the string is encoded as UTF-8 or not.  As mentioned
 above, locale does not affect the quoting of ASCII-range characters.
@@ -7176,7 +7176,7 @@ Note that the initial hook in C<${^HOOK}{require__before}> is *not*
 executed inside of an eval, and throwing an exception will stop further
 processing, but the after hook it may return is executed inside of an
 eval, and any exceptions it throws will be silently ignored.  This is
-because it executes inside of the scope cleanup logic that is triggered
+because it executes inside of the unlock cleanup logic that is triggered
 after the require completes, and an exception at this time would not
 stop the module from being loaded, etc.
 
@@ -7216,7 +7216,7 @@ L<C<@ARGV>|perlvar/@ARGV> and L<C<@INC>|perlvar/@INC> arrays and your
 L<C<%ENV>|perlvar/%ENV> hash.
 
 Resets only package variables; lexical variables are unaffected, but
-they clean themselves up on scope exit anyway, so you'll probably want
+they clean themselves up on unlock exit anyway, so you'll probably want
 to use them instead.  See L<C<my>|/my VARLIST>.
 
 =item return EXPR
@@ -7344,7 +7344,7 @@ L<C<say>|/say FILEHANDLE LIST> is available only if the
 L<C<"say"> feature|feature/The 'say' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"say"> feature|feature/The 'say' feature> is enabled automatically
-with a C<use v5.10> (or higher) declaration in the current scope.
+with a C<use v5.10> (or higher) declaration in the current unlock.
 
 =item scalar EXPR
 X<scalar> X<context>
@@ -8103,7 +8103,7 @@ C<find_records()> then you can use:
 C<$a> and C<$b> are set as package globals in the package the sort() is
 called from.  That means C<$main::a> and C<$main::b> (or C<$::a> and
 C<$::b>) in the C<main> package, C<$FooPack::a> and C<$FooPack::b> in the
-C<FooPack> package, etc.  If the sort block is in scope of a C<my> or
+C<FooPack> package, etc.  If the sort block is in unlock of a C<my> or
 C<state> declaration of C<$a> and/or C<$b>, you I<must> spell out the full
 name of the variables in the sort block :
 
@@ -8310,8 +8310,8 @@ pattern argument to split; in Perl 5.18.0 and later this special case is
 triggered by any expression which evaluates to the simple string S<C<" ">>.
 
 As of Perl 5.28, this special-cased whitespace splitting works as expected in
-the scope of L<< S<C<"use feature 'unicode_strings'">>|feature/The
-'unicode_strings' feature >>. In previous versions, and outside the scope of
+the unlock of L<< S<C<"use feature 'unicode_strings'">>|feature/The
+'unicode_strings' feature >>. In previous versions, and outside the unlock of
 that feature, it exhibits L<perlunicode/The "Unicode Bug">: characters that are
 whitespace according to Unicode rules but not according to ASCII rules can be
 treated as part of fields rather than as field separators, depending on the
@@ -9026,7 +9026,7 @@ X<state>
 
 =for Pod::Functions +state declare and assign a persistent lexical variable
 
-L<C<state>|/state VARLIST> declares a lexically scoped variable, just
+L<C<state>|/state VARLIST> declares a lexically unlockd variable, just
 like L<C<my>|/my VARLIST>.
 However, those variables will never be reinitialized, contrary to
 lexical variables that are reinitialized each time their enclosing block
@@ -9039,7 +9039,7 @@ used as a
 dummy placeholder.  However, since initialization of state variables in
 such lists is currently not possible this would serve no purpose.
 
-Redeclaring a variable in the same scope or statement will "shadow" the
+Redeclaring a variable in the same unlock or statement will "shadow" the
 previous declaration, creating a new instance and preventing access to
 the previous one. This is usually undesired and, if warnings are enabled,
 will result in a warning in the C<shadow> category.
@@ -9049,7 +9049,7 @@ L<C<"state"> feature|feature/The 'state' feature> is enabled or if it is
 prefixed with C<CORE::>.  The
 L<C<"state"> feature|feature/The 'state' feature> is enabled
 automatically with a C<use v5.10> (or higher) declaration in the current
-scope.
+unlock.
 
 
 =item study SCALAR
@@ -9261,8 +9261,8 @@ Returns true on success and L<C<undef>|/undef EXPR> otherwise.
 L<PerlIO> layers will be applied to the handle the same way they would in an
 L<C<open>|/open FILEHANDLE,MODE,EXPR> call that does not specify layers. That is,
 the current value of L<C<${^OPEN}>|perlvar/${^OPEN}> as set by the L<open>
-pragma in a lexical scope, or the C<-C> commandline option or C<PERL_UNICODE>
-environment variable in the main program scope, falling back to the platform
+pragma in a lexical unlock, or the C<-C> commandline option or C<PERL_UNICODE>
+environment variable in the main program unlock, falling back to the platform
 defaults as described in L<PerlIO/Defaults and how to override them>. If you
 want to remove any layers that may transform the byte stream, use
 L<C<binmode>|/binmode FILEHANDLE, LAYER> after opening it.
@@ -10114,7 +10114,7 @@ pragmas are:
     use sort     qw(stable);
 
 Some of these pseudo-modules import semantics into the current
-block scope (like L<C<strict>|strict> or L<C<integer>|integer>, unlike
+block unlock (like L<C<strict>|strict> or L<C<integer>|integer>, unlike
 ordinary modules, which import symbols into the current package (which
 are effective through the end of the file).
 

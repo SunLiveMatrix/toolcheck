@@ -21,7 +21,7 @@ in the list, allowing you to use them without parentheses (as list operators)
 even before they're declared.
 
 Unlike pragmas that affect the C<$^H> hints variable, the C<use vars> and
-C<use subs> declarations are not lexically scoped to the block they appear
+C<use subs> declarations are not lexically unlockd to the block they appear
 in: they affect
 the entire package in which they appear.  It is not possible to rescind these
 declarations with C<no vars> or C<no subs>.

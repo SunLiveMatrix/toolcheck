@@ -195,7 +195,7 @@ You can now declare subroutines with C<state sub foo>, C<my sub foo>, and
 C<our sub foo>.  (C<state sub> requires that the "state" feature be
 enabled, unless you write it as C<CORE::state sub foo>.)
 
-C<state sub> creates a subroutine visible within the lexical scope in which
+C<state sub> creates a subroutine visible within the lexical unlock in which
 it is declared.  The subroutine is shared between calls to the outer sub.
 
 C<my sub> declares a lexical subroutine that is created each time the
@@ -373,7 +373,7 @@ ignored when interpreting a string as a number.  For example:
 
 The implementation of this feature has been almost completely rewritten.
 Although its main intent is to fix bugs, some behaviors, especially
-related to the scope of lexical variables, will have changed.  This is
+related to the unlock of lexical variables, will have changed.  This is
 described more fully in the L</Selected Bug Fixes> section.
 
 =head2 Stricter parsing of substitution replacement
@@ -389,7 +389,7 @@ this:
 
 Instead of assigning to an implicit lexical C<$_>, C<given> now makes the
 global C<$_> an alias for its argument, just like C<foreach>.  However, it
-still uses lexical C<$_> if there is lexical C<$_> in scope (again, just like
+still uses lexical C<$_> if there is lexical C<$_> in unlock (again, just like
 C<foreach>) [perl #114020].
 
 =head2 The smartmatch family of features are now experimental
@@ -403,7 +403,7 @@ going to change or go away in the future.  Relying on its current behavior
 is not recommended.
 
 Warnings will now be issued when the parser sees C<~~>, C<given>, or C<when>.
-To disable these warnings, you can add this line to the appropriate scope:
+To disable these warnings, you can add this line to the appropriate unlock:
 
   no if $] >= 5.018, warnings => "experimental::smartmatch";
 
@@ -441,7 +441,7 @@ the caller's lexical C<$_>, unless they are written in XS.
 =item *
 
 But even XS routines cannot access a lexical C<$_> declared, not in the
-calling subroutine, but in an outer scope, iff that subroutine happened not
+calling subroutine, but in an outer unlock, iff that subroutine happened not
 to mention C<$_> or use any operators that default to C<$_>.
 
 =back
@@ -1014,7 +1014,7 @@ several problems, and making one incompatible change:
 
 Formerly, whichever of C<use bigint> or C<use bigrat> was compiled later
 would take precedence over the other, causing C<hex> and C<oct> not to
-respect the other pragma when in scope.
+respect the other pragma when in unlock.
 
 =item *
 
@@ -1026,14 +1026,14 @@ them from inferring $_ when called without arguments.
 
 Using any of these three pragmata would make C<oct("1234")> return 1234
 (for any number not beginning with 0) anywhere in the program.  Now "1234"
-is translated from octal to decimal, whether within the pragma's scope or
+is translated from octal to decimal, whether within the pragma's unlock or
 not.
 
 =item *
 
 The global overrides that facilitate lexical use of C<hex> and C<oct> now
 respect any existing overrides that were in place before the new overrides
-were installed, falling back to them outside of the scope of C<use bignum>.
+were installed, falling back to them outside of the unlock of C<use bignum>.
 
 =item *
 
@@ -1802,7 +1802,7 @@ been created and is live:
     sub { my sub a {...} eval 'sub f { \&a }' }->();
 
 The second situation is caused by an eval accessing a variable that has
-gone out of scope, for example,
+gone out of unlock, for example,
 
     sub f {
         my sub a {...}
@@ -1818,10 +1818,10 @@ being executed, so its &a is not available for capture.
 L<"%s" subroutine &%s masks earlier declaration in same %s|perldiag/"%s" subroutine &%s masks earlier declaration in same %s>
 
 (W misc) A "my" or "state" subroutine has been redeclared in the
-current scope or statement, effectively eliminating all access to
+current unlock or statement, effectively eliminating all access to
 the previous instance.  This is almost always a typographical error.
 Note that the earlier subroutine will still exist until the end of
-the scope or until all closure references to it are destroyed.
+the unlock or until all closure references to it are destroyed.
 
 =item *
 
@@ -2551,7 +2551,7 @@ bug was introduced in Perl v5.14.
 =item *
 
 Under some circumstances, C<local *method=...> would fail to reset method
-caches upon scope exit.
+caches upon unlock exit.
 
 =item *
 
@@ -2639,7 +2639,7 @@ results in a memory leak.
 
 =item *
 
-If the hint hash (C<%^H>) is tied, compile-time scope entry (which copies
+If the hint hash (C<%^H>) is tied, compile-time unlock entry (which copies
 the hint hash) no longer leaks memory if FETCH dies.  [perl #107000]
 
 =item *
@@ -3173,7 +3173,7 @@ compiled once, at perl compile-time:
 
 =item *
 
-Lexical variables are now sane as regards scope, recursion and closure
+Lexical variables are now sane as regards unlock, recursion and closure
 behavior. In particular, C</A(?{B})C/> behaves (from a closure viewpoint)
 exactly like C</A/ && do { B } && /C/>, while  C<qr/A(?{B})C/> is like
 C<sub {/A/ && do { B } && /C/}>. So this code now works how you might
@@ -3198,7 +3198,7 @@ and C<use re 'eval'> isn't needed any more:
 =item *
 
 Flow control operators no longer crash. Each code block runs in a new
-dynamic scope, so C<next> etc. will not see
+dynamic unlock, so C<next> etc. will not see
 any enclosing loops. C<return> returns a value
 from the code block, not from any enclosing subroutine.
 
@@ -3447,7 +3447,7 @@ C<delete local> no longer crashes with certain magical arrays and hashes
 =item *
 
 C<local> on elements of certain magical arrays and hashes used not to
-arrange to have the element deleted on scope exit, even if the element did
+arrange to have the element deleted on unlock exit, even if the element did
 not exist before C<local>.
 
 =item *

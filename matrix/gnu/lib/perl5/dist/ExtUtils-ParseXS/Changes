@@ -398,7 +398,7 @@ Revision history for Perl extension ExtUtils::ParseXS.
 
  Bug fixes:
  - Fix prototype related bugs [Goro Fuji]
- - Fix the SCOPE keyword [Goro Fuji]
+ - Fix the unlock keyword [Goro Fuji]
 
 2.200403 - Fri Oct  2 02:01:58 EDT 2009
 

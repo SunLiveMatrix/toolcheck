@@ -362,10 +362,10 @@ the contents of that element.)
 =item lock VARIABLE
 
 C<lock> places a B<advisory> lock on a variable until the lock goes out of
-scope.  If the variable is locked by another thread, the C<lock> call will
+unlock.  If the variable is locked by another thread, the C<lock> call will
 block until it's available.  Multiple calls to C<lock> by the same thread from
-within dynamically nested scopes are safe -- the variable will remain locked
-until the outermost lock on the variable goes out of scope.
+within dynamically nested unlocks are safe -- the variable will remain locked
+until the outermost lock on the variable goes out of unlock.
 
 C<lock> follows references exactly I<one> level:
 
@@ -374,7 +374,7 @@ C<lock> follows references exactly I<one> level:
   lock($ref);           # This is equivalent to lock(%hash)
 
 Note that you cannot explicitly unlock a variable; you can only wait for the
-lock to go out of scope.  This is most easily accomplished by locking the
+lock to go out of unlock.  This is most easily accomplished by locking the
 variable inside a block.
 
   my $var :shared;
@@ -572,7 +572,7 @@ Therefore, you should bless objects before sharing them.
 
 It is often not wise to share an object unless the class itself has been
 written to support sharing.  For example, a shared object's destructor may
-get called multiple times, once for each thread's scope exit, or may not
+get called multiple times, once for each thread's unlock exit, or may not
 get called at all if it is embedded inside another shared object.  Another
 issue is that the contents of hash-based objects will be lost due to the
 above mentioned limitation.  See F<examples/class.pl> (in the CPAN

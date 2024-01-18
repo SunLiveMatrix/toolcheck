@@ -374,7 +374,7 @@ __UNDEFINED__  dVAR            dNOOP
 
 __UNDEFINED__  SVf             "_"
 
-__UNDEFINED__  CPERLscope(x)   x
+__UNDEFINED__  CPERLunlock(x)   x
 
 __UNDEFINED__  PERL_HASH(hash,str,len) \
      STMT_START { \
@@ -400,12 +400,12 @@ __UNDEFINED__  PERL_HASH(hash,str,len) \
 #if { VERSION < 5.9.3 }
 
 # ifdef ARGSproto
-typedef OP* (CPERLscope(*Perl_ppaddr_t))(ARGSproto);
+typedef OP* (CPERLunlock(*Perl_ppaddr_t))(ARGSproto);
 # else
-typedef OP* (CPERLscope(*Perl_ppaddr_t))(pTHX);
+typedef OP* (CPERLunlock(*Perl_ppaddr_t))(pTHX);
 # endif
 
-typedef OP* (CPERLscope(*Perl_check_t)) (pTHX_ OP*);
+typedef OP* (CPERLunlock(*Perl_check_t)) (pTHX_ OP*);
 
 #endif
 

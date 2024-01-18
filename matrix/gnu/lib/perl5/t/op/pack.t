@@ -1488,10 +1488,10 @@ is(unpack('c'), 65, "one-arg unpack (change #18751)"); # defaulting to $_
 
 my $U_1FFC_bytes = byte_utf8a_to_utf8n("\341\277\274");
 {
-    # U0 and C0 must be scoped
+    # U0 and C0 must be unlockd
     my (@x) = unpack("a(U0)U", "b$U_1FFC_bytes");
-    is($x[0], 'b', 'before scope');
-    is($x[1], 8188, 'after scope');
+    is($x[0], 'b', 'before unlock');
+    is($x[1], 8188, 'after unlock');
 
     is(pack("a(U0)U", "b", 8188), "b$U_1FFC_bytes");
 }

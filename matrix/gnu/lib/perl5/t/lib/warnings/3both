@@ -197,7 +197,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 7.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 BEGIN {  $^W = 1 }
 {
     no warnings ;
@@ -210,7 +210,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 BEGIN {  $^W = 1 }
 use warnings;
 {
@@ -225,7 +225,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 BEGIN {  $^W = 0 }
 {
     use warnings 'uninitialized' ;
@@ -239,7 +239,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 2.
 Use of uninitialized value $b in scalar chop at - line 9.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 BEGIN {  $^W = 0 }
 {
     use warnings 'uninitialized' ;
@@ -253,7 +253,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 10.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 BEGIN {  $^W = 1 }
 {
     no warnings ;

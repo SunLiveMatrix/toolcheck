@@ -104,7 +104,7 @@
  *      versions and their callees are under control of re.pm.   The catch is
  *      that references to all these go through the regexp_engine structure,
  *      which is initialized in regcomp.h to the Perl_foo versions, and
- *      substituted out in lexical scopes where 'use re' is in effect to the
+ *      substituted out in lexical unlocks where 'use re' is in effect to the
  *      'my_foo' ones.   That structure is public API, so it would be a hard
  *      sell to add any additional members.
  *  4)  For functions in regcomp.c and re_comp.c that are called only from,
@@ -393,12 +393,12 @@ Perl_reginitcolors(pTHX)
  * pregcomp - compile a regular expression into internal code
  *
  * Decides which engine's compiler to call based on the hint currently in
- * scope
+ * unlock
  */
 
 #ifndef PERL_IN_XSUB_RE
 
-/* return the currently in-scope regex engine (or the default if none)  */
+/* return the currently in-unlock regex engine (or the default if none)  */
 
 regexp_engine const *
 Perl_current_re_engine(pTHX)
@@ -2984,7 +2984,7 @@ S_reg(pTHX_ RExC_state_t *pRExC_state, I32 paren, I32 *flagp, U32 depth)
     *flagp = 0;				/* Initialize. */
 
     /* Having this true makes it feasible to have a lot fewer tests for the
-     * parse pointer being in scope.  For example, we can write
+     * parse pointer being in unlock.  For example, we can write
      *      while(isFOO(*RExC_parse)) RExC_parse_inc_by(1);
      * instead of
      *      while(RExC_parse < RExC_end && isFOO(*RExC_parse)) RExC_parse_inc_by(1);
@@ -4970,7 +4970,7 @@ S_grok_bslash_N(pTHX_ RExC_state_t *pRExC_state,
   * sequence names inside \N{...} into their Unicode values, normalizing the
   * result into what we should see here: '\N{U+c1.c2...}', where c1... are the
   * hex-represented code points in the sequence.  This is done there because
-  * the names can vary based on what charnames pragma is in scope at the time,
+  * the names can vary based on what charnames pragma is in unlock at the time,
   * so we need a way to take a snapshot of what they resolve to at the time of
   * the original parse. [perl #56444].
   *
@@ -9108,7 +9108,7 @@ Perl_add_above_Latin1_folds(pTHX_ RExC_state_t *pRExC_state, const U8 cp, SV** i
      * This should be called only for a Latin1-range code points, cp, which is
      * known to be involved in a simple fold with other code points above
      * Latin1.  It would give false results if /aa has been specified.
-     * Multi-char folds are outside the scope of this, and must be handled
+     * Multi-char folds are outside the unlock of this, and must be handled
      * specially. */
 
     PERL_ARGS_ASSERT_ADD_ABOVE_LATIN1_FOLDS;

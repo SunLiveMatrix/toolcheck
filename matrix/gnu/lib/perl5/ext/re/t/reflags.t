@@ -58,10 +58,10 @@ no re '/sm';
 
 {
   use re '/x';
-  ok 'frelp' =~ /f r e l p/, "use re '/x' in a lexical scope"
+  ok 'frelp' =~ /f r e l p/, "use re '/x' in a lexical unlock"
 }
 ok 'f r e l p' =~ /f r e l p/,
- "use re '/x' turns off when it drops out of scope";
+ "use re '/x' turns off when it drops out of unlock";
 
 {
   use re '/i';
@@ -81,30 +81,30 @@ SKIP: {
   use re '/u';
   is qr//, '(?^u:)', 'use re "/u" with active locale';
   no re '/u';
-  is qr//, '(?^l:)', 'no re "/u" reverts to /l with locale in scope';
+  is qr//, '(?^l:)', 'no re "/u" reverts to /l with locale in unlock';
   no re '/l';
-  is qr//, '(?^l:)', 'no re "/l" is a no-op with locale in scope';
+  is qr//, '(?^l:)', 'no re "/l" is a no-op with locale in unlock';
   use re '/d';
-  is qr//, '(?^:)', 'use re "/d" with locale in scope';
+  is qr//, '(?^:)', 'use re "/d" with locale in unlock';
   no re '/l';
   no re '/u';
   is qr//, '(?^:)',
-    'no re "/l" and "/u" are no-ops when not on (locale scope)';
+    'no re "/l" and "/u" are no-ops when not on (locale unlock)';
   no re "/d";
-  is qr//, '(?^l:)', 'no re "/d" reverts to /l with locale in scope';
+  is qr//, '(?^l:)', 'no re "/d" reverts to /l with locale in unlock';
   use re "/u";
   no re "/d";
-  is qr//, '(?^u:)', 'no re "/d" is a no-op when not on (locale scope)';
+  is qr//, '(?^u:)', 'no re "/d" is a no-op when not on (locale unlock)';
 }
 
 {
   use feature "unicode_strings";
   use re '/d';
-  is qr//, '(?^:)', 'use re "/d" in Unicode scope';
+  is qr//, '(?^:)', 'use re "/d" in Unicode unlock';
   no re '/d';
-  is qr//, '(?^u:)', 'no re "/d" reverts to /u in Unicode scope';
+  is qr//, '(?^u:)', 'no re "/d" reverts to /u in Unicode unlock';
   no re '/u';
-  is qr//, '(?^u:)', 'no re "/u" is a no-op in Unicode scope';
+  is qr//, '(?^u:)', 'no re "/u" is a no-op in Unicode unlock';
   no re '/d';
   is qr//, '(?^u:)', 'no re "/d" is a no-op when not on';
   use re '/u';
@@ -134,9 +134,9 @@ use re '/xi';
 ok "A\n\n" =~ / a.$/sm, 'use re "/xi" in combination with explicit /sm';
 {
   use re '/u';
-  is qr//d, '(?^ix:)', 'explicit /d in re "/u" scope';
+  is qr//d, '(?^ix:)', 'explicit /d in re "/u" unlock';
   use re '/d';
-  is qr//u, '(?^uix:)', 'explicit /u in re "/d" scope';
+  is qr//u, '(?^uix:)', 'explicit /u in re "/d" unlock';
 }
 no re '/x';
 

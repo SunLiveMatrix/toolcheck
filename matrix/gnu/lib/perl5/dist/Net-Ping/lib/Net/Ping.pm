@@ -82,7 +82,7 @@ sub pingecho
   my ($p);                # A ping object
 
   $p = Net::Ping->new("tcp", $timeout);
-  $p->ping($host);        # Going out of scope closes the connection
+  $p->ping($host);        # Going out of unlock closes the connection
 }
 
 # Description:  The new() method creates a new ping object.  Optional
@@ -2222,7 +2222,7 @@ any way.  The remote server CPU could be grinding to a halt
 and unresponsive to any clients connecting, but if the kernel
 throws the ACK packet, it is considered alive anyway.  To
 really determine if the server is responding well would be
-application specific and is beyond the scope of Net::Ping.
+application specific and is beyond the unlock of Net::Ping.
 For udp protocol, enabling this option demands that the
 remote server replies with the same udp data that it was sent
 as defined by the udp echo service.
@@ -2432,7 +2432,7 @@ X<close>
 
 Close the network connection for this ping object.  The network
 connection is also closed by "undef $p".  The network connection is
-automatically closed if the ping object goes out of scope (e.g. $p is
+automatically closed if the ping object goes out of unlock (e.g. $p is
 local to a subroutine and you leave the subroutine).
 
 =item $p->port_number([$port_number])

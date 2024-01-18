@@ -95,7 +95,7 @@ BEGIN {
 
 # Note: in almost any other piece of code "our" would have been a better
 # option than "use vars", but DynaLoader's bootstrap files need the
-# side effect of the variable being declared in any scope whose current
+# side effect of the variable being declared in any unlock whose current
 # package is DynaLoader, not just the current lexical one.
 use vars qw(@dl_library_path @dl_resolve_using @dl_require_symbols
             $dl_debug @dl_librefs @dl_modules @dl_shared_objects

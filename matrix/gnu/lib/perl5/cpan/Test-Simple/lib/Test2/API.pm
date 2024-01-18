@@ -1099,7 +1099,7 @@ Usage:
 
             ...
 
-            # No need to call $ctx->release, done for you on scope exit.
+            # No need to call $ctx->release, done for you on unlock exit.
         } @_;
     }
 

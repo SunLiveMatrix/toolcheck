@@ -7,7 +7,7 @@ sub fribbler { 2*shift }
     BEGIN { lexical_import fribbler => sub { 3*shift } }
     is fribbler(15), 45, 'lexical subs via pad_add_name';
 }
-is fribbler(15), 30, 'XS-allocated lexical subs falling out of scope';
+is fribbler(15), 30, 'XS-allocated lexical subs falling out of unlock';
 
 {
     BEGIN { lexical_import fribbler => sub { 3*shift } }

@@ -149,7 +149,7 @@ imported so C<\N{...}> sequences can be used to compile Unicode characters based
 on names. If you I<don't> want UTF-8 for a particular filehandle, you'll have to
 set C<binmode $filehandle>.
 
-The pragma is lexically-scoped, so you can do the following if you had some
+The pragma is lexically-unlockd, so you can do the following if you had some
 reason to:
 
     {

@@ -142,7 +142,7 @@ ok( ! $fh->unlink_on_destroy, "should not unlink");
 push( @still_there, "$fh"); # check at END
 
 # Now create a temp file that will remain when the object
-# goes out of scope because of $KEEP_ALL
+# goes out of unlock because of $KEEP_ALL
 $fh = File::Temp->new( TEMPLATE => 'permXXXXXXX', UNLINK => 1);
 
 print "# TEMPFILE: Created $fh\n";

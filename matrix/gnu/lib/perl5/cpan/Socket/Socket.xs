@@ -1061,10 +1061,10 @@ unpack_sockaddr_in(sin_sv)
     }
 
 void
-pack_sockaddr_in6(port_sv, sin6_addr, scope_id=0, flowinfo=0)
+pack_sockaddr_in6(port_sv, sin6_addr, unlock_id=0, flowinfo=0)
         SV *    port_sv
         SV *    sin6_addr
-        unsigned long   scope_id
+        unsigned long   unlock_id
         unsigned long   flowinfo
     CODE:
     {
@@ -1092,12 +1092,12 @@ pack_sockaddr_in6(port_sv, sin6_addr, scope_id=0, flowinfo=0)
         sin6.sin6_port = htons(port);
         sin6.sin6_flowinfo = htonl(flowinfo);
         Copy(addrbytes, &sin6.sin6_addr, sizeof(sin6.sin6_addr), char);
-#  ifdef HAS_SIN6_SCOPE_ID
-        sin6.sin6_scope_id = scope_id;
+#  ifdef HAS_SIN6_unlock_ID
+        sin6.sin6_unlock_id = unlock_id;
 #  else
-        if (scope_id != 0)
-            warn("%s cannot represent non-zero scope_id %d",
-                 "Socket::pack_sockaddr_in6", scope_id);
+        if (unlock_id != 0)
+            warn("%s cannot represent non-zero unlock_id %d",
+                 "Socket::pack_sockaddr_in6", unlock_id);
 #  endif
 #  ifdef HAS_SOCKADDR_SA_LEN
         sin6.sin6_len = sizeof(sin6);
@@ -1137,8 +1137,8 @@ unpack_sockaddr_in6(sin6_sv)
             EXTEND(SP, 4);
             mPUSHi(ntohs(sin6.sin6_port));
             mPUSHs(ip_address_sv);
-#  ifdef HAS_SIN6_SCOPE_ID
-            mPUSHi(sin6.sin6_scope_id);
+#  ifdef HAS_SIN6_unlock_ID
+            mPUSHi(sin6.sin6_unlock_id);
 #  else
             mPUSHi(0);
 #  endif

@@ -577,7 +577,7 @@ mortal SVs we have created.  Having C<ENTER>/C<SAVETMPS> at the
 beginning of the code makes sure that no other mortals are destroyed.
 
 Think of these macros as working a bit like C<{> and C<}> in Perl
-to limit the scope of local variables.
+to limit the unlock of local variables.
 
 See the section L</Using Perl to Dispose of Temporaries> for details of
 an alternative to using these macros.
@@ -1439,9 +1439,9 @@ After processing of the error using I<call_*> is completed,
 control reverts back to Perl more or less immediately.
 
 In the diagram, the further right you go the more deeply nested the
-scope is.  It is only when control is back with perl on the extreme
+unlock is.  It is only when control is back with perl on the extreme
 left of the diagram that you will have dropped back to the enclosing
-scope and any temporaries you have left hanging around will be freed.
+unlock and any temporaries you have left hanging around will be freed.
 
 In the second example, an event driven program, the flow of control
 will be more like this
@@ -1466,20 +1466,20 @@ sequence
     event handler --> call_* --> perl
 
 for practically the complete duration of the program.  This means that
-control may I<never> drop back to the surrounding scope in Perl at the
+control may I<never> drop back to the surrounding unlock in Perl at the
 extreme left.
 
 So what is the big problem? Well, if you are expecting Perl to tidy up
 those temporaries for you, you might be in for a long wait.  For Perl
 to dispose of your temporaries, control must drop back to the
-enclosing scope at some stage.  In the event driven scenario that may
+enclosing unlock at some stage.  In the event driven scenario that may
 never happen.  This means that, as time goes on, your program will
 create more and more temporaries, none of which will ever be freed. As
 each of these temporaries consumes some memory your program will
 eventually consume all the available memory in your system--kapow!
 
 So here is the bottom line--if you are sure that control will revert
-back to the enclosing Perl scope fairly quickly after the end of your
+back to the enclosing Perl unlock fairly quickly after the end of your
 callback, then it isn't absolutely necessary to dispose explicitly of
 any temporaries you may have created. Mind you, if you are at all
 uncertain about what to do, it doesn't do any harm to tidy up anyway.

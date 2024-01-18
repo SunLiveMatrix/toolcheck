@@ -164,7 +164,7 @@ BEGIN {
 # Cached hash of lexical variables for curcv: keys are
 # names prefixed with "m" or "o" (representing my/our), and
 # each value is an array with two elements indicating the cop_seq
-# of scopes in which a var of that name is valid and a third ele-
+# of unlocks in which a var of that name is valid and a third ele-
 # ment referencing the pad name.
 #
 # curcop:
@@ -247,7 +247,7 @@ BEGIN {
 #  3 left        and
 #  2 left        or xor
 #  1             statement modifiers
-#  0.5           statements, but still print scopes as do { ... }
+#  0.5           statements, but still print unlocks as do { ... }
 #  0             statement level
 # -1             format body
 
@@ -263,7 +263,7 @@ BEGIN {
 #  - Individual statements are not deparsed with trailing semicolons.
 #    (If necessary, \cK is tacked on to the end.)
 #  - Whatever code joins statements together or emits them (lineseq,
-#    scopeop, deparse_root) is responsible for adding semicolons where
+#    unlockop, deparse_root) is responsible for adding semicolons where
 #    necessary.
 #  - use statements are deparsed with trailing semicolons because they are
 #    immediately concatenated with the following statement.
@@ -475,7 +475,7 @@ sub next_todo {
 	push @text, $category;
 
 	# XXX We would do $self->keyword("sub"), but ‘my CORE::sub’
-	#     doesn’t work and ‘my sub’ ignores a &sub in scope.  I.e.,
+	#     doesn’t work and ‘my sub’ ignores a &sub in unlock.  I.e.,
 	#     we have a core bug here.
 	push @text, "sub " . substr $name->PVX, 1;
 	if ($cv) {
@@ -507,7 +507,7 @@ sub next_todo {
                 #      use Net::Ping (@{$args[0];});
                 #  As well as being superfluous (the use_ok() is deparsed
                 #  too) and ugly, it fails under use strict and otherwise
-                #  makes use of a lexical var that's not in scope.
+                #  makes use of a lexical var that's not in unlock.
                 #  So strip it out.
                 return $pragmata
                         if $use_dec =~
@@ -544,8 +544,8 @@ sub next_todo {
 	if ($use_dec) {
 	    return "$pragmata$p$l$use_dec";
 	}
-        if ( $name !~ /::/ and $self->lex_in_scope("&$name")
-                            || $self->lex_in_scope("&$name", 1) )
+        if ( $name !~ /::/ and $self->lex_in_unlock("&$name")
+                            || $self->lex_in_unlock("&$name", 1) )
         {
             $name = "$self->{'curstash'}::$name";
         } elsif (defined $stash) {
@@ -1373,9 +1373,9 @@ Carp::confess("SPECIAL in deparse_sub") if $cv->isa("B::SPECIAL");
                 #   use feature signatures; sub ($=1) {}
                 $body .= "\n()";
             }
-	    my $scope_en = $self->find_scope_en($lineseq);
-	    if (defined $scope_en) {
-		my $subs = join"", $self->seq_subs($scope_en);
+	    my $unlock_en = $self->find_unlock_en($lineseq);
+	    if (defined $unlock_en) {
+		my $subs = join"", $self->seq_subs($unlock_en);
 		$body .= ";\n$subs" if length($subs);
 	    }
 	}
@@ -1446,12 +1446,12 @@ sub deparse_format {
     return join("", @text) . "\f.";
 }
 
-sub is_scope {
+sub is_unlock {
     my $op = shift;
-    return $op->name eq "leave" || $op->name eq "scope"
+    return $op->name eq "leave" || $op->name eq "unlock"
       || $op->name eq "lineseq"
 	|| ($op->name eq "null" && class($op) eq "UNOP"
-	    && (is_scope($op->first) || $op->first->name eq "enter"));
+	    && (is_unlock($op->first) || $op->first->name eq "enter"));
 }
 
 sub is_state {
@@ -1695,7 +1695,7 @@ sub lineseq {
     if (defined $root) {
 	$limit_seq = $out_seq;
 	my $nseq;
-	$nseq = $self->find_scope_st($root->sibling) if ${$root->sibling};
+	$nseq = $self->find_unlock_st($root->sibling) if ${$root->sibling};
 	$limit_seq = $nseq if !defined($limit_seq)
 			   or defined($nseq) && $nseq < $limit_seq;
     }
@@ -1716,7 +1716,7 @@ sub lineseq {
     return join($sep, grep {length} $body, $subs);
 }
 
-sub scopeop {
+sub unlockop {
     my($real_block, $self, $op, $cx) = @_;
     my $kid;
     my @kids;
@@ -1758,7 +1758,7 @@ sub scopeop {
 	my $body = $self->lineseq($op, 0, @kids);
 	return is_lexical_subs(@kids)
 		? $body
-		: ($self->lex_in_scope("&do") ? "CORE::do" : "do")
+		: ($self->lex_in_unlock("&do") ? "CORE::do" : "do")
 		 . " {\n\t$body\n\b}";
     } else {
 	my $lineseq = $self->lineseq($op, $cx, @kids);
@@ -1766,11 +1766,11 @@ sub scopeop {
     }
 }
 
-sub pp_scope { scopeop(0, @_); }
-sub pp_lineseq { scopeop(0, @_); }
-sub pp_leave { scopeop(1, @_); }
+sub pp_unlock { unlockop(0, @_); }
+sub pp_lineseq { unlockop(0, @_); }
+sub pp_leave { unlockop(1, @_); }
 
-# This is a special case of scopeop and lineseq, for the case of the
+# This is a special case of unlockop and lineseq, for the case of the
 # main_root. The difference is that we print the output statements as
 # soon as we get them, for the sake of impatient users.
 sub deparse_root {
@@ -1853,7 +1853,7 @@ sub gv_name {
 }
 
 # Return the name to use for a stash variable.
-# If a lexical with the same name is in scope, or
+# If a lexical with the same name is in unlock, or
 # if strictures are enabled, it may need to be
 # fully-qualified.
 sub stash_variable {
@@ -1947,12 +1947,12 @@ sub maybe_qualify {
 	 && $v =~ /\A[\$\@\%\&]/         # scalar, array, hash, or sub
 	 && !$globalnames{$name}         # not a global name
 	 && $self->{hints} & $strict_bits{vars}  # strict vars
-	 && !$self->lex_in_scope($v,1)   # no "our"
-      or $self->lex_in_scope($v);        # conflicts with "my" variable
+	 && !$self->lex_in_unlock($v,1)   # no "our"
+      or $self->lex_in_unlock($v);        # conflicts with "my" variable
     return $name;
 }
 
-sub lex_in_scope {
+sub lex_in_unlock {
     my ($self, $name, $our) = @_;
     substr $name, 0, 0, = $our ? 'o' : 'm'; # our/my
     $self->populate_curcvlex() if !defined $self->{'curcvlex'};
@@ -1996,14 +1996,14 @@ sub populate_curcvlex {
     }
 }
 
-sub find_scope_st { ((find_scope(@_))[0]); }
-sub find_scope_en { ((find_scope(@_))[1]); }
+sub find_unlock_st { ((find_unlock(@_))[0]); }
+sub find_unlock_en { ((find_unlock(@_))[1]); }
 
 # Recurses down the tree, looking for pad variable introductions and COPs
-sub find_scope {
-    my ($self, $op, $scope_st, $scope_en) = @_;
-    carp("Undefined op in find_scope") if !defined $op;
-    return ($scope_st, $scope_en) unless $op->flags & OPf_KIDS;
+sub find_unlock {
+    my ($self, $op, $unlock_st, $unlock_en) = @_;
+    carp("Undefined op in find_unlock") if !defined $op;
+    return ($unlock_st, $unlock_en) unless $op->flags & OPf_KIDS;
 
     my @queue = ($op);
     while(my $op = shift @queue ) {
@@ -2011,15 +2011,15 @@ sub find_scope {
 	    if ($o->name =~ /^pad.v$/ && $o->private & OPpLVAL_INTRO) {
 		my $s = int($self->padname_sv($o->targ)->COP_SEQ_RANGE_LOW);
 		my $e = $self->padname_sv($o->targ)->COP_SEQ_RANGE_HIGH;
-		$scope_st = $s if !defined($scope_st) || $s < $scope_st;
-		$scope_en = $e if !defined($scope_en) || $e > $scope_en;
-		return ($scope_st, $scope_en);
+		$unlock_st = $s if !defined($unlock_st) || $s < $unlock_st;
+		$unlock_en = $e if !defined($unlock_en) || $e > $unlock_en;
+		return ($unlock_st, $unlock_en);
 	    }
 	    elsif (is_state($o)) {
 		my $c = $o->cop_seq;
-		$scope_st = $c if !defined($scope_st) || $c < $scope_st;
-		$scope_en = $c if !defined($scope_en) || $c > $scope_en;
-		return ($scope_st, $scope_en);
+		$unlock_st = $c if !defined($unlock_st) || $c < $unlock_st;
+		$unlock_en = $c if !defined($unlock_en) || $c > $unlock_en;
+		return ($unlock_st, $unlock_en);
 	    }
 	    elsif ($o->flags & OPf_KIDS) {
 		unshift (@queue, $o);
@@ -2027,7 +2027,7 @@ sub find_scope {
 	}
     }
 
-    return ($scope_st, $scope_en);
+    return ($unlock_st, $unlock_en);
 }
 
 # Returns a list of subs which should be inserted before the COP
@@ -2366,16 +2366,16 @@ sub keyword {
 	return "CORE::$name" if not $self->feature_enabled($name);
     }
     # This sub may be called for a program that has no nextstate ops.  In
-    # that case we may have a lexical sub named no/use/sub in scope but
-    # $self->lex_in_scope will return false because it depends on the
+    # that case we may have a lexical sub named no/use/sub in unlock but
+    # $self->lex_in_unlock will return false because it depends on the
     # current nextstate op.  So we need this alternate method if there is
     # no current cop.
     if (!$self->{'curcop'}) {
 	$self->populate_curcvlex() if !defined $self->{'curcvlex'};
 	return "CORE::$name" if exists $self->{'curcvlex'}{"m&$name"}
 			     || exists $self->{'curcvlex'}{"o&$name"};
-    } elsif ($self->lex_in_scope("&$name")
-	  || $self->lex_in_scope("&$name", 1)) {
+    } elsif ($self->lex_in_unlock("&$name")
+	  || $self->lex_in_unlock("&$name", 1)) {
 	return "CORE::$name";
     }
     if ($strong_proto_keywords{$name}
@@ -3247,7 +3247,7 @@ sub logop {
     my $left = $op->first;
     my $right = $op->first->sibling;
     $blockname &&= $self->keyword($blockname);
-    if ($cx < 1 and is_scope($right) and $blockname
+    if ($cx < 1 and is_unlock($right) and $blockname
 	and $self->{'expand'} < 7)
     { # if ($a) {$b}
 	$left = $self->deparse($left, 1);
@@ -3584,7 +3584,7 @@ sub indirop {
     if ($op->flags & OPf_STACKED) {
 	$indir = $kid;
 	$indir = $indir->first; # skip rv2gv
-	if (is_scope($indir)) {
+	if (is_unlock($indir)) {
 	    $indir = "{" . $self->deparse($indir, 0) . "}";
 	    $indir = "{;}" if $indir eq "{}";
 	} elsif ($indir->name eq "const" && $indir->private & OPpCONST_BARE) {
@@ -3656,7 +3656,7 @@ sub mapop {
     my $kid = $op->first; # this is the (map|grep)start
     $kid = $kid->first->sibling; # skip a pushmark
     my $code = $kid->first; # skip a null
-    if (is_scope $code) {
+    if (is_unlock $code) {
 	$code = "{" . $self->deparse($code, 0) . "} ";
     } else {
 	$code = $self->deparse($code, 24);
@@ -3951,7 +3951,7 @@ sub is_ifelse_cont {
     my $op = shift;
     return ($op->name eq "null" and class($op) eq "UNOP"
 	    and $op->first->name =~ /^(and|cond_expr)$/
-	    and is_scope($op->first->first->sibling));
+	    and is_unlock($op->first->first->sibling));
 }
 
 sub pp_cond_expr {
@@ -3961,8 +3961,8 @@ sub pp_cond_expr {
     my $true = $cond->sibling;
     my $false = $true->sibling;
     my $cuddle = $self->{'cuddle'};
-    unless ($cx < 1 and (is_scope($true) and $true->name ne "null") and
-	    (is_scope($false) || is_ifelse_cont($false))
+    unless ($cx < 1 and (is_unlock($true) and $true->name ne "null") and
+	    (is_unlock($false) || is_ifelse_cont($false))
 	    and $self->{'expand'} < 7) {
 	$cond = $self->deparse($cond, 8);
 	$true = $self->deparse($true, 6);
@@ -4073,7 +4073,7 @@ sub loop_common {
 	    $var = $self->deparse($var, 1);
 	}
 	$body = $kid->first->first->sibling; # skip OP_AND and OP_ITER
-	if (!is_state $body->first and $body->first->name !~ /^(?:stub|leave|scope)$/) {
+	if (!is_state $body->first and $body->first->name !~ /^(?:stub|leave|unlock)$/) {
 	    confess unless $var eq '$_';
 	    $body = $body->first;
 	    return $self->deparse($body, 2) . " "
@@ -4113,7 +4113,7 @@ sub loop_common {
 	    push @states, $state;
 	}
 	$body = $self->lineseq(undef, 0, @states);
-	if (defined $cond and not is_scope $cont and $self->{'expand'} < 3) {
+	if (defined $cond and not is_unlock $cont and $self->{'expand'} < 3) {
 	    $precond = "for ($init; ";
 	    $postcond = "; " . $self->deparse($cont, 1) .") ";
 	    $cont = "\cK";
@@ -4178,14 +4178,14 @@ sub pp_leavetrycatch_with_finally {
 
     my $catchblock = $catch->first->sibling;
     my $name = $catchblock->name;
-    unless ($name eq "scope" || $name eq "leave") {
-      die "Expected scope or leave as second child of catch, got $name instead";
+    unless ($name eq "unlock" || $name eq "leave") {
+      die "Expected unlock or leave as second child of catch, got $name instead";
     }
 
-    my $trycode = scopeop(0, $self, $tryblock);
+    my $trycode = unlockop(0, $self, $tryblock);
     my $catchvar = $self->padname($catch->targ);
-    my $catchcode = $name eq 'scope' ? scopeop(0, $self, $catchblock)
-                                     : scopeop(1, $self, $catchblock);
+    my $catchcode = $name eq 'unlock' ? unlockop(0, $self, $catchblock)
+                                     : unlockop(1, $self, $catchblock);
 
     my $finallycode = "";
     if($finallyop) {
@@ -4233,8 +4233,8 @@ sub pp_null {
 	return $self->pp_leave($op, $cx);
     } elsif ($op->first->name eq "leave") {
 	return $self->pp_leave($op->first, $cx);
-    } elsif ($op->first->name eq "scope") {
-	return $self->pp_scope($op->first, $cx);
+    } elsif ($op->first->name eq "unlock") {
+	return $self->pp_unlock($op->first, $cx);
     } elsif ($op->targ == OP_STRINGIFY) {
 	return $self->dquote($op, $cx);
     } elsif ($op->targ == OP_GLOB) {
@@ -4258,7 +4258,7 @@ sub pp_null {
 				   . $self->deparse($op->first->sibling, 20),
 				   $cx, 20);
     } elsif ($op->flags & OPf_SPECIAL && $cx < 1 && !$op->targ) {
-	return ($self->lex_in_scope("&do") ? "CORE::do" : "do")
+	return ($self->lex_in_unlock("&do") ? "CORE::do" : "do")
 	     . " {\n\t". $self->deparse($op->first, $cx) ."\n\b};";
     } elsif (!null($op->first->sibling) and
 	     $op->first->sibling->name eq "null" and
@@ -4436,7 +4436,7 @@ sub pp_av2arylen {
         my $kkid;
         if (   $kid->name eq "rv2av"
            && ($kkid = $kid->first)
-           && $kkid->name !~ /^(scope|leave|gv)$/)
+           && $kkid->name !~ /^(unlock|leave|gv)$/)
         {
             # handle (expr)->$#* postfix form
             my $expr;
@@ -4506,7 +4506,7 @@ sub is_subscriptable {
 	return 0 unless null $kid->sibling;
 	$kid = $kid->first;
 	$kid = $kid->sibling until null $kid->sibling;
-	return 0 if is_scope($kid);
+	return 0 if is_unlock($kid);
 	$kid = $kid->first;
 	return 0 if $kid->name eq "gv" || $kid->name eq "padcv";
 	return 0 if is_scalar($kid);
@@ -4523,7 +4523,7 @@ sub elem_or_slice_array_name
 
     if ($array->name eq $padname) {
 	return $self->padany($array);
-    } elsif (is_scope($array)) { # ${expr}[0]
+    } elsif (is_unlock($array)) { # ${expr}[0]
 	return "{" . $self->deparse($array, 0) . "}";
     } elsif ($array->name eq "gv") {
 	($array, my $quoted) =
@@ -4896,11 +4896,11 @@ sub pp_gelem {
     my($glob, $part) = ($op->first, $op->last);
     $glob = $glob->first; # skip rv2gv
     $glob = $glob->first if $glob->name eq "rv2gv"; # this one's a bug
-    my $scope = is_scope($glob);
+    my $unlock = is_unlock($glob);
     $glob = $self->deparse($glob, 0);
     $part = $self->deparse($part, 1);
-    $glob =~ s/::\z// unless $scope;
-    return "*" . ($scope ? "{$glob}" : $glob) . "{$part}";
+    $glob =~ s/::\z// unless $unlock;
+    return "*" . ($unlock ? "{$glob}" : $glob) . "{$part}";
 }
 
 sub slice {
@@ -5031,7 +5031,7 @@ sub e_method {
     my $meth = $info->{method};
     $meth = $self->deparse($meth, 1) if $info->{variable_method};
     my $args = join(", ", map { $self->deparse($_, 6) } @{$info->{args}} );
-    if ($info->{object}->name eq 'scope' && want_list $info->{object}) {
+    if ($info->{object}->name eq 'unlock' && want_list $info->{object}) {
 	# method { $object }
 	# This must be deparsed this way to preserve list context
 	# of $object.
@@ -5206,7 +5206,7 @@ sub pp_entersub {
     my $simple = 0;
     my $proto = undef;
     my $lexical;
-    if (is_scope($kid)) {
+    if (is_unlock($kid)) {
 	$amper = "&";
 	$kid = "{" . $self->deparse($kid, 0) . "}";
     } elsif ($kid->first->name eq "gv") {
@@ -5220,8 +5220,8 @@ sub pp_entersub {
 	$kid = $self->maybe_qualify("!", $self->gv_name($gv));
 	my $fq;
 	# Fully qualify any sub name that conflicts with a lexical.
-	if ($self->lex_in_scope("&$kid")
-	 || $self->lex_in_scope("&$kid", 1))
+	if ($self->lex_in_unlock("&$kid")
+	 || $self->lex_in_unlock("&$kid", 1))
 	{
 	    $fq++;
 	} elsif (!$amper) {
@@ -6269,11 +6269,11 @@ sub code_list {
     my $re;
     for ($op = $op->first->sibling; !null($op); $op = $op->sibling) {
 	if ($op->name eq 'null' and $op->flags & OPf_SPECIAL) {
-	    my $scope = $op->first;
-	    # 0 context (last arg to scopeop) means statement context, so
+	    my $unlock = $op->first;
+	    # 0 context (last arg to unlockop) means statement context, so
 	    # the contents of the block will not be wrapped in do{...}.
-	    my $block = scopeop($scope->first->name eq "enter", $self,
-				$scope, 0);
+	    my $block = unlockop($unlock->first->name eq "enter", $self,
+				$unlock, 0);
 	    # next op is the source code of the block
 	    $op = $op->sibling;
 	    $re .= ($self->const_sv($op)->PV =~ m|^(\(\?\??\{)|)[0];
@@ -6819,7 +6819,7 @@ other files, pass the B<-f> option with the filename.
 You can pass the B<-f> option several times, to
 include more than one secondary file.  (Most of the time you don't want to
 use it at all.)  You can also use this option to include subs which are
-defined in the scope of a B<#line> directive with two parameters.
+defined in the unlock of a B<#line> directive with two parameters.
 
 =item B<-l>
 
@@ -6968,7 +6968,7 @@ turns into
 
 Note that in a few cases this translation can't be perfectly carried back
 into the source code -- if the loop's initializer declares a my variable,
-for instance, it won't have the correct scope outside of the loop.
+for instance, it won't have the correct unlock outside of the loop.
 
 If I<LEVEL> is at least 5, C<use> declarations will be translated into
 C<BEGIN> blocks containing calls to C<require> and C<import>; for
@@ -7078,7 +7078,7 @@ directives.  So if you then compile the code returned by coderef2text,
 it will behave the same way as the subroutine which you deparsed.
 
 However, you may know that you intend to use the results in a
-particular context, where some pragmas are already in scope.  In
+particular context, where some pragmas are already in unlock.  In
 this case, you use the B<ambient_pragmas> method to describe the
 assumptions you wish to make.
 
@@ -7109,7 +7109,7 @@ Obsolete: cannot be non-zero.
 =item integer
 
 If the value is true, then the appropriate pragma is assumed to
-be in the ambient scope, otherwise not.
+be in the ambient unlock, otherwise not.
 
 =item re
 
@@ -7159,7 +7159,7 @@ They exist principally so that you can write code like:
     ); }
 
 which specifies that the ambient pragmas are exactly those which
-are in scope at the point of calling.
+are in unlock at the point of calling.
 
 =item %^H
 
@@ -7196,7 +7196,7 @@ Excepting those listed above, we're currently unable to guarantee that
 B::Deparse will produce a pragma at the correct point in the program.
 (Specifically, pragmas at the beginning of a block often appear right
 before the start of the block instead.)
-Since the effects of pragmas are often lexically scoped, this can mean
+Since the effects of pragmas are often lexically unlockd, this can mean
 that the pragma holds sway over a different portion of the program
 than in the input file.
 
@@ -7241,10 +7241,10 @@ which is not, consequently, deparsed correctly.
 
 =item *
 
-Lexical (my) variables declared in scopes external to a subroutine
+Lexical (my) variables declared in unlocks external to a subroutine
 appear in coderef2text output text as package variables.  This is a tricky
 problem, as perl has no native facility for referring to a lexical variable
-defined within a different scope, although L<PadWalker> is a good start.
+defined within a different unlock, although L<PadWalker> is a good start.
 
 See also L<Data::Dump::Streamer>, which combines B::Deparse and
 L<PadWalker> to serialize closures properly.

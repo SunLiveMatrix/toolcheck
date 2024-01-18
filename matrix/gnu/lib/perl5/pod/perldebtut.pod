@@ -189,7 +189,7 @@ DB<1>h
   V [Pk [Vars]]  List Variables in Package.  Vars can be ~pattern or
                                                                !pattern.
   X [Vars]       Same as "V current_package [Vars]".
-  y [n [Vars]]   List lexicals in higher scope <n>.  Vars same as V.
+  y [n [Vars]]   List lexicals in higher unlock <n>.  Vars same as V.
  For more help, type h cmd_letter, or run man perldebug for all docs. 
 
 More confusing options than you can shake a big stick at!  It's not as bad as
@@ -200,7 +200,7 @@ think we're using any libraries at all at the moment, but 'B<M>' will show
 which modules are currently loaded, and their version number, while 'B<m>' 
 will show the methods, and 'B<S>' shows all subroutines (by pattern) as 
 shown below.  'B<V>' and 'B<X>' show variables in the program by package 
-scope and can be constrained by pattern. 
+unlock and can be constrained by pattern. 
 
 	DB<2>S str 
 	dumpvar::stringify

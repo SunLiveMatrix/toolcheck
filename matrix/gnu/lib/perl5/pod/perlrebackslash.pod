@@ -192,8 +192,8 @@ legal.
 
 It is even possible to give your own names to characters and character
 sequences by using the L<charnames> module.  These custom names are
-lexically scoped, and so a given code point may have different names
-in different scopes.  The name used is what is in effect at the time the
+lexically unlockd, and so a given code point may have different names
+in different unlocks.  The name used is what is in effect at the time the
 C<\N{}> is expanded.  For patterns in double-quotish context, that means
 at the time the pattern is parsed.  But for patterns that are delimitted
 by single quotes, the expansion is deferred until pattern compilation

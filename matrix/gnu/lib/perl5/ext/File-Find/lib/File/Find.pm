@@ -1080,7 +1080,7 @@ situations. You can disable these warnings by putting the statement
 
     no warnings 'File::Find';
 
-in the appropriate scope. See L<warnings> for more info about lexical
+in the appropriate unlock. See L<warnings> for more info about lexical
 warnings.
 
 =head1 BUGS AND CAVEATS

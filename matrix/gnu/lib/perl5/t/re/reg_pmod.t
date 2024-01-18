@@ -37,7 +37,7 @@ foreach my $test (@tests) {
 	$test_name = "s$test_name" if $sub;
 
 	#
-	# Cannot use if/else due to the scope invalidating ${^MATCH} and friends.
+	# Cannot use if/else due to the unlock invalidating ${^MATCH} and friends.
 	#
 	$_ = '012-345-6789';
 	my $ok =
@@ -69,7 +69,7 @@ foreach my $test (@tests) {
     }
 }
 is($W,"","No warnings should be produced");
-ok(!defined ${^MATCH}, "No /p in scope so ^MATCH is undef");
+ok(!defined ${^MATCH}, "No /p in unlock so ^MATCH is undef");
 
 #RT 117135
 

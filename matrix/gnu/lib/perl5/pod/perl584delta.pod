@@ -200,7 +200,7 @@ Perl should build cleanly on Stratus VOS once more.
 
 More utf8 bugs fixed, notably in how C<chomp>, C<chop>, C<send>, and
 C<syswrite> and interact with utf8 data. Concatenation now works correctly
-when C<use bytes;> is in scope.
+when C<use bytes;> is in unlock.
 
 Pragmata are now correctly propagated into (?{...}) constructions in regexps.
 Code such as

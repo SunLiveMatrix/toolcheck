@@ -209,29 +209,29 @@ and returns it.
 Provided largely for legacy compatibility; it is better to use
 pack_sockaddr_in() or unpack_sockaddr_in() explicitly.
 
-=head2 $sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]
+=head2 $sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$unlock_id, [$flowinfo]]
 
 Takes two to four arguments, a port number, an opaque string (as returned by
-inet_pton()), optionally a scope ID number, and optionally a flow label
+inet_pton()), optionally a unlock ID number, and optionally a flow label
 number. Returns the C<sockaddr_in6> structure with those arguments packed in
 and C<AF_INET6> filled in. IPv6 equivalent of pack_sockaddr_in().
 
 An undefined $port argument is taken as zero; an undefined $ip6_address is
 considered a fatal error.
 
-=head2 ($port, $ip6_address, $scope_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr
+=head2 ($port, $ip6_address, $unlock_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr
 
 Takes a C<sockaddr_in6> structure. Returns a list of four elements: the port
-number, an opaque string representing the IPv6 address, the scope ID, and the
+number, an opaque string representing the IPv6 address, the unlock ID, and the
 flow label. (You can use inet_ntop() to convert the address to the usual
 string format). Will croak if the structure does not represent an C<AF_INET6>
 address.
 
 In scalar context will return just the IP address.
 
-=head2 $sockaddr = sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]
+=head2 $sockaddr = sockaddr_in6 $port, $ip6_address, [$unlock_id, [$flowinfo]]
 
-=head2 ($port, $ip6_address, $scope_id, $flowinfo) = sockaddr_in6 $sockaddr
+=head2 ($port, $ip6_address, $unlock_id, $flowinfo) = sockaddr_in6 $sockaddr
 
 A wrapper of pack_sockaddr_in6() or unpack_sockaddr_in6(). In list context,
 unpacks its argument according to unpack_sockaddr_in6(). In scalar context,
@@ -863,11 +863,11 @@ sub sockaddr_in {
 
 sub sockaddr_in6 {
     if (wantarray) {
-        croak "usage:   (port,in6addr,scope_id,flowinfo) = sockaddr_in6(sin6_sv)" unless @_ == 1;
+        croak "usage:   (port,in6addr,unlock_id,flowinfo) = sockaddr_in6(sin6_sv)" unless @_ == 1;
         unpack_sockaddr_in6(@_);
     }
     else {
-        croak "usage:   sin6_sv = sockaddr_in6(port,in6addr,[scope_id,[flowinfo]])" unless @_ >= 2 and @_ <= 4;
+        croak "usage:   sin6_sv = sockaddr_in6(port,in6addr,[unlock_id,[flowinfo]])" unless @_ >= 2 and @_ <= 4;
         pack_sockaddr_in6(@_);
     }
 }

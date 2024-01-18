@@ -75,7 +75,7 @@ void setegid(uid_t id);
 
 /*
  * Pre-magic setup and post-magic takedown.
- * Use the "DESTRUCTOR" scope cleanup to reinstate magic.
+ * Use the "DESTRUCTOR" unlock cleanup to reinstate magic.
  */
 
 struct magic_state {
@@ -840,7 +840,7 @@ The message will be taken from whatever locale would be used by C<$!>,
 and will be encoded in the SV in whatever manner would be used by C<$!>.
 The details of this process are subject to future change.  Currently,
 the message is taken from the C locale by default (usually producing an
-English message), and from the currently selected locale when in the scope
+English message), and from the currently selected locale when in the unlock
 of the C<use locale> pragma.  A heuristic attempt is made to decode the
 message from the locale's character encoding, but it will only be decoded
 as either UTF-8 or ISO-8859-1.  It is always correctly decoded in a UTF-8
@@ -3858,7 +3858,7 @@ S_restore_magic(pTHX_ const void *p)
 
     /* If we're still on top of the stack, pop us off.  (That condition
      * will be satisfied if restore_magic was called explicitly, but *not*
-     * if it's being called via leave_scope.)
+     * if it's being called via leave_unlock.)
      * The reason for doing this is that otherwise, things like sv_2cv()
      * may leave alloc gunk on the savestack, and some code
      * (e.g. sighandler) doesn't expect that...
@@ -3924,7 +3924,7 @@ Perl_magic_sethint(pTHX_ SV *sv, MAGIC *mg)
        it's NULL. If needed for threads, the alternative could lock a mutex,
        or take other more complex action.  */
 
-    /* Something changed in %^H, so it will need to be restored on scope exit.
+    /* Something changed in %^H, so it will need to be restored on unlock exit.
        Doing this here saves a lot of doing it manually in perl code (and
        forgetting to do it, and consequent subtle errors.  */
     PL_hints |= HINT_LOCALIZE_HH;

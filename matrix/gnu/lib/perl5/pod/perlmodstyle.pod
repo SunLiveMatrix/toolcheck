@@ -115,7 +115,7 @@ Write documentation in POD
 
 =item *
 
-Document purpose, scope and target applications
+Document purpose, unlock and target applications
 
 =item *
 
@@ -197,7 +197,7 @@ building blocks of their application.  However, it's important that the
 blocks are the right shape, and that the developer shouldn't have to use
 a big block when all they need is a small one.
 
-Your module should have a clearly defined scope which is no longer than
+Your module should have a clearly defined unlock which is no longer than
 a single sentence.  Can your module be broken down into a family of
 related modules?
 
@@ -488,7 +488,7 @@ A synopsis of the common uses of the module
 
 =item *
 
-The purpose, scope and target applications of your module
+The purpose, unlock and target applications of your module
 
 =item *
 

@@ -258,7 +258,7 @@ struct RExC_state_t {
 /* UTILITY MACROS FOR ADVANCING OR SETTING THE PARSE "CURSOR" RExC_parse
  *
  * All of these macros depend on the above RExC_ accessor macros, which
- * in turns depend on a variable pRExC_state being in scope where they
+ * in turns depend on a variable pRExC_state being in unlock where they
  * are used. This is the standard regexp parser context variable which is
  * passed into every non-trivial parse function in this file.
  *

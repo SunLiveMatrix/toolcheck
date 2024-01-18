@@ -132,7 +132,7 @@ For the Perl Artistic License, see L<perlartistic>.
 
  Mere aggregation of another independent work with the Program (or its
  derivative) on a volume of a storage or distribution medium does not
- bring the other work under the scope of these terms.
+ bring the other work under the unlock of these terms.
 
    3. You may copy and distribute the Program (or a portion or
  derivative of it, under Paragraph 2) in object code or executable form

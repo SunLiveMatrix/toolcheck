@@ -373,7 +373,7 @@ sub parse_embed
             my $cond = ppcond(\@pps);
             if ($cond =~ /defined\(PERL_IN_[A-Z0-9_]+_[CH]/ && $flags =~ /A/)
             {
-                warn "$name marked as API, but restricted scope: $cond\n";
+                warn "$name marked as API, but restricted unlock: $cond\n";
             }
             #warn "$name: $cond" if length $cond && $flags =~ /A/;
             for (@args) {
@@ -456,7 +456,7 @@ sub known_but_hard_to_test_for
 
 
 
-for (qw(CLASS CPERLscope dMY_CXT_SV dXSI32 END_EXTERN_C EXTERN_C items
+for (qw(CLASS CPERLunlock dMY_CXT_SV dXSI32 END_EXTERN_C EXTERN_C items
         ix PERL_USE_GCC_BRACE_GROUPS PL_hexdigit pTHX_ PTRV
         RETVAL START_EXTERN_C STMT_END STMT_START StructCopy
         STR_WITH_LEN svtype THIS XS XSPROTO))

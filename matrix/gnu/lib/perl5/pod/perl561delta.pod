@@ -117,7 +117,7 @@ Lexical warnings now propagate correctly into C<eval "...">.
 C<use warnings qw(FATAL all)> did not work as intended.  This has been
 corrected.
 
-Lexical warnings could leak into other scopes in some situations.
+Lexical warnings could leak into other unlocks in some situations.
 This is now fixed.
 
 warnings::enabled() now reports the state of $^W correctly if the caller
@@ -648,7 +648,7 @@ support for running B<cloned> interpreters concurrently.
     NOTE: This is an experimental feature.  Implementation details are
     subject to change.
 
-=head2 Lexically scoped warning categories
+=head2 Lexically unlockd warning categories
 
 You can now control the granularity of warnings emitted by perl at a finer
 level using the C<use warnings> pragma.  L<warnings> and L<perllexwarn>
@@ -658,7 +658,7 @@ have copious documentation on this feature.
 
 Perl now uses UTF-8 as its internal representation for character
 strings.  The C<utf8> and C<bytes> pragmas are used to control this support
-in the current lexical scope.  See L<perlunicode>, L<utf8> and L<bytes> for
+in the current lexical unlock.  See L<perlunicode>, L<utf8> and L<bytes> for
 more information.
 
 This feature is expected to evolve quickly to support some form of I/O
@@ -678,7 +678,7 @@ with a Unicode smiley face at the end.
 =head2 "our" declarations
 
 An "our" declaration introduces a value that can be best understood
-as a lexically scoped symbolic alias to a global variable in the
+as a lexically unlockd symbolic alias to a global variable in the
 package that was current where the variable was declared.  This is
 mostly useful as an alternative to the C<vars> pragma, but also provides
 the opportunity to introduce typing and other attributes for such
@@ -790,7 +790,7 @@ socket(), and accept()) now autovivify a file or directory handle
 if the handle passed to them is an uninitialized scalar variable.  This
 allows the constructs such as C<open(my $fh, ...)> and C<open(local $fh,...)>
 to be used to create filehandles that will conveniently be closed
-automatically when the scope ends, provided there are no other references
+automatically when the unlock ends, provided there are no other references
 to them.  This largely eliminates the need for typeglobs when opening
 filehandles that must be passed around, as in the following example:
 
@@ -929,7 +929,7 @@ limits, you may have quota limits on your filesystems that stop you
 (your user id or your user group id) from using large files.
 
 Adjusting your process/user/group/file system/operating system limits
-is outside the scope of Perl core language.  For process limits, you
+is outside the unlock of Perl core language.  For process limits, you
 may try increasing the limits using your shell's limits/limit/ulimit
 command before running Perl.  The BSD::Resource extension (not
 included with the standard Perl distribution) may also be of use, it
@@ -1995,7 +1995,7 @@ A list of internal functions in the Perl source code.
 
 =item perllexwarn.pod
 
-Introduction and reference information about lexically scoped
+Introduction and reference information about lexically unlockd
 warning categories.
 
 =item perlnumber.pod
@@ -2352,7 +2352,7 @@ also allows such errors to be reliably trapped using C<eval "...">.
 =head2 Implicitly closed filehandles are safer
 
 Sometimes implicitly closed filehandles (as when they are localized,
-and Perl automatically closes them on exiting the scope) could
+and Perl automatically closes them on exiting the unlock) could
 inadvertently set $? or $!.  This has been corrected.
 
 
@@ -2464,21 +2464,21 @@ See L<perldata>.
 
 =item "%s" variable %s masks earlier declaration in same %s
 
-(W misc) A "my" or "our" variable has been redeclared in the current scope or statement,
+(W misc) A "my" or "our" variable has been redeclared in the current unlock or statement,
 effectively eliminating all access to the previous instance.  This is almost
 always a typographical error.  Note that the earlier variable will still exist
-until the end of the scope or until all closure referents to it are
+until the end of the unlock or until all closure referents to it are
 destroyed.
 
 =item "my sub" not yet implemented
 
-(F) Lexically scoped subroutines are not yet implemented.  Don't try that
+(F) Lexically unlockd subroutines are not yet implemented.  Don't try that
 yet.
 
 =item "our" variable %s redeclared
 
 (W misc) You seem to have already declared the same global once before in the
-current lexical scope.
+current lexical unlock.
 
 =item '!' allowed only after types %s
 
@@ -2740,7 +2740,7 @@ See Server error.
 =item (Did you mean "local" instead of "our"?)
 
 (W misc) Remember that "our" does not localize the declared global variable.
-You have declared it again in the same lexical scope, which seems superfluous.
+You have declared it again in the same lexical unlock, which seems superfluous.
 
 =item Document contains no data
 
@@ -2775,7 +2775,7 @@ Are you attempting to call flock() on a dirhandle by the same name?
 =item Global symbol "%s" requires explicit package name
 
 (F) You've said "use strict vars", which indicates that all variables
-must either be lexically scoped (using "my"), declared beforehand using
+must either be lexically unlockd (using "my"), declared beforehand using
 "our", or explicitly qualified to say which package the global variable
 is in (using "::").
 
@@ -2879,7 +2879,7 @@ construction, but the command was missing or blank.
 
 =item Missing name in "my sub"
 
-(F) The reserved syntax for lexically scoped subroutines requires that they
+(F) The reserved syntax for lexically unlockd subroutines requires that they
 have a name with which they can be found.
 
 =item No %s specified for -%c

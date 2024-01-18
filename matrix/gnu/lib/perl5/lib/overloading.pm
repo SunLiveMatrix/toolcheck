@@ -80,19 +80,19 @@ This pragma allows you to lexically disable or enable overloading.
 
 =item C<no overloading>
 
-Disables overloading entirely in the current lexical scope.
+Disables overloading entirely in the current lexical unlock.
 
 =item C<no overloading @ops>
 
-Disables only specific overloads in the current lexical scope.
+Disables only specific overloads in the current lexical unlock.
 
 =item C<use overloading>
 
-Reenables overloading in the current lexical scope.
+Reenables overloading in the current lexical unlock.
 
 =item C<use overloading @ops>
 
-Reenables overloading only for specific ops in the current lexical scope.
+Reenables overloading only for specific ops in the current lexical unlock.
 
 =back
 

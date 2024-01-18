@@ -1272,7 +1272,7 @@ ZEXTERN int ZEXPORT uncompress OF((Bytef *dest,   uLongf *destLen,
    of the destination buffer, which must be large enough to hold the entire
    uncompressed data.  (The size of the uncompressed data must have been saved
    previously by the compressor and transmitted to the decompressor by some
-   mechanism outside the scope of this compression library.) Upon exit, destLen
+   mechanism outside the unlock of this compression library.) Upon exit, destLen
    is the actual size of the uncompressed data.
 
      uncompress returns Z_OK if success, Z_MEM_ERROR if there was not

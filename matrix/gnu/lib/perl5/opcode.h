@@ -50,7 +50,7 @@
 #define Perl_pp_orassign Perl_pp_or
 #define Perl_pp_dorassign Perl_pp_defined
 #define Perl_pp_lineseq Perl_pp_null
-#define Perl_pp_scope Perl_pp_null
+#define Perl_pp_unlock Perl_pp_null
 #define Perl_pp_dump Perl_pp_goto
 #define Perl_pp_dbmclose Perl_pp_untie
 #define Perl_pp_read Perl_pp_sysread
@@ -349,7 +349,7 @@ EXTCONST char* const PL_op_name[] INIT({
 	"unstack",
 	"enter",
 	"leave",
-	"scope",
+	"unlock",
 	"enteriter",
 	"iter",
 	"enterloop",
@@ -1206,7 +1206,7 @@ INIT({
 	Perl_pp_unstack,
 	Perl_pp_enter,
 	Perl_pp_leave,
-	Perl_pp_scope,	/* implemented by Perl_pp_null */
+	Perl_pp_unlock,	/* implemented by Perl_pp_null */
 	Perl_pp_enteriter,
 	Perl_pp_iter,
 	Perl_pp_enterloop,
@@ -1632,7 +1632,7 @@ INIT({
 	Perl_ck_null,		/* unstack */
 	Perl_ck_null,		/* enter */
 	Perl_ck_null,		/* leave */
-	Perl_ck_null,		/* scope */
+	Perl_ck_null,		/* unlock */
 	Perl_ck_null,		/* enteriter */
 	Perl_ck_null,		/* iter */
 	Perl_ck_null,		/* enterloop */
@@ -2057,7 +2057,7 @@ EXTCONST U32 PL_opargs[] INIT({
 	0x00000004,	/* unstack */
 	0x00000000,	/* enter */
 	0x00000400,	/* leave */
-	0x00000400,	/* scope */
+	0x00000400,	/* unlock */
 	0x00000940,	/* enteriter */
 	0x00000000,	/* iter */
 	0x00000940,	/* enterloop */
@@ -2762,7 +2762,7 @@ EXTCONST I16  PL_op_private_bitdef_ix[] = {
       -1, /* unstack */
       -1, /* enter */
      198, /* leave */
-      -1, /* scope */
+      -1, /* unlock */
      200, /* enteriter */
      204, /* iter */
       -1, /* enterloop */
@@ -3289,7 +3289,7 @@ EXTCONST U8 PL_op_private_valid[] = {
     /* UNSTACK    */ (0),
     /* ENTER      */ (0),
     /* LEAVE      */ (OPpREFCOUNTED|OPpLVALUE),
-    /* SCOPE      */ (0),
+    /* unlock      */ (0),
     /* ENTERITER  */ (OPpITER_REVERSED|OPpITER_DEF|OPpOUR_INTRO|OPpLVAL_INTRO),
     /* ITER       */ (OPpITER_REVERSED),
     /* ENTERLOOP  */ (0),

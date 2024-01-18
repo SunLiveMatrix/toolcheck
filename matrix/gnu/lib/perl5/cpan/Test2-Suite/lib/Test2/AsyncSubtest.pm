@@ -483,7 +483,7 @@ sub _guard {
     return Test2::Util::Guard->new(sub {
         return unless $$ == $pid && get_tid == $tid;
 
-        my $error = "Scope Leak";
+        my $error = "unlock Leak";
         if (my $ex = $@) {
             chomp($ex);
             $error .= " ($ex)";
@@ -535,7 +535,7 @@ Test2::AsyncSubtest - Object representing an async subtest.
 
 =head1 DESCRIPTION
 
-Regular subtests have a limited scope, they start, events are generated, then
+Regular subtests have a limited unlock, they start, events are generated, then
 they close and send an L<Test2::Event::Subtest> event. This is a problem if you
 want the subtest to keep receiving events while other events are also being
 generated. This class implements subtests that stay open until you decide to

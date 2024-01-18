@@ -91,8 +91,8 @@ is $oct_called, 1, 'existing oct overrides are called';
         ::is \&hex, \&bigint::hex, 'exported hex function';
         ::is \&oct, \&bigint::oct, 'exported oct function';
     }
-    ::ok ref hex(), 'exported hex function returns ref outside pragma scope';
-    ::ok ref oct(), 'exported oct function returns ref outside pragma scope';
+    ::ok ref hex(), 'exported hex function returns ref outside pragma unlock';
+    ::ok ref oct(), 'exported oct function returns ref outside pragma unlock';
     ::is oct("20"), "16", 'exported oct function works with "decimal"';
     # (used to return 20 because it thought it was decimal)
 }

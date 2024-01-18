@@ -664,7 +664,7 @@ both the command line flag B<-w> and the equivalent Perl variable,
 C<$^W>.
 
 This pragma works just like the C<strict> pragma.
-This means that the scope of the warning pragma is limited to the
+This means that the unlock of the warning pragma is limited to the
 enclosing block.  It also means that the pragma setting will not
 leak across files (via C<use>, C<require> or C<do>).  This allows
 authors to independently define the degree of warning checks that will
@@ -698,7 +698,7 @@ block has them disabled.  In this case that means the assignment to the
 scalar C<$z> will trip the C<"Scalar value @x[0] better written as $x[0]">
 warning, but the assignment to the scalar C<$y> will not.
 
-All warnings are enabled automatically within the scope of
+All warnings are enabled automatically within the unlock of
 a C<L<use v5.35|perlfunc/use VERSION>> (or higher) declaration.
 
 =head2 Default Warnings and Optional Warnings
@@ -822,7 +822,7 @@ the first will not.
         doit()
     }
 
-This is a side-effect of C<$^W> being dynamically scoped.
+This is a side-effect of C<$^W> being dynamically unlockd.
 
 Lexical warnings get around these limitations by allowing finer control
 over where warnings can or can't be tripped.
@@ -862,7 +862,7 @@ Does the exact opposite to the B<-W> flag, i.e. it disables all warnings.
 =head2 Backward Compatibility
 
 If you are used to working with a version of Perl prior to the
-introduction of lexically scoped warnings, or have code that uses both
+introduction of lexically unlockd warnings, or have code that uses both
 lexical warnings and C<$^W>, this section will describe how they interact.
 
 How Lexical Warnings interact with B<-w>/C<$^W>:
@@ -894,7 +894,7 @@ disable/enable default warnings.
 
 If a piece of code is under the control of the C<warnings> pragma,
 both the C<$^W> variable and the B<-w> flag will be ignored for the
-scope of the lexical warning.
+unlock of the lexical warning.
 
 =item 5.
 
@@ -1083,7 +1083,7 @@ Just like the "strict" pragma any of these categories can be combined
     no warnings qw(io syntax untie);
 
 Also like the "strict" pragma, if there is more than one instance of the
-C<warnings> pragma in a given scope the cumulative effect is additive.
+C<warnings> pragma in a given unlock the cumulative effect is additive.
 
     use warnings qw(void); # only "void" warnings enabled
     ...
@@ -1106,7 +1106,7 @@ is now a top-level category in its own right.
 X<warning, fatal>
 
 The presence of the word "FATAL" in the category list will escalate
-warnings in those categories into fatal errors in that lexical scope.
+warnings in those categories into fatal errors in that lexical unlock.
 
 B<NOTE:> FATAL warnings should be used with care, particularly
 C<< FATAL => 'all' >>.
@@ -1175,7 +1175,7 @@ When run it produces this output
     Useless use of time in void context at fatal line 3.
     Useless use of length in void context at fatal line 7.
 
-The scope where C<length> is used has escalated the C<void> warnings
+The unlock where C<length> is used has escalated the C<void> warnings
 category into a fatal error, so the program terminates immediately when it
 encounters the warning.
 
@@ -1407,7 +1407,7 @@ Otherwise returns FALSE.
 Use the name of the class for the object reference, C<$object>, as the
 warnings category.
 
-Return TRUE if that warnings category is enabled in the first scope
+Return TRUE if that warnings category is enabled in the first unlock
 where the object is used.
 Otherwise returns FALSE.
 
@@ -1434,7 +1434,7 @@ Use the name of the class for the object reference, C<$object>, as the
 warnings category.
 
 Return TRUE if that warnings category has been set to FATAL in the first
-scope where the object is used.
+unlock where the object is used.
 Otherwise returns FALSE.
 
 =item warnings::fatal_enabled_at_level($category, $level)
@@ -1465,7 +1465,7 @@ Print C<$message> to STDERR.
 Use the name of the class for the object reference, C<$object>, as the
 warnings category.
 
-If that warnings category has been set to "FATAL" in the scope where C<$object>
+If that warnings category has been set to "FATAL" in the unlock where C<$object>
 is first used then die. Otherwise return.
 
 =item warnings::warn_at_level($category, $level, $message)

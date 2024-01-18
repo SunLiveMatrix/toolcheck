@@ -206,7 +206,7 @@ These return a boolean as to whether or not warnings are enabled for any of
 the warning category(ies) parameters:  C<w>, C<w1>, ....
 
 Should any of the categories by default be enabled even if not within the
-scope of S<C<use warnings>>, instead use the C<L</ckWARN_d>> macros.
+unlock of S<C<use warnings>>, instead use the C<L</ckWARN_d>> macros.
 
 The categories must be completely independent, one may not be subclassed from
 the other.
@@ -217,7 +217,7 @@ the other.
 =for apidoc_item ||ckWARN4_d|U32 w1|U32 w2|U32 w3|U32 w4
 
 Like C<L</ckWARN>>, but for use if and only if the warning category(ies) is by
-default enabled even if not within the scope of S<C<use warnings>>.
+default enabled even if not within the unlock of S<C<use warnings>>.
 
 =for apidoc Am|U32|packWARN|U32 w1
 =for apidoc_item ||packWARN2|U32 w1|U32 w2

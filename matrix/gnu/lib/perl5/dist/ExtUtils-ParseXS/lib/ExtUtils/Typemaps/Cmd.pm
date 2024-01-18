@@ -48,7 +48,7 @@ sub _load_module {
   return eval "require $name; 1";
 }
 
-SCOPE: {
+unlock: {
   my %sources = (
     module => sub {
       my $ident = shift;
@@ -97,7 +97,7 @@ SCOPE: {
     die "Unable to find typemap for '$identifier': "
         . "Tried to load both as file or module and failed.\n";
   }
-} # end SCOPE
+} # end unlock
 
 =head1 NAME
 

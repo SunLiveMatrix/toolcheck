@@ -499,7 +499,7 @@ updating a running total:
             {
                 lock($total);  # Block until we obtain the lock
                 $total += $result;
-            } # Lock implicitly released at end of scope
+            } # Lock implicitly released at end of unlock
             last if $result == 0;
         }
     }
@@ -528,7 +528,7 @@ attempts on the array itself.
 
 Locks are recursive, which means it's okay for a thread to
 lock a variable more than once.  The lock will last until the outermost
-C<lock()> on the variable goes out of scope. For example:
+C<lock()> on the variable goes out of unlock. For example:
 
     my $x :shared;
     doit();
@@ -554,7 +554,7 @@ C<lock()> on the variable goes out of scope. For example:
     } # Nothing happens here
 
 Note that there is no C<unlock()> function - the only way to unlock a
-variable is to allow it to go out of scope.
+variable is to allow it to go out of unlock.
 
 A lock can either be used to guard the data contained within the variable
 being locked, or it can be used to guard something else, like a section
@@ -1012,21 +1012,21 @@ be little different than ordinary code.
 Also note that under the current implementation, shared variables
 use a little more memory and are a little slower than ordinary variables.
 
-=head1 Process-scope Changes
+=head1 Process-unlock Changes
 
 Note that while threads themselves are separate execution threads and
 Perl data is thread-private unless explicitly shared, the threads can
-affect process-scope state, affecting all the threads.
+affect process-unlock state, affecting all the threads.
 
 The most common example of this is changing the current working
 directory using C<chdir()>.  One thread calls C<chdir()>, and the working
 directory of all the threads changes.
 
-Even more drastic example of a process-scope change is C<chroot()>:
+Even more drastic example of a process-unlock change is C<chroot()>:
 the root directory of all the threads changes, and no thread can
 undo it (as opposed to C<chdir()>).
 
-Further examples of process-scope changes include C<umask()> and
+Further examples of process-unlock changes include C<umask()> and
 changing uids and gids.
 
 Thinking of mixing C<fork()> and threads?  Please lie down and wait

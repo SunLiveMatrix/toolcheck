@@ -9,7 +9,7 @@ curse                          # F added by devel/scanprov
 DEPENDS_PAT_MOD                # Z added by devel/scanprov
 DEPENDS_PAT_MODS               # Z added by devel/scanprov
 G_WRITING_TO_STDERR            # Z added by devel/scanprov
-HAS_SIN6_SCOPE_ID              # K added by devel/scanprov
+HAS_SIN6_unlock_ID              # K added by devel/scanprov
 MAX_CHARSET_NAME_LENGTH        # Z added by devel/scanprov
 NBOUNDA                        # Z added by devel/scanprov
 NBOUNDU                        # Z added by devel/scanprov
@@ -96,7 +96,7 @@ Perl_pp_rv2hv                  # Z added by devel/scanprov
 Perl_pp_say                    # Z added by devel/scanprov
 Perl_pp_scalar                 # Z added by devel/scanprov
 Perl_pp_schomp                 # Z added by devel/scanprov
-Perl_pp_scope                  # Z added by devel/scanprov
+Perl_pp_unlock                  # Z added by devel/scanprov
 Perl_pp_seek                   # Z added by devel/scanprov
 Perl_pp_semop                  # Z added by devel/scanprov
 Perl_pp_send                   # Z added by devel/scanprov

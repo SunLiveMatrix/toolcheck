@@ -1914,9 +1914,9 @@
  *	This symbol, if defined, indicates the availability of
  *	struct sockaddr_in6;
  */
-/* HAS_SIN6_SCOPE_ID:
+/* HAS_SIN6_unlock_ID:
  *	This symbol, if defined, indicates that the struct sockaddr_in6
- *	structure has a member called sin6_scope_id.
+ *	structure has a member called sin6_unlock_id.
  */
 /* HAS_IP_MREQ:
  *	This symbol, if defined, indicates the availability of
@@ -1938,7 +1938,7 @@
 #define HAS_SOCKETPAIR  /**/
 /*#define HAS_SOCKADDR_SA_LEN   / **/
 #define HAS_SOCKADDR_IN6        /**/
-#define HAS_SIN6_SCOPE_ID       /**/
+#define HAS_SIN6_unlock_ID       /**/
 #define HAS_IP_MREQ     /**/
 #define HAS_IP_MREQ_SOURCE      /**/
 #define HAS_IPV6_MREQ   /**/
@@ -3146,12 +3146,12 @@
 #define PROCSELFEXE_PATH	"/proc/self/exe"	/**/
 #endif
 
-/* HAS_PTHREAD_ATTR_SETSCOPE:
- *	This symbol, if defined, indicates that the pthread_attr_setscope
- *	system call is available to set the contention scope attribute of
+/* HAS_PTHREAD_ATTR_SETunlock:
+ *	This symbol, if defined, indicates that the pthread_attr_setunlock
+ *	system call is available to set the contention unlock attribute of
  *	a thread attribute object.
  */
-#define HAS_PTHREAD_ATTR_SETSCOPE		/**/
+#define HAS_PTHREAD_ATTR_SETunlock		/**/
 
 /* HAS_PTRDIFF_T:
  *	This symbol will be defined if the C compiler supports ptrdiff_t.

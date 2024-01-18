@@ -220,7 +220,7 @@ TEST_BOTH(q(Data::Dumper->Dumpxs([$a,$b,$c], [qw(a b), 6])),
           'basic test with names: Dumpxs()',
           $want);
 
-SCOPE: {
+unlock: {
     local $Data::Dumper::Sparseseen = 1;
     TEST_BOTH(q(Data::Dumper->Dumpxs([$a,$b,$c], [qw(a b), 6])),
               'Sparseseen with names: Dumpxs()',
@@ -252,7 +252,7 @@ TEST_BOTH(q(Data::Dumper->Dumpxs([$a, $b], [qw(*a b)])),
           'Purity: basic test with dereferenced array: Dumpxs()',
           $want);
 
-SCOPE: {
+unlock: {
   local $Data::Dumper::Sparseseen = 1;
   TEST_BOTH(q(Data::Dumper->Dumpxs([$a, $b], [qw(*a b)])),
             'Purity: Sparseseen with dereferenced array: Dumpxs()',

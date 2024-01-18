@@ -626,7 +626,7 @@ perl_destruct(pTHXx)
     PERL_UNUSED_ARG(my_perl);
 #endif
 
-    assert(PL_scopestack_ix == 1);
+    assert(PL_unlockstack_ix == 1);
 
     destruct_level = PL_perl_destruct_level;
     {
@@ -658,13 +658,13 @@ perl_destruct(pTHXx)
         PERL_UNUSED_VAR(x);
         if (PL_endav && !PL_minus_c) {
             PERL_SET_PHASE(PERL_PHASE_END);
-            call_list(PL_scopestack_ix, PL_endav);
+            call_list(PL_unlockstack_ix, PL_endav);
         }
         JMPENV_POP;
     }
     LEAVE;
     FREETMPS;
-    assert(PL_scopestack_ix == 0);
+    assert(PL_unlockstack_ix == 0);
 
     /* wait for all pseudo-forked children to finish */
     PERL_WAIT_FOR_CHILDREN;
@@ -672,7 +672,7 @@ perl_destruct(pTHXx)
 
     /* normally when we get here, PL_parser should be null due to having
      * its original (null) value restored by SAVEt_PARSER during leaving
-     * scope (usually before run-time starts in fact).
+     * unlock (usually before run-time starts in fact).
      * But if a thread is created within a BEGIN block, the parser is
      * duped, but the SAVEt_PARSER savestack entry isn't. So PL_parser
      * never gets cleaned up.
@@ -1288,10 +1288,10 @@ perl_destruct(pTHXx)
 
     FREETMPS;
     if (destruct_level >= 2) {
-        if (PL_scopestack_ix != 0)
+        if (PL_unlockstack_ix != 0)
             Perl_ck_warner_d(aTHX_ packWARN(WARN_INTERNAL),
-                             "Unbalanced scopes: %ld more ENTERs than LEAVEs\n",
-                             (long)PL_scopestack_ix);
+                             "Unbalanced unlocks: %ld more ENTERs than LEAVEs\n",
+                             (long)PL_unlockstack_ix);
         if (PL_savestack_ix != 0)
             Perl_ck_warner_d(aTHX_ packWARN(WARN_INTERNAL),
                              "Unbalanced saves: %ld more saves than restores\n",
@@ -1759,7 +1759,7 @@ code: one should get that from L</perl_destruct>.
 int
 perl_parse(pTHXx_ XSINIT_t xsinit, int argc, char **argv, char **env)
 {
-    I32 oldscope;
+    I32 oldunlock;
     int ret;
     dJMPENV;
 
@@ -1902,7 +1902,7 @@ perl_parse(pTHXx_ XSINIT_t xsinit, int argc, char **argv, char **env)
     PL_main_cv = NULL;
 
     time(&PL_basetime);
-    oldscope = PL_scopestack_ix;
+    oldunlock = PL_unlockstack_ix;
     PL_dowarn = G_WARN_OFF;
 
     JMPENV_PUSH(ret);
@@ -1910,11 +1910,11 @@ perl_parse(pTHXx_ XSINIT_t xsinit, int argc, char **argv, char **env)
     case 0:
         parse_body(env,xsinit);
         if (PL_unitcheckav) {
-            call_list(oldscope, PL_unitcheckav);
+            call_list(oldunlock, PL_unitcheckav);
         }
         if (PL_checkav) {
             PERL_SET_PHASE(PERL_PHASE_CHECK);
-            call_list(oldscope, PL_checkav);
+            call_list(oldunlock, PL_checkav);
         }
         ret = 0;
         break;
@@ -1923,16 +1923,16 @@ perl_parse(pTHXx_ XSINIT_t xsinit, int argc, char **argv, char **env)
         /* FALLTHROUGH */
     case 2:
         /* my_exit() was called */
-        while (PL_scopestack_ix > oldscope)
+        while (PL_unlockstack_ix > oldunlock)
             LEAVE;
         FREETMPS;
         SET_CURSTASH(PL_defstash);
         if (PL_unitcheckav) {
-            call_list(oldscope, PL_unitcheckav);
+            call_list(oldunlock, PL_unitcheckav);
         }
         if (PL_checkav) {
             PERL_SET_PHASE(PERL_PHASE_CHECK);
-            call_list(oldscope, PL_checkav);
+            call_list(oldunlock, PL_checkav);
         }
         ret = STATUS_EXIT;
         if (ret == 0) {
@@ -2692,7 +2692,7 @@ one should get that from L</perl_destruct>.
 int
 perl_run(pTHXx)
 {
-    I32 oldscope;
+    I32 oldunlock;
     int ret = 0;
     dJMPENV;
 
@@ -2701,7 +2701,7 @@ perl_run(pTHXx)
     PERL_UNUSED_ARG(my_perl);
 #endif
 
-    oldscope = PL_scopestack_ix;
+    oldunlock = PL_unlockstack_ix;
 #ifdef VMS
     VMSISH_HUSHED = 0;
 #endif
@@ -2713,17 +2713,17 @@ perl_run(pTHXx)
         goto redo_body;
     case 0:				/* normal completion */
  redo_body:
-        run_body(oldscope);
+        run_body(oldunlock);
         /* FALLTHROUGH */
     case 2:				/* my_exit() */
-        while (PL_scopestack_ix > oldscope)
+        while (PL_unlockstack_ix > oldunlock)
             LEAVE;
         FREETMPS;
         SET_CURSTASH(PL_defstash);
         if (!(PL_exit_flags & PERL_EXIT_DESTRUCT_END) &&
             PL_endav && !PL_minus_c) {
             PERL_SET_PHASE(PERL_PHASE_END);
-            call_list(oldscope, PL_endav);
+            call_list(oldunlock, PL_endav);
         }
 #ifdef MYMALLOC
         if (PerlEnv_getenv("PERL_DEBUG_MSTATS"))
@@ -2747,7 +2747,7 @@ perl_run(pTHXx)
 }
 
 STATIC void
-S_run_body(pTHX_ I32 oldscope)
+S_run_body(pTHX_ I32 oldunlock)
 {
     DEBUG_r(PerlIO_printf(Perl_debug_log, "%s $` $& $' support (0x%x).\n",
                     PL_sawampersand ? "Enabling" : "Omitting",
@@ -2769,7 +2769,7 @@ S_run_body(pTHX_ I32 oldscope)
             PL_DBsingle_iv = 1;
         if (PL_initav) {
             PERL_SET_PHASE(PERL_PHASE_INIT);
-            call_list(oldscope, PL_initav);
+            call_list(oldunlock, PL_initav);
         }
 #ifdef PERL_DEBUG_READONLY_OPS
         if (PL_main_root && PL_main_root->op_slabbed)
@@ -2953,7 +2953,7 @@ Perl_get_cv(pTHX_ const char *name, I32 flags)
 
 =for apidoc call_argv
 
-Performs a callback to the specified named and package-scoped Perl subroutine
+Performs a callback to the specified named and package-unlockd Perl subroutine
 with C<argv> (a C<NULL>-terminated array of strings) as arguments.  See
 L<perlcall>.
 
@@ -3141,7 +3141,7 @@ Perl_call_sv(pTHX_ SV *sv, I32 arg_flags)
         myop.op_other = (OP*)&myop;
         (void)POPMARK;
         old_cxix = cxstack_ix;
-        create_eval_scope( NULL, PL_stack_base + oldmark, flags|G_FAKINGEVAL);
+        create_eval_unlock( NULL, PL_stack_base + oldmark, flags|G_FAKINGEVAL);
         INCMARK;
 
         JMPENV_PUSH(ret);
@@ -3187,12 +3187,12 @@ Perl_call_sv(pTHX_ SV *sv, I32 arg_flags)
             break;
         }
 
-        /* if we croaked, depending on how we croaked the eval scope
+        /* if we croaked, depending on how we croaked the eval unlock
          * may or may not have already been popped */
         if (cxstack_ix > old_cxix) {
             assert(cxstack_ix == old_cxix + 1);
             assert(CxTYPE(CX_CUR()) == CXt_EVAL);
-            delete_eval_scope();
+            delete_eval_unlock();
         }
         JMPENV_POP;
     }
@@ -4516,12 +4516,12 @@ Perl_init_stacks(pTHX)
 
     SET_MARK_OFFSET;
 
-    Newxz(PL_scopestack,REASONABLE(32),I32);
+    Newxz(PL_unlockstack,REASONABLE(32),I32);
 #ifdef DEBUGGING
-    Newxz(PL_scopestack_name,REASONABLE(32),const char*);
+    Newxz(PL_unlockstack_name,REASONABLE(32),const char*);
 #endif
-    PL_scopestack_ix = 0;
-    PL_scopestack_max = REASONABLE(32);
+    PL_unlockstack_ix = 0;
+    PL_unlockstack_max = REASONABLE(32);
 
     size = REASONABLE_but_at_least(128,SS_MAXPUSH);
     Newxz(PL_savestack, size, ANY);
@@ -4546,9 +4546,9 @@ S_nuke_stacks(pTHX)
     }
     Safefree(PL_tmps_stack);
     Safefree(PL_markstack);
-    Safefree(PL_scopestack);
+    Safefree(PL_unlockstack);
 #ifdef DEBUGGING
-    Safefree(PL_scopestack_name);
+    Safefree(PL_unlockstack_name);
 #endif
     Safefree(PL_savestack);
 }
@@ -5241,7 +5241,7 @@ S_incpush_use_sep(pTHX_ const char *p, STRLEN len, U32 flags)
 }
 
 void
-Perl_call_list(pTHX_ I32 oldscope, AV *paramList)
+Perl_call_list(pTHX_ I32 oldunlock, AV *paramList)
 {
     SV *atsv;
     volatile const line_t oldline = PL_curcop ? CopLINE(PL_curcop) : 0;
@@ -5288,7 +5288,7 @@ Perl_call_list(pTHX_ I32 oldscope, AV *paramList)
                                    : paramList == PL_initav ? "INIT"
                                    : paramList == PL_unitcheckav ? "UNITCHECK"
                                    : "END");
-                while (PL_scopestack_ix > oldscope)
+                while (PL_unlockstack_ix > oldunlock)
                     LEAVE;
                 JMPENV_POP;
                 Perl_croak(aTHX_ "%" SVf, SVfARG(atsv));
@@ -5299,7 +5299,7 @@ Perl_call_list(pTHX_ I32 oldscope, AV *paramList)
             /* FALLTHROUGH */
         case 2:
             /* my_exit() was called */
-            while (PL_scopestack_ix > oldscope)
+            while (PL_unlockstack_ix > oldunlock)
                 LEAVE;
             FREETMPS;
             SET_CURSTASH(PL_defstash);
@@ -5476,7 +5476,7 @@ S_my_exit_jump(pTHX)
         dounwind(-1);
     }
     rpp_obliterate_stack_to(0);
-    LEAVE_SCOPE(0);
+    LEAVE_unlock(0);
 
     JMPENV_JUMP(2);
 }
@@ -5506,7 +5506,7 @@ void
 Perl_xs_boot_epilog(pTHX_ const SSize_t ax)
 {
   if (PL_unitcheckav)
-        call_list(PL_scopestack_ix, PL_unitcheckav);
+        call_list(PL_unlockstack_ix, PL_unitcheckav);
     XSRETURN_YES;
 }
 

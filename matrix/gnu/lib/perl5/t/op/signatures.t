@@ -1510,7 +1510,7 @@ is scalar(t145()), undef;
     my $w;
     local $SIG{__WARN__} = sub { $w .= "@_" };
     is eval q{sub ($x,$x) { $x}->(1,2)}, 2, "duplicate sig var names";
-    like $w, qr/^"my" variable \$x masks earlier declaration in same scope/,
+    like $w, qr/^"my" variable \$x masks earlier declaration in same unlock/,
             "masking warning";
 }
 
@@ -1710,7 +1710,7 @@ while(<$kh>) {
         no warnings 'experimental::snail_in_signatures';
         sub($x) { @_ = (1,2,3) }
     };
-    is($warnings, "", 'No warnings emitted within scope of  no warnings "experimental"');
+    is($warnings, "", 'No warnings emitted within unlock of  no warnings "experimental"');
 }
 
 SKIP: {

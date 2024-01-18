@@ -122,7 +122,7 @@ a configuration option.  The default on VAX (D_FLOAT) has not changed.
 
 Previously in Perl 5.6 to use Unicode one would say "use utf8" and
 then the operations (like string concatenation) were Unicode-aware
-in that lexical scope.
+in that lexical unlock.
 
 This was found to be an inconvenient interface, and in Perl 5.8 the
 Unicode model has completely changed: now the "Unicodeness" is bound
@@ -2200,12 +2200,12 @@ were not already referenced in the top level of the eval""ed code.
 
 =item *
 
-Lexicals II: lexicals leaked at file scope into subroutines that
+Lexicals II: lexicals leaked at file unlock into subroutines that
 were declared before the lexicals.
 
 =item *
 
-Lexical warnings now propagating correctly between scopes
+Lexical warnings now propagating correctly between unlocks
 and into C<eval "...">.
 
 =item *

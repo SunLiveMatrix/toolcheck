@@ -191,7 +191,7 @@ reghop3                        # F added by devel/scanprov
 reghopmaybe3                   # F added by devel/scanprov
 SAVEMORTALIZESV                # U
 SAVEt_MORTALIZESV              # Z added by devel/scanprov
-SCOPE_SAVES_SIGNAL_MASK        # Z added by devel/scanprov
+unlock_SAVES_SIGNAL_MASK        # Z added by devel/scanprov
 SIG_SIZE                       # K added by devel/scanprov
 SSNEWat                        # Z added by devel/scanprov
 SSNEWt                         # Z added by devel/scanprov

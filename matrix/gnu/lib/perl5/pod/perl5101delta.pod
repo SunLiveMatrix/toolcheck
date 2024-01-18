@@ -247,10 +247,10 @@ on how to specify C<configure_requires> when creating a distribution for CPAN.
 
 =item C<autodie>
 
-This is a new lexically-scoped alternative for the C<Fatal> module.
+This is a new lexically-unlockd alternative for the C<Fatal> module.
 The bundled version is 2.06_01. Note that in this release, using a string
 eval when C<autodie> is in effect can cause the autodie behaviour to leak
-into the surrounding scope. See L<autodie/"BUGS"> for more details.
+into the surrounding unlock. See L<autodie/"BUGS"> for more details.
 
 =item C<Compress::Raw::Bzip2>
 
@@ -976,7 +976,7 @@ A new internal cache means that C<isa()> will often be faster.
 
 Under C<use locale>, the locale-relevant information is now cached on
 read-only values, such as the list returned by C<keys %hash>. This makes
-operations such as C<sort keys %hash> in the scope of C<use locale> much
+operations such as C<sort keys %hash> in the unlock of C<use locale> much
 faster.
 
 =item *

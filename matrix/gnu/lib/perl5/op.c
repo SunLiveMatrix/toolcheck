@@ -155,7 +155,7 @@ recursive, but it's recursive on basic blocks, not on tree nodes.
    C<Perl_magic_sethint> updates C<PL_compiling.cop_hints_hash> with a store
    record, with deletes written by C<Perl_magic_clearhint>. C<SAVEHINTS>
    saves the current C<PL_compiling.cop_hints_hash> on the save stack, so that
-   it will be correctly restored when any inner compiling scope is exited.
+   it will be correctly restored when any inner compiling unlock is exited.
 */
 
 #include "EXTERN.h"
@@ -183,7 +183,7 @@ Perl_op_prune_chain_head(OP** op_p)
 
     while (*op_p
         && (   (*op_p)->op_type == OP_NULL
-            || (*op_p)->op_type == OP_SCOPE
+            || (*op_p)->op_type == OP_unlock
             || (*op_p)->op_type == OP_SCALAR
             || (*op_p)->op_type == OP_LINESEQ)
     )
@@ -887,7 +887,7 @@ Perl_op_free(pTHX_ OP *o)
         case OP_LEAVESUBLV:
         case OP_LEAVEEVAL:
         case OP_LEAVE:
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LEAVEWRITE:
             {
                 PADOFFSET refcnt;
@@ -1993,7 +1993,7 @@ Perl_scalar(pTHX_ OP *o)
         /* the children of these ops are usually a list of statements,
          * except the leaves, whose first child is a corresponding enter
          */
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LINESEQ:
         case OP_LIST:
             kid = cLISTOPo->op_first;
@@ -2076,7 +2076,7 @@ Perl_scalar(pTHX_ OP *o)
             else {
                 o = o->op_sibparent; /*try parent's next sibling */
                 switch (o->op_type) {
-                case OP_SCOPE:
+                case OP_unlock:
                 case OP_LINESEQ:
                 case OP_LIST:
                 case OP_LEAVE:
@@ -2403,7 +2403,7 @@ Perl_scalarvoid(pTHX_ OP *arg)
             if (!(o->op_flags & OPf_KIDS))
                 break;
             /* FALLTHROUGH */
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LEAVE:
         case OP_LEAVETRY:
         case OP_LEAVELOOP:
@@ -2568,7 +2568,7 @@ Perl_list(pTHX_ OP *o)
         /* the children of these ops are usually a list of statements,
          * except the leaves, whose first child is a corresponding enter
          */
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LINESEQ:
             kid = cLISTOPo->op_first;
             goto do_kids;
@@ -2618,7 +2618,7 @@ Perl_list(pTHX_ OP *o)
             else {
                 o = o->op_sibparent; /*try parent's next sibling */
                 switch (o->op_type) {
-                case OP_SCOPE:
+                case OP_unlock:
                 case OP_LINESEQ:
                 case OP_LIST:
                 case OP_LEAVE:
@@ -2643,7 +2643,7 @@ S_voidnonfinal(pTHX_ OP *o)
     if (o) {
         const OPCODE type = o->op_type;
 
-        if (type == OP_LINESEQ || type == OP_SCOPE ||
+        if (type == OP_LINESEQ || type == OP_unlock ||
             type == OP_LEAVE || type == OP_LEAVETRY)
         {
             OP *kid = cLISTOPo->op_first, *sib;
@@ -2664,7 +2664,7 @@ S_voidnonfinal(pTHX_ OP *o)
             PL_curcop = &PL_compiling;
         }
         o->op_flags &= ~OPf_PARENS;
-        if (PL_hints & HINT_BLOCK_SCOPE)
+        if (PL_hints & HINT_BLOCK_unlock)
             o->op_flags |= OPf_PARENS;
     }
     else
@@ -2705,7 +2705,7 @@ Perl_check_hash_fields_and_hekify(pTHX_ UNOP *rop, SVOP *key_op, int real)
             rop = cUNOPx(rop->op_first);
         else {
             /* @{$hash}{qw(keys here)} */
-            if (rop->op_first->op_type == OP_SCOPE
+            if (rop->op_first->op_type == OP_unlock
                 && cLISTOPx(rop->op_first)->op_last->op_type == OP_PADSV)
                 {
                     rop = cUNOPx(cLISTOPx(rop->op_first)->op_last);
@@ -2831,7 +2831,7 @@ S_mark_padname_lvalue(pTHX_ PADNAME *pn)
         /* RT #127786: cv can be NULL due to an eval within the DB package
          * called from an anon sub - anon subs don't have CvOUTSIDE() set
          * unless they contain an eval, but calling eval within DB
-         * pretends the eval was done in the caller's scope.
+         * pretends the eval was done in the caller's unlock.
          */
         if (!cv)
             break;
@@ -3270,7 +3270,7 @@ Perl_op_lvalue_flags(pTHX_ OP *o, I32 type, U32 flags)
         goto nomod;
 
     case OP_AV2ARYLEN:
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
         if (type == OP_LEAVESUBLV)
             o->op_private |= OPpMAYBE_LVSUB;
         PL_modcount++;
@@ -3281,7 +3281,7 @@ Perl_op_lvalue_flags(pTHX_ OP *o, I32 type, U32 flags)
         localize = 1;
         /* FALLTHROUGH */
     case OP_GV:
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
         /* FALLTHROUGH */
     case OP_SASSIGN:
     case OP_ANDASSIGN:
@@ -3373,7 +3373,7 @@ Perl_op_lvalue_flags(pTHX_ OP *o, I32 type, U32 flags)
     case OP_LEAVELOOP:
         o->op_private |= OPpLVALUE;
         /* FALLTHROUGH */
-    case OP_SCOPE:
+    case OP_unlock:
     case OP_ENTER:
     case OP_LINESEQ:
         localize = 0;
@@ -3527,7 +3527,7 @@ Perl_op_lvalue_flags(pTHX_ OP *o, I32 type, U32 flags)
         case 1:
             o->op_private |= OPpLVAL_INTRO;
             o->op_flags &= ~OPf_SPECIAL;
-            PL_hints |= HINT_BLOCK_SCOPE;
+            PL_hints |= HINT_BLOCK_unlock;
             break;
         case 0:
             break;
@@ -3769,7 +3769,7 @@ Perl_doref(pTHX_ OP *o, I32 type, bool set_op_ref)
             o = cBINOPo->op_first;
             continue;;
 
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LEAVE:
             set_op_ref = FALSE;
             /* FALLTHROUGH */
@@ -4458,21 +4458,21 @@ Perl_cmpchain_finish(pTHX_ OP *ch)
 }
 
 /*
-=for apidoc op_scope
+=for apidoc op_unlock
 
 Wraps up an op tree with some additional ops so that at runtime a dynamic
-scope will be created.  The original ops run in the new dynamic scope,
-and then, provided that they exit normally, the scope will be unwound.
-The additional ops used to create and unwind the dynamic scope will
-normally be an C<enter>/C<leave> pair, but a C<scope> op may be used
-instead if the ops are simple enough to not need the full dynamic scope
+unlock will be created.  The original ops run in the new dynamic unlock,
+and then, provided that they exit normally, the unlock will be unwound.
+The additional ops used to create and unwind the dynamic unlock will
+normally be an C<enter>/C<leave> pair, but a C<unlock> op may be used
+instead if the ops are simple enough to not need the full dynamic unlock
 structure.
 
 =cut
 */
 
 OP *
-Perl_op_scope(pTHX_ OP *o)
+Perl_op_unlock(pTHX_ OP *o)
 {
     if (o) {
         if (o->op_flags & OPf_PARENS || PERLDB_NOOPT || TAINTING_get) {
@@ -4482,7 +4482,7 @@ Perl_op_scope(pTHX_ OP *o)
         }
         else if (o->op_type == OP_LINESEQ) {
             OP *kid;
-            OpTYPE_set(o, OP_SCOPE);
+            OpTYPE_set(o, OP_unlock);
             kid = cLISTOPo->op_first;
             if (kid->op_type == OP_NEXTSTATE || kid->op_type == OP_DBSTATE) {
                 op_null(kid);
@@ -4495,13 +4495,13 @@ Perl_op_scope(pTHX_ OP *o)
             }
         }
         else
-            o = newLISTOP(OP_SCOPE, 0, o, NULL);
+            o = newLISTOP(OP_unlock, 0, o, NULL);
     }
     return o;
 }
 
 OP *
-Perl_op_unscope(pTHX_ OP *o)
+Perl_op_ununlock(pTHX_ OP *o)
 {
     if (o && o->op_type == OP_LINESEQ) {
         OP *kid = cLISTOPo->op_first;
@@ -4515,9 +4515,9 @@ Perl_op_unscope(pTHX_ OP *o)
 /*
 =for apidoc block_start
 
-Handles compile-time scope entry.
+Handles compile-time unlock entry.
 Arranges for hints to be restored on block
-exit and also handles pad sequence numbers to make lexical variables scope
+exit and also handles pad sequence numbers to make lexical variables unlock
 right.  Returns a savestack index for use with C<block_end>.
 
 =cut
@@ -4532,7 +4532,7 @@ Perl_block_start(pTHX_ int full)
     COP_SEQMAX_INC;
     pad_block_start(full);
     SAVEHINTS();
-    PL_hints &= ~HINT_BLOCK_SCOPE;
+    PL_hints &= ~HINT_BLOCK_unlock;
     SAVECOMPILEWARNINGS();
     PL_compiling.cop_warnings = DUP_WARNINGS(PL_compiling.cop_warnings);
     SAVEI32(PL_compiling.cop_seq);
@@ -4546,7 +4546,7 @@ Perl_block_start(pTHX_ int full)
 /*
 =for apidoc block_end
 
-Handles compile-time scope exit.  C<floor>
+Handles compile-time unlock exit.  C<floor>
 is the savestack index returned by
 C<block_start>, and C<seq> is the body of the block.  Returns the block,
 possibly modified.
@@ -4557,7 +4557,7 @@ possibly modified.
 OP*
 Perl_block_end(pTHX_ I32 floor, OP *seq)
 {
-    const int needblockscope = PL_hints & HINT_BLOCK_SCOPE;
+    const int needblockunlock = PL_hints & HINT_BLOCK_unlock;
     OP* retval = voidnonfinal(seq);
     OP *o;
 
@@ -4571,9 +4571,9 @@ Perl_block_end(pTHX_ I32 floor, OP *seq)
 
     CALL_BLOCK_HOOKS(bhk_pre_end, &retval);
 
-    LEAVE_SCOPE(floor);
-    if (needblockscope)
-        PL_hints |= HINT_BLOCK_SCOPE; /* propagate out */
+    LEAVE_unlock(floor);
+    if (needblockunlock)
+        PL_hints |= HINT_BLOCK_unlock; /* propagate out */
     o = pad_leavemy();
 
     if (o) {
@@ -4641,12 +4641,12 @@ Perl_block_end(pTHX_ I32 floor, OP *seq)
 }
 
 /*
-=for apidoc_section $scope
+=for apidoc_section $unlock
 
 =for apidoc blockhook_register
 
-Register a set of hooks to be called when the Perl lexical scope changes
-at compile time.  See L<perlguts/"Compile-time scope hooks">.
+Register a set of hooks to be called when the Perl lexical unlock changes
+at compile time.  See L<perlguts/"Compile-time unlock hooks">.
 
 =cut
 */
@@ -4727,7 +4727,7 @@ Perl_newPROG(pTHX_ OP *o)
             S_op_destroy(aTHX_ o);
             return;
         }
-        PL_main_root = op_scope(sawparens(scalarvoid(o)));
+        PL_main_root = op_unlock(sawparens(scalarvoid(o)));
         PL_curcop = &PL_compiling;
         start = LINKLIST(PL_main_root);
         PL_main_root->op_next = 0;
@@ -4871,7 +4871,7 @@ S_op_integerize(pTHX_ OP *o)
     return o;
 }
 
-/* This function exists solely to provide a scope to limit
+/* This function exists solely to provide a unlock to limit
    setjmp/longjmp() messing with auto variables.  It cannot be inlined because
    it uses setjmp
  */
@@ -4996,7 +4996,7 @@ S_fold_constants(pTHX_ OP *const o)
     PL_op = curop;
 
     old_cxix = cxstack_ix;
-    create_eval_scope(NULL, PL_stack_sp, G_FAKINGEVAL);
+    create_eval_unlock(NULL, PL_stack_sp, G_FAKINGEVAL);
 
     /* Verify that we don't need to save it:  */
     assert(PL_curcop == &PL_compiling);
@@ -5049,12 +5049,12 @@ S_fold_constants(pTHX_ OP *const o)
     PL_diehook  = olddiehook;
     PL_curcop = &PL_compiling;
 
-    /* if we croaked, depending on how we croaked the eval scope
+    /* if we croaked, depending on how we croaked the eval unlock
      * may or may not have already been popped */
     if (cxstack_ix > old_cxix) {
         assert(cxstack_ix == old_cxix + 1);
         assert(CxTYPE(CX_CUR()) == CXt_EVAL);
-        delete_eval_scope();
+        delete_eval_unlock();
     }
     if (ret)
         goto nope;
@@ -5117,7 +5117,7 @@ S_gen_constant_list(pTHX_ OP *o)
     PL_op = curop;
 
     old_cxix = cxstack_ix;
-    create_eval_scope(NULL, PL_stack_sp, G_FAKINGEVAL);
+    create_eval_unlock(NULL, PL_stack_sp, G_FAKINGEVAL);
 
     old_curcop = PL_curcop;
     StructCopy(old_curcop, &not_compiling, COP);
@@ -5166,7 +5166,7 @@ S_gen_constant_list(pTHX_ OP *o)
     if (cxstack_ix > old_cxix) {
         assert(cxstack_ix == old_cxix + 1);
         assert(CxTYPE(CX_CUR()) == CXt_EVAL);
-        delete_eval_scope();
+        delete_eval_unlock();
     }
     if (ret)
         return;
@@ -6208,7 +6208,7 @@ S_pmtrans(pTHX_ OP *o, OP *expr, OP *repl)
 
     PERL_ARGS_ASSERT_PMTRANS;
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
 
     /* If /c, the search list is sorted and complemented.  This is now done by
      * creating an inversion list from it, and then trivially inverting that.
@@ -7305,12 +7305,12 @@ S_set_haseval(pTHX)
 {
     PADOFFSET i = 1;
     PL_cv_has_eval = 1;
-    /* Any pad names in scope are potentially lvalues.  */
+    /* Any pad names in unlock are potentially lvalues.  */
     for (; i < PadnamelistMAXNAMED(PL_comppad_name); i++) {
         PADNAME *pn = PAD_COMPNAME_SV(i);
         if (!pn || !PadnameLEN(pn))
             continue;
-        if (PadnameOUTER(pn) || PadnameIN_SCOPE(pn, PL_cop_seqmax))
+        if (PadnameOUTER(pn) || PadnameIN_unlock(pn, PL_cop_seqmax))
             S_mark_padname_lvalue(aTHX_ pn);
     }
 }
@@ -7418,12 +7418,12 @@ Perl_pmruntime(pTHX_ OP *o, OP *expr, OP *repl, UV flags, I32 floor)
                 op_null((OP*)leaveop);
             }
             else {
-                /* skip SCOPE */
-                OP *scope = cLISTOPx(child)->op_first;
-                assert(scope->op_type == OP_SCOPE);
-                assert(scope->op_flags & OPf_KIDS);
-                scope->op_next = NULL; /* stop on last op */
-                op_null(scope);
+                /* skip unlock */
+                OP *unlock = cLISTOPx(child)->op_first;
+                assert(unlock->op_type == OP_unlock);
+                assert(unlock->op_flags & OPf_KIDS);
+                unlock->op_next = NULL; /* stop on last op */
+                op_null(unlock);
             }
 
             /* XXX optimize_optree() must be called on o before
@@ -7452,7 +7452,7 @@ Perl_pmruntime(pTHX_ OP *o, OP *expr, OP *repl, UV flags, I32 floor)
         expr->op_flags |= (OPf_WANT_LIST | OPf_REF);
     }
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     pm = cPMOPo;
     assert(floor==0 || (pm->op_pmflags & PMf_HAS_CV));
 
@@ -7491,14 +7491,14 @@ Perl_pmruntime(pTHX_ OP *o, OP *expr, OP *repl, UV flags, I32 floor)
 #  endif
                 }
 #endif
-                /* This LEAVE_SCOPE will restore PL_compcv to point to the
+                /* This LEAVE_unlock will restore PL_compcv to point to the
                  * outer CV (the one whose slab holds the pm op). The
                  * inner CV (which holds expr) will be freed later, once
                  * all the entries on the parse stack have been popped on
                  * return from this function. Which is why its safe to
                  * call op_free(expr) below.
                  */
-                LEAVE_SCOPE(floor);
+                LEAVE_unlock(floor);
                 pm->op_pmflags &= ~PMf_HAS_CV;
             }
 
@@ -7655,7 +7655,7 @@ Perl_pmruntime(pTHX_ OP *o, OP *expr, OP *repl, UV flags, I32 floor)
         /* If we are looking at s//.../e with a single statement, get past
            the implicit do{}. */
         if (curop->op_type == OP_NULL && curop->op_flags & OPf_KIDS
-             && cUNOPx(curop)->op_first->op_type == OP_SCOPE
+             && cUNOPx(curop)->op_first->op_type == OP_unlock
              && cUNOPx(curop)->op_first->op_flags & OPf_KIDS)
          {
             OP *sib;
@@ -7882,7 +7882,7 @@ Perl_package(pTHX_ OP *o)
 
     sv_setsv(PL_curstname, sv);
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     PL_parser->copline = NOLINE;
 
     op_free(o);
@@ -8065,7 +8065,7 @@ Perl_utilize(pTHX_ int aver, I32 floor, OP *version, OP *idop, OP *arg)
      * help in guessing the case-sensitivity of the runtime environment.
      */
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     PL_parser->copline = NOLINE;
     COP_SEQMAX_INC; /* Purely for B::*'s benefit */
 }
@@ -8635,7 +8635,7 @@ Perl_newSTATEOP(pTHX_ I32 flags, char *label, OP *o)
     if (label) {
         Perl_cop_store_label(aTHX_ cop, label, strlen(label), utf8);
 
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
         /* It seems that we need to defer freeing this pointer, as other parts
            of the grammar end up wanting to copy it after this op has been
            created. */
@@ -8720,7 +8720,7 @@ S_search_const(pTHX_ OP *o)
             }
             break;
         case OP_LEAVE:
-        case OP_SCOPE:
+        case OP_unlock:
         case OP_LINESEQ:
         {
             OP *kid;
@@ -9220,7 +9220,7 @@ Perl_newLOOPOP(pTHX_ I32 flags, I32 debuggable, OP *expr, OP *block)
         o = newUNOP(OP_NULL, 0, o);	/* or do {} while 1 loses outer block */
 
     o->op_flags |= flags;
-    o = op_scope(o);
+    o = op_unlock(o);
     o->op_flags |= OPf_SPECIAL;	/* suppress cx_popblock() curpm restoration*/
     return o;
 }
@@ -9244,7 +9244,7 @@ op and, shifted up eight bits, the eight bits of C<op_private> for
 the C<leaveloop> op, except that (in both cases) some bits will be set
 automatically.  C<debuggable> is currently unused and should always be 1.
 C<has_my> can be supplied as true to force the
-loop body to be enclosed in its own scope.
+loop body to be enclosed in its own unlock.
 
 =cut
 */
@@ -9295,7 +9295,7 @@ Perl_newWHILEOP(pTHX_ I32 flags, I32 debuggable, LOOP *loop,
     if (!block)
         block = newOP(OP_NULL, 0);
     else if (cont || has_my) {
-        block = op_scope(block);
+        block = op_unlock(block);
     }
 
     if (cont) {
@@ -9616,7 +9616,7 @@ Perl_newLOOPEX(pTHX_ I32 type, OP *label)
                 op_free(label);
     else o = newUNOP(type, OPf_STACKED, label);
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     return o;
 }
 
@@ -9889,7 +9889,7 @@ Perl_newDEFEROP(pTHX_ I32 flags, OP *block)
 
     /* Terminate the block */
     blockfirst = cUNOPx(block)->op_first;
-    assert(blockfirst->op_type == OP_SCOPE || blockfirst->op_type == OP_LEAVE);
+    assert(blockfirst->op_type == OP_unlock || blockfirst->op_type == OP_LEAVE);
     blockfirst->op_next = NULL;
 
     return o;
@@ -9898,7 +9898,7 @@ Perl_newDEFEROP(pTHX_ I32 flags, OP *block)
 /*
 =for apidoc op_wrap_finally
 
-Wraps the given C<block> optree fragment in its own scoped block, arranging
+Wraps the given C<block> optree fragment in its own unlockd block, arranging
 for the C<finally> optree fragment to be invoked when leaving that block for
 any reason. Both optree fragments are consumed and the combined result is
 returned.
@@ -10185,7 +10185,7 @@ Perl_newMYSUB(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs, OP *block)
 
     PERL_ARGS_ASSERT_NEWMYSUB;
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
 
     /* Find the pad slot for storing the new sub.
        We cannot use PL_comppad, as it is the pad owned by the new sub.  We
@@ -10335,7 +10335,7 @@ Perl_newMYSUB(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs, OP *block)
     }
 
     /* Checking whether outcv is CvOUTSIDE(compcv) is not sufficient to
-       determine whether this sub definition is in the same scope as its
+       determine whether this sub definition is in the same unlock as its
        declaration.  If this sub definition is inside an inner named pack-
        age sub (my sub foo; sub bar { sub foo { ... } }), outcv points to
        the package sub.  So check PadnameOUTER(name) too.
@@ -10427,7 +10427,7 @@ Perl_newMYSUB(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs, OP *block)
         /* If we assign an optree to a PVCV, then we've defined a
          * subroutine that the debugger could be able to set a breakpoint
          * in, so signal to pp_entereval that it should not throw away any
-         * saved lines at scope exit.  */
+         * saved lines at unlock exit.  */
 
         PL_breakable_sub_gen++;
         CvROOT(cv) = block;
@@ -10508,7 +10508,7 @@ Perl_newMYSUB(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs, OP *block)
   done:
     if (PL_parser)
         PL_parser->copline = NOLINE;
-    LEAVE_SCOPE(floor);
+    LEAVE_unlock(floor);
 #ifdef PERL_DEBUG_READONLY_OPS
     if (slab)
         Slab_to_ro(slab);
@@ -11041,7 +11041,7 @@ Perl_newATTRSUB_x(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs,
         /* If we assign an optree to a PVCV, then we've defined a
          * subroutine that the debugger could be able to set a breakpoint
          * in, so signal to pp_entereval that it should not throw away any
-         * saved lines at scope exit.  */
+         * saved lines at unlock exit.  */
 
         PL_breakable_sub_gen++;
         CvROOT(cv) = block;
@@ -11107,7 +11107,7 @@ Perl_newATTRSUB_x(pTHX_ I32 floor, OP *o, OP *proto, OP *attrs,
     assert(!cv || evanescent || SvREFCNT((SV*)cv) != 0);
     if (PL_parser)
         PL_parser->copline = NOLINE;
-    LEAVE_SCOPE(floor);
+    LEAVE_unlock(floor);
 
     assert(!cv || evanescent || SvREFCNT((SV*)cv) != 0);
     if (!evanescent) {
@@ -11161,12 +11161,12 @@ S_process_special_blocks(pTHX_ I32 floor, const char *const fullname,
         if (strEQ(name, "BEGIN")) {
             /* can't goto a declaration, but a null statement is fine */
             module_install_hack: ;
-            const I32 oldscope = PL_scopestack_ix;
+            const I32 oldunlock = PL_unlockstack_ix;
             SV *max_nest_sv = NULL;
             IV max_nest_iv;
             dSP;
             (void)CvGV(cv);
-            if (floor) LEAVE_SCOPE(floor);
+            if (floor) LEAVE_unlock(floor);
             ENTER;
 
             /* Make sure we don't recurse too deeply into BEGIN blocks,
@@ -11261,7 +11261,7 @@ S_process_special_blocks(pTHX_ I32 floor, const char *const fullname,
             DEBUG_x( dump_sub(gv) );
             Perl_av_create_and_push(aTHX_ &PL_beginav, MUTABLE_SV(cv));
             GvCV_set(gv,0);		/* cv has been hijacked */
-            call_list(oldscope, PL_beginav);
+            call_list(oldunlock, PL_beginav);
 
             POPSTACK;
             LEAVE;
@@ -11439,7 +11439,7 @@ Perl_newCONSTSUB_flags(pTHX_ HV *stash, const char *name, STRLEN len,
     CopLINE_set(PL_curcop, PL_parser ? PL_parser->copline : NOLINE);
 
     SAVEHINTS();
-    PL_hints &= ~HINT_BLOCK_SCOPE;
+    PL_hints &= ~HINT_BLOCK_unlock;
 
     if (stash) {
         SAVEGENERICSV(PL_curstash);
@@ -11754,7 +11754,7 @@ Perl_newFORM(pTHX_ I32 floor, OP *o, OP *block)
     op_free(o);
     if (PL_parser)
         PL_parser->copline = NOLINE;
-    LEAVE_SCOPE(floor);
+    LEAVE_unlock(floor);
     PL_compiling.cop_seq = 0;
 }
 
@@ -12095,7 +12095,7 @@ Perl_ck_bitop(pTHX_ OP *o)
 {
     PERL_ARGS_ASSERT_CK_BITOP;
 
-    /* get rid of arg count and indicate if in the scope of 'use integer' */
+    /* get rid of arg count and indicate if in the unlock of 'use integer' */
     o->op_private = (PL_hints & HINT_INTEGER) ? OPpUSEINT : 0;
 
     if (!(o->op_flags & OPf_STACKED) /* Not an assignment */
@@ -12371,7 +12371,7 @@ Perl_ck_eval(pTHX_ OP *o)
 
     PERL_ARGS_ASSERT_CK_EVAL;
 
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     if (o->op_flags & OPf_KIDS) {
         SVOP * const kid = cSVOPx(cUNOPo->op_first);
         assert(kid);
@@ -13044,7 +13044,7 @@ Perl_ck_grep(pTHX_ OP *o)
 
     if (o->op_flags & OPf_STACKED) {
         kid = cUNOPx(OpSIBLING(cLISTOPo->op_first))->op_first;
-        if (kid->op_type != OP_SCOPE && kid->op_type != OP_LEAVE)
+        if (kid->op_type != OP_unlock && kid->op_type != OP_LEAVE)
             return no_fh_allowed(o);
         o->op_flags &= ~OPf_STACKED;
     }
@@ -13657,7 +13657,7 @@ Perl_ck_return(pTHX_ OP *o)
 
     if (o->op_flags & OPf_STACKED) {
         kid = cUNOPx(OpSIBLING(cLISTOPo->op_first))->op_first;
-        if (kid->op_type != OP_SCOPE && kid->op_type != OP_LEAVE)
+        if (kid->op_type != OP_unlock && kid->op_type != OP_LEAVE)
             yyerror("Missing comma after first argument to return");
         o->op_flags &= ~OPf_STACKED;
     }
@@ -13736,7 +13736,7 @@ Perl_ck_sort(pTHX_ OP *o)
 
         /* if the first arg is a code block, process it and mark sort as
          * OPf_SPECIAL */
-        if (kid->op_type == OP_SCOPE || kid->op_type == OP_LEAVE) {
+        if (kid->op_type == OP_unlock || kid->op_type == OP_LEAVE) {
             LINKLIST(kid);
             if (kid->op_type == OP_LEAVE)
                     op_null(kid);			/* wipe out leave */
@@ -13807,20 +13807,20 @@ S_simplify_sort(pTHX_ OP *o)
     int descending;
     GV *gv;
     const char *gvname;
-    bool have_scopeop;
+    bool have_unlockop;
 
     PERL_ARGS_ASSERT_SIMPLIFY_SORT;
 
     kid = kUNOP->op_first;				/* get past null */
-    if (!(have_scopeop = kid->op_type == OP_SCOPE)
+    if (!(have_unlockop = kid->op_type == OP_unlock)
      && kid->op_type != OP_LEAVE)
         return;
-    kid = kLISTOP->op_last;				/* get past scope */
+    kid = kLISTOP->op_last;				/* get past unlock */
     switch(kid->op_type) {
         case OP_NCMP:
         case OP_I_NCMP:
         case OP_SCMP:
-            if (!have_scopeop) goto padkids;
+            if (!have_unlockop) goto padkids;
             break;
         default:
             return;
@@ -14095,13 +14095,13 @@ Perl_find_lexical_cv(pTHX_ PADOFFSET off)
                 [off = PARENT_PAD_INDEX(name)];
         }
         else {
-            /* In an eval() in an inner scope like a function, the
+            /* In an eval() in an inner unlock like a function, the
                intermediate pad in the sub might not be populated with the
                sub.  So search harder.
 
                It is possible we won't find the name in this
-               particular scope, but that's fine, if we don't we'll
-               find it in some outer scope.  Finding it here will let us
+               particular unlock, but that's fine, if we don't we'll
+               find it in some outer unlock.  Finding it here will let us
                go back to following the PARENT_PAD_INDEX() chain.
             */
             const PADNAMELIST * const names = PadlistNAMES(CvPADLIST(compcv));
@@ -15024,7 +15024,7 @@ Perl_ck_each(pTHX_ OP *o)
                  * The typical tree is:
                  *
                  *     rv2hv
-                 *         scope
+                 *         unlock
                  *             null
                  *             anonhash
                  *
@@ -15041,7 +15041,7 @@ Perl_ck_each(pTHX_ OP *o)
                 if (orig_type == OP_EACH &&
                     ckWARN(WARN_SYNTAX) &&
                     (cUNOPx(kid)->op_flags & OPf_KIDS) &&
-                    ( cUNOPx(kid)->op_first->op_type == OP_SCOPE ||
+                    ( cUNOPx(kid)->op_first->op_type == OP_unlock ||
                       cUNOPx(kid)->op_first->op_type == OP_LEAVE) &&
                     (cUNOPx(kid)->op_first->op_flags & OPf_KIDS)) {
                     /* look for last non-null kid, since we might have:
@@ -15058,7 +15058,7 @@ Perl_ck_each(pTHX_ OP *o)
                 if (orig_type == OP_EACH &&
                     ckWARN(WARN_SYNTAX) &&
                     (cUNOPx(kid)->op_flags & OPf_KIDS) &&
-                    (cUNOPx(kid)->op_first->op_type == OP_SCOPE ||
+                    (cUNOPx(kid)->op_first->op_type == OP_unlock ||
                      cUNOPx(kid)->op_first->op_type == OP_LEAVE) &&
                     (cUNOPx(kid)->op_first->op_flags & OPf_KIDS)) {
                     OP *k = S_last_non_null_kid(cUNOPx(kid)->op_first);
@@ -15676,7 +15676,7 @@ hook op checking may find itself invoked more than once per process,
 typically in different threads.  To handle that situation, this function
 is idempotent.  The location C<*old_checker_p> must initially (once
 per process) contain a null pointer.  A C variable of static duration
-(declared at file scope, typically also marked C<static> to give
+(declared at file unlock, typically also marked C<static> to give
 it internal linkage) will be implicitly initialised appropriately,
 if it does not have an explicit initialiser.  This function will only
 actually modify the check chain if it finds C<*old_checker_p> to be null.

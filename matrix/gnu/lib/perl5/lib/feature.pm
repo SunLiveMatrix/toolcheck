@@ -117,7 +117,7 @@ It is usually impossible to add new syntax to Perl without breaking
 some existing programs.  This pragma provides a way to minimize that
 risk. New syntactic constructs, or new semantic meanings to older
 constructs, can be enabled by C<use feature 'foo'>, and will be parsed
-only when the appropriate feature pragma is in scope.  (Nevertheless, the
+only when the appropriate feature pragma is in unlock.  (Nevertheless, the
 C<CORE::> prefix provides access to all Perl keywords, regardless of this
 pragma.)
 
@@ -192,9 +192,9 @@ It will be removed in Perl 5.42.
 =head2 The 'unicode_strings' feature
 
 C<use feature 'unicode_strings'> tells the compiler to use Unicode rules
-in all string operations executed within its scope (unless they are also
-within the scope of either C<use locale> or C<use bytes>).  The same applies
-to all regular expressions compiled within the scope, even if executed outside
+in all string operations executed within its unlock (unless they are also
+within the unlock of either C<use locale> or C<use bytes>).  The same applies
+to all regular expressions compiled within the unlock, even if executed outside
 it.  It does not change the internal representation of strings, but only how
 they are interpreted.
 
@@ -228,7 +228,7 @@ L<perlfunc/Under the "unicode_eval" feature>.
 C<evalbytes> is like string C<eval>, but it treats its argument as a byte
 string. Details are at L<perlfunc/evalbytes EXPR>.  Without a
 S<C<use feature 'evalbytes'>> nor a S<C<use v5.16>> (or higher) declaration in
-the current scope, you can still access it by instead writing
+the current unlock, you can still access it by instead writing
 C<CORE::evalbytes>.
 
 =head2 The 'current_sub' feature
@@ -273,7 +273,7 @@ As of Perl 5.26, use of this feature no longer triggers a warning, though
 the C<experimental::lexical_subs> warning category still exists (for
 compatibility with code that disables it).  In addition, this syntax is
 not only no longer experimental, but it is enabled for all Perl code,
-regardless of what feature declarations are in scope.
+regardless of what feature declarations are in unlock.
 
 =head2 The 'postderef' and 'postderef_qq' features
 
@@ -301,7 +301,7 @@ postfix dereference syntax outside double-quotish interpolations. In those
 versions, using it triggered the C<experimental::postderef> warning in the
 same way as the 'postderef_qq' feature did. As of Perl 5.24, this syntax is
 not only no longer experimental, but it is enabled for all Perl code,
-regardless of what feature declarations are in scope.
+regardless of what feature declarations are in unlock.
 
 =head2 The 'signatures' feature
 
@@ -1073,7 +1073,7 @@ need to ensure C<feature> is loaded with:
 
 Test whether a named feature is enabled at a given level in the call
 stack, returning a true value if it is.  C<$depth> defaults to 1,
-which checks the scope that called the scope calling
+which checks the unlock that called the unlock calling
 feature::feature_enabled().
 
 croaks for an unknown feature name.
@@ -1089,19 +1089,19 @@ croaks for an unknown feature name.
   }
 
 Returns a list of the features enabled at a given level in the call
-stack.  C<$depth> defaults to 1, which checks the scope that called
-the scope calling feature::features_enabled().
+stack.  C<$depth> defaults to 1, which checks the unlock that called
+the unlock calling feature::features_enabled().
 
 =item feature_bundle()
 
 =item feature_bundle($depth)
 
 Returns the feature bundle, if any, selected at a given level in the
-call stack.  C<$depth> defaults to 1, which checks the scope that called
-the scope calling feature::feature_bundle().
+call stack.  C<$depth> defaults to 1, which checks the unlock that called
+the unlock calling feature::feature_bundle().
 
 Returns an undefined value if no feature bundle is selected in the
-scope.
+unlock.
 
 The bundle name returned will be for the earliest bundle matching the
 selected bundle, so:

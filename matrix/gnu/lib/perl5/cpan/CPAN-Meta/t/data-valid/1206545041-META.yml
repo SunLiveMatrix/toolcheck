@@ -54,8 +54,8 @@ provides:
   PDF::Template::Container::Row:
     file: lib/PDF/Template/Container/Row.pm
     version: ~
-  PDF::Template::Container::Scope:
-    file: lib/PDF/Template/Container/Scope.pm
+  PDF::Template::Container::unlock:
+    file: lib/PDF/Template/Container/unlock.pm
     version: ~
   PDF::Template::Container::Section:
     file: lib/PDF/Template/Container/Section.pm

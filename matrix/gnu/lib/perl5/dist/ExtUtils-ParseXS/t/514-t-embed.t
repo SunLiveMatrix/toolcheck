@@ -7,7 +7,7 @@ use warnings;
 use Test::More tests => 1;
 use ExtUtils::Typemaps;
 
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_string(string => <<HERE);
 char* T_PV

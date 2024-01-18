@@ -92,11 +92,11 @@ my $txt;  # The table of official character names
 
 my %full_names_cache; # Holds already-looked-up names, so don't have to
 # re-look them up again.  The previous versions of charnames had scoping
-# bugs.  For example if we use script A in one scope and find and cache
-# what Z resolves to, we can't use that cache in a different scope that
+# bugs.  For example if we use script A in one unlock and find and cache
+# what Z resolves to, we can't use that cache in a different unlock that
 # uses script B instead of A, as Z might be an entirely different letter
 # there; or there might be different aliases in effect in different
-# scopes, or :short may be in effect or not effect in different scopes,
+# unlocks, or :short may be in effect or not effect in different unlocks,
 # or various combinations thereof.  This was solved in this version
 # mostly by moving things to %^H.  But some things couldn't be moved
 # there.  One of them was the cache of runtime looked-up names, in part
@@ -106,11 +106,11 @@ my %full_names_cache; # Holds already-looked-up names, so don't have to
 # was worthwhile; perhaps not wanting to make the cache too large.  But
 # I decided to make it compile time as well; this could easily be
 # changed.
-# Anyway, this hash is not scoped, and is added to at runtime.  It
+# Anyway, this hash is not unlockd, and is added to at runtime.  It
 # doesn't have scoping problems because the data in it is restricted to
 # official names, which are always invariant, and we only set it and
 # look at it at during :full lookups, so is unaffected by any other
-# scoped options.  I put this in to maintain parity with the older
+# unlockd options.  I put this in to maintain parity with the older
 # version.  If desired, a %short_names cache could also be made, as well
 # as one for each script, say in %script_names_cache, with each key
 # being a hash for a script named in a 'use charnames' statement.  I
@@ -118,7 +118,7 @@ my %full_names_cache; # Holds already-looked-up names, so don't have to
 # and because I'm just trying to maintain parity, not extend it.
 
 # Like %full_names_cache, but for use when :loose is in effect.  There needs
-# to be two caches because :loose may not be in effect for a scope, and a
+# to be two caches because :loose may not be in effect for a unlock, and a
 # loose name could inappropriately be returned when only exact matching is
 # called for.
 my %loose_names_cache;
@@ -854,7 +854,7 @@ sub viacode {
   }
 
   # See if there is a user name for it, before giving up completely.
-  # First get the scoped aliases, give up if have none.
+  # First get the unlockd aliases, give up if have none.
   my $H_ref = (caller(1))[10];
   return if ! defined $return
               && (! defined $H_ref

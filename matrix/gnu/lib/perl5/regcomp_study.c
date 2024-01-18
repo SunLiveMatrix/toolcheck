@@ -2243,7 +2243,7 @@ Perl_study_chunk(pTHX_
                      *
                      * However we must assume this GOSUB is infinite, to
                      * avoid wrongly applying other optimizations in the
-                     * enclosing scope - see GH 18096, for example.
+                     * enclosing unlock - see GH 18096, for example.
                      */
                     is_inf = is_inf_internal = 1;
                     scan= regnext(scan);

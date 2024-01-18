@@ -6,7 +6,7 @@
   Mandatory Warnings All TODO
   ------------------
   Recompile perl with -DDEBUGGING to use -D switch	[moreswitches]
-  Unbalanced scopes: %ld more ENTERs than LEAVEs	[perl_destruct]
+  Unbalanced unlocks: %ld more ENTERs than LEAVEs	[perl_destruct]
   Unbalanced saves: %ld more saves than restores	[perl_destruct]
   Unbalanced tmps: %ld more allocs than frees		[perl_destruct]
   Unbalanced context: %ld more PUSHes than POPs		[perl_destruct]

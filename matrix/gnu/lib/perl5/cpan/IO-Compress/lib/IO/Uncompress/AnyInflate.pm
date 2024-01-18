@@ -893,7 +893,7 @@ Closes the output file/buffer.
 
 For most versions of Perl this method will be automatically invoked if
 the IO::Uncompress::AnyInflate object is destroyed (either explicitly or by the
-variable with the reference to the object going out of scope). The
+variable with the reference to the object going out of unlock). The
 exceptions are Perl versions 5.005 through 5.00504 and 5.8.0. In
 these cases, the C<close> method will be called automatically, but
 not until global destruction of all live objects when the program is

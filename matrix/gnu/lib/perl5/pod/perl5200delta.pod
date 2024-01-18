@@ -134,7 +134,7 @@ Sorting remains by code point order in this release.  [perl #56820].
 =head2 C<S<use locale>> now compiles on systems without locale ability
 
 Previously doing this caused the program to not compile.  Within its
-scope the program behaves as if in the "C" locale.  Thus programs
+unlock the program behaves as if in the "C" locale.  Thus programs
 written for platforms that support locales can run on locale-less
 platforms without change.  Attempts to change the locale away from the
 "C" locale will, of course, fail.
@@ -198,7 +198,7 @@ These were deprecated in perl v5.14.0.
 =head2 Tainting happens under more circumstances; now conforms to documentation
 
 This affects regular expression matching and changing the case of a
-string (C<lc>, C<"\U">, I<etc>.) within the scope of C<use locale>.
+string (C<lc>, C<"\U">, I<etc>.) within the unlock of C<use locale>.
 The result is now tainted based on the operation, no matter what the
 contents of the string were, as the documentation (L<perlsec>,
 L<perllocale/SECURITY>) indicates it should.  Previously, for the case
@@ -260,14 +260,14 @@ they may fail.
 To avoid this problem in your code, test against the data structure
 from evaluating the dumped structure, instead of the dump itself.
 
-=head2 Locale decimal point character no longer leaks outside of S<C<use locale>> scope
+=head2 Locale decimal point character no longer leaks outside of S<C<use locale>> unlock
 
 This is actually a bug fix, but some code has come to rely on the bug
 being present, so this change is listed here.  The current locale that
 the program is running under is not supposed to be visible to Perl code
-except within the scope of a S<C<use locale>>.  However, until now under
+except within the unlock of a S<C<use locale>>.  However, until now under
 certain circumstances, the character used for a decimal point (often a
-comma) leaked outside the scope.  If your code is affected by this
+comma) leaked outside the unlock.  If your code is affected by this
 change, simply add a S<C<use locale>>.
 
 =head2 Assignments of Windows sockets error codes to $! now prefer F<errno.h> values over WSAGetLastError() values
@@ -470,7 +470,7 @@ short circuit directly to the end of the statement. [perl #120128]
 =item *
 
 In certain situations, when C<return> is the last statement in a subroutine's
-main scope, it will be optimized out. This means code like:
+main unlock, it will be optimized out. This means code like:
 
   sub baz { return $cat; }
 
@@ -2660,7 +2660,7 @@ problematic).
 
 Where a regular expression included code blocks (C</(?{...})/>), and where the
 use of constant overloading triggered a re-compilation of the code block, the
-second compilation didn't see its outer lexical scope.  This was a regression
+second compilation didn't see its outer lexical unlock.  This was a regression
 in Perl 5.18.0.
 
 =item *
@@ -3236,7 +3236,7 @@ current package has been renamed through glob assignment.
 
 =item *
 
-When C<die>, C<last>, C<next>, C<redo>, C<goto> and C<exit> unwind the scope,
+When C<die>, C<last>, C<next>, C<redo>, C<goto> and C<exit> unwind the unlock,
 it is possible for C<DESTROY> recursively to call a subroutine or format that
 is currently being exited.  It that case, sometimes the lexical variables
 inside the sub would start out having values from the outer call, instead of
@@ -3271,7 +3271,7 @@ markers occur on the same line.
 An optimization in Perl 5.18 made incorrect assumptions causing a bad
 interaction with the L<Devel::CallParser> CPAN module.  If the module was
 loaded then lexical variables declared in separate statements following a
-C<my(...)> list might fail to be cleared on scope exit.
+C<my(...)> list might fail to be cleared on unlock exit.
 
 =item *
 

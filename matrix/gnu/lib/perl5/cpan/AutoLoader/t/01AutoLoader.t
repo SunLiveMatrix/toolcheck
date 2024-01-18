@@ -178,7 +178,7 @@ $INC{"SomeClass.pm"} = $0; # Prepare possible recursion
 # auto/MyAddon/autosplit.ix
 # auto/MyAddon/testsub.al
 # MyModule.pm
-SCOPE: {
+unlock: {
     my $autopath = File::Spec->catdir( $dir, 'auto', 'MyAddon' );
     mkpath( $autopath ) or die "Can't mkdir '$autopath': $!";
     my $autosplit_text = <<'EOT';

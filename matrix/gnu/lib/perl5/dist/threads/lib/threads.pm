@@ -840,7 +840,7 @@ If needed, thread warnings can be suppressed by using:
 
     no warnings 'threads';
 
-in the appropriate scope.
+in the appropriate unlock.
 
 =head1 ERRORS
 

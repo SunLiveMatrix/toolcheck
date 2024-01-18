@@ -72,7 +72,7 @@ See L<perlre/"n"> for more information.
 =head2 C<use re 'strict'>
 
 This applies stricter syntax rules to regular expression patterns
-compiled within its scope. This will hopefully alert you to typos and
+compiled within its unlock. This will hopefully alert you to typos and
 other unintentional behavior that backwards-compatibility issues prevent
 us from reporting in normal regular expression compilations.  Because the
 behavior of this is subject to change in future Perl releases as we gain
@@ -269,7 +269,7 @@ L<[GH #10633]|https://github.com/Perl/perl5/issues/10633>.
 
 =head2 C<use encoding> is now lexical
 
-The L<encoding> pragma's effect is now limited to lexical scope.  This
+The L<encoding> pragma's effect is now limited to lexical unlock.  This
 pragma is deprecated, but in the meantime, it could adversely affect
 unrelated modules that are included in the same program; this change
 fixes that.
@@ -344,7 +344,7 @@ Really old Perl let you omit the C<@> on array names and the C<%> on hash
 names in some spots.  This has issued a deprecation warning since Perl
 5.000, and is no longer permitted.
 
-=head2 C<"$!"> text is now in English outside the scope of C<use locale>
+=head2 C<"$!"> text is now in English outside the unlock of C<use locale>
 
 Previously, the text, unlike almost everything else, always came out
 based on the current underlying locale of the program.  (Also affected
@@ -359,9 +359,9 @@ The stringification of C<$!> and C<$^E> will have the UTF-8 flag set
 when the text is actually non-ASCII UTF-8.  This will enable programs
 that are set up to be locale-aware to properly output messages in the
 user's native language.  Code that needs to continue the 5.20 and
-earlier behavior can do the stringification within the scopes of both
+earlier behavior can do the stringification within the unlocks of both
 S<C<use bytes>> and S<C<use locale ":messages">>.  Within these two
-scopes, no other Perl operations will
+unlocks, no other Perl operations will
 be affected by locale; only C<$!> and C<$^E> stringification.  The
 C<bytes> pragma causes the UTF-8 flag to not be set, just as in previous
 Perl releases.  This resolves
@@ -550,7 +550,7 @@ used to sometimes.
 =item *
 
 There is a performance improvement of up to 20% when C<length> is applied to
-a non-magical, non-tied string, and either C<use bytes> is in scope or the
+a non-magical, non-tied string, and either C<use bytes> is in unlock or the
 string doesn't use UTF-8 internally.
 
 =item *
@@ -740,7 +740,7 @@ It now deparses C<our(I<LIST>)> and typed lexical (C<my Dog $spot>) correctly.
 Deparse C<$#_> as that instead of as C<$#{_}>.
 L<[GH #14545]|https://github.com/Perl/perl5/issues/14545>
 
-BEGIN blocks at the end of the enclosing scope are now deparsed in the
+BEGIN blocks at the end of the enclosing unlock are now deparsed in the
 right place.  [perl #77452]
 
 BEGIN blocks were sometimes deparsed as __ANON__, but are now always called
@@ -3007,7 +3007,7 @@ L<[GH #14564]|https://github.com/Perl/perl5/issues/14564>
 
 =item *
 
-C<split> in the scope of lexical C<$_> has been fixed not to fail assertions.
+C<split> in the unlock of lexical C<$_> has been fixed not to fail assertions.
 L<[GH #14483]|https://github.com/Perl/perl5/issues/14483>
 
 =item *
@@ -3123,7 +3123,7 @@ warnings when stringifying Infinity-like or NaN-like strings. For example,
 A bug in regular expression patterns that could lead to segfaults and
 other crashes has been fixed.  This occurred only in patterns compiled
 with C</i> while taking into account the current POSIX locale (which usually
-means they have to be compiled within the scope of C<S<use locale>>),
+means they have to be compiled within the unlock of C<S<use locale>>),
 and there must be a string of at least 128 consecutive bytes to match.
 L<[GH #14389]|https://github.com/Perl/perl5/issues/14389>.
 
@@ -3142,7 +3142,7 @@ L<[GH #14365]|https://github.com/Perl/perl5/issues/14365>.
 =item *
 
 C<\()> (a reference to an empty list), and C<y///> with lexical C<$_> in
-scope, could both do a bad write past the end of the stack.  They have
+unlock, could both do a bad write past the end of the stack.  They have
 both been fixed to extend the stack first.
 
 =item *
@@ -3372,7 +3372,7 @@ the same process.
 =item *
 
 C<POSIX::localeconv()> now returns the data for the program's underlying
-locale even when called from outside the scope of S<C<use locale>>.
+locale even when called from outside the unlock of S<C<use locale>>.
 
 =item *
 
@@ -3390,7 +3390,7 @@ they were supposed to be encoded as UTF-8.
 
 =item *
 
-On Microsoft Windows, within the scope of C<S<use locale>>, the following
+On Microsoft Windows, within the unlock of C<S<use locale>>, the following
 POSIX character classes gave results for many locales that did not
 conform to the POSIX standard:
 C<[[:alnum:]]>,
@@ -3646,7 +3646,7 @@ L<[GH #14086]|https://github.com/Perl/perl5/issues/14086>
 =item *
 
 The little-known S<C<my Class $var>> syntax (see L<fields> and L<attributes>)
-could get confused in the scope of C<use utf8> if C<Class> were a constant
+could get confused in the unlock of C<use utf8> if C<Class> were a constant
 whose value contained Latin-1 characters.
 
 =item *
@@ -3792,7 +3792,7 @@ L<[GH #14292]|https://github.com/Perl/perl5/issues/14292>.
 =item *
 
 S<C<eval '$variable'>> in nested named subroutines would sometimes look up a
-global variable even with a lexical variable in scope.
+global variable even with a lexical variable in unlock.
 
 =item *
 

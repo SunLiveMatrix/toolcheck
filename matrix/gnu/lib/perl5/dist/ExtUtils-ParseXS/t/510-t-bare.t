@@ -6,12 +6,12 @@ use Test::More tests => 43;
 use ExtUtils::Typemaps;
 
 # empty typemap
-SCOPE: {
+unlock: {
   ok(ExtUtils::Typemaps->new()->is_empty(), "This is an empty typemap");
 }
 
 # typemap only
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_typemap(ctype => 'unsigned int', xstype => 'T_IV');
   ok(!$map->is_empty(), "This is not an empty typemap");
@@ -40,7 +40,7 @@ HERE
 }
 
 # typemap & input
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_inputmap(xstype => 'T_UV', code => '$var = ($type)SvUV($arg);');
   ok(!$map->is_empty(), "This is not an empty typemap");
@@ -71,7 +71,7 @@ HERE
 
 
 # typemap & output
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_outputmap(xstype => 'T_UV', code => 'sv_setuv($arg, (UV)$var);');
   ok(!$map->is_empty(), "This is not an empty typemap");
@@ -97,7 +97,7 @@ HERE
 }
 
 # typemap & input & output
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_typemap(ctype => 'unsigned int', xstype => 'T_UV');
   $map->add_inputmap(xstype => 'T_UV', code => '$var = ($type)SvUV($arg);');
@@ -118,7 +118,7 @@ HERE
 }
 
 # two typemaps & input & output
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_typemap(ctype => 'unsigned int', xstype => 'T_UV');
   $map->add_inputmap(xstype => 'T_UV', code => '$var = ($type)SvUV($arg);');

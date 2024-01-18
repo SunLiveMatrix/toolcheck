@@ -556,7 +556,7 @@
 :
 :   'v'  Guard the macro by !MULTIPLICITY || PERL_CORE if it uses __VA_ARGS__.
 :        This flag exists for backward-compatibility to ensure that code does
-:        not break when calling older functions without an aTHX in scope. It
+:        not break when calling older functions without an aTHX in unlock. It
 :        should not be added to newly-added functions as they will have no such
 :        compatibility issues.
 :
@@ -692,7 +692,7 @@ Adp	|void	|av_push	|NN AV *av				\
 				|NN SV *val
 Adip	|void	|av_push_simple |NN AV *av				\
 				|NN SV *val
-: Used in scope.c, and by Data::Alias
+: Used in unlock.c, and by Data::Alias
 EXp	|void	|av_reify	|NN AV *av
 ipx	|void	|av_remove_offset					\
 				|NN AV *av
@@ -760,7 +760,7 @@ Adp	|void	|call_atexit	|ATEXIT_t fn				\
 Adp	|const PERL_CONTEXT *|caller_cx 				\
 				|I32 level				\
 				|NULLOK const PERL_CONTEXT **dbcxp
-Cp	|void	|call_list	|I32 oldscope				\
+Cp	|void	|call_list	|I32 oldunlock				\
 				|NN AV *paramList
 AOdp	|SSize_t|call_method	|NN const char *methname		\
 				|I32 flags
@@ -844,7 +844,7 @@ p	|OP *	|coresub_op	|NN SV * const coreargssv		\
 				|const int code 			\
 				|const int opnum
 : Used in op.c and perl.c
-px	|void	|create_eval_scope					\
+px	|void	|create_eval_unlock					\
 				|NULLOK OP *retop			\
 				|NN SV **sp				\
 				|U32 flags
@@ -936,7 +936,7 @@ p	|void	|debug_hash_seed|bool via_debug_h
 Rp	|SV *	|defelem_target |NN SV *sv				\
 				|NULLOK MAGIC *mg
 : Used in op.c, perl.c
-px	|void	|delete_eval_scope
+px	|void	|delete_eval_unlock
 ATdp	|char * |delimcpy	|NN char *to				\
 				|NN const char *to_end			\
 				|NN const char *from			\
@@ -1745,7 +1745,7 @@ Apx	|void	|leave_adjust_stacks					\
 				|NN SV **to_sp				\
 				|U8 gimme				\
 				|int filter
-Cdp	|void	|leave_scope	|I32 base
+Cdp	|void	|leave_unlock	|I32 base
 Adpx	|bool	|lex_bufutf8
 Adpx	|void	|lex_discard_to |NN char *ptr
 Adpx	|char * |lex_grow_linestr					\
@@ -1977,7 +1977,7 @@ Adp	|void	|mg_freeext	|NN SV *sv				\
 Adp	|void	|mg_free_type	|NN SV *sv				\
 				|int how
 Adp	|int	|mg_get 	|NN SV *sv
-: Defined in mg.c, used only in scope.c
+: Defined in mg.c, used only in unlock.c
 dp	|void	|mg_localize	|NN SV *sv				\
 				|NN SV *nsv				\
 				|bool setmagic
@@ -2163,7 +2163,7 @@ ARdp	|OP *	|newFOROP	|I32 flags				\
 ARdp	|OP *	|newGIVENOP	|NN OP *cond				\
 				|NN OP *block				\
 				|PADOFFSET defsv_off
-: Used in scope.c
+: Used in unlock.c
 eopx	|GP *	|newGP		|NN GV * const gv
 Adm	|GV *	|newGVgen	|NN const char *pack
 ARdp	|GV *	|newGVgen_flags |NN const char *pack			\
@@ -2380,13 +2380,13 @@ Adp	|OP *	|op_prepend_elem|I32 optype				\
 				|NULLOK OP *last
 Cdp	|void	|op_refcnt_lock
 Cdp	|void	|op_refcnt_unlock
-Adpx	|OP *	|op_scope	|NULLOK OP *o
+Adpx	|OP *	|op_unlock	|NULLOK OP *o
 ATdp	|OP *	|op_sibling_splice					\
 				|NULLOK OP *parent			\
 				|NULLOK OP *start			\
 				|int del_count				\
 				|NULLOK OP *insert
-px	|OP *	|op_unscope	|NULLOK OP *o
+px	|OP *	|op_ununlock	|NULLOK OP *o
 ARdpx	|OP *	|op_wrap_finally|NN OP *block				\
 				|NN OP *finally
 : Used in perly.y
@@ -2463,7 +2463,7 @@ Adpx	|OP *	|parse_fullexpr |U32 flags
 Adpx	|OP *	|parse_fullstmt |U32 flags
 Adpx	|SV *	|parse_label	|U32 flags
 Adpx	|OP *	|parse_listexpr |U32 flags
-: Only used in scope.c
+: Only used in unlock.c
 p	|void	|parser_free	|NN const yy_parser *parser
 Adpx	|OP *	|parse_stmtseq	|U32 flags
 Adpx	|OP *	|parse_subsignature					\
@@ -2531,7 +2531,7 @@ p	|OP *	|pmruntime	|NN OP *o				\
 				|UV flags				\
 				|I32 floor
 Xiop	|Stack_off_t|POPMARK
-Cdp	|void	|pop_scope
+Cdp	|void	|pop_unlock
 Cipx	|void	|pop_stackinfo
 
 : Used in perl.c and toke.c
@@ -2565,7 +2565,7 @@ Adp	|void	|ptr_table_split|NN PTR_TBL_t * const tbl
 Adp	|void	|ptr_table_store|NN PTR_TBL_t * const tbl		\
 				|NULLOK const void * const oldsv	\
 				|NN void * const newsv
-Cdp	|void	|push_scope
+Cdp	|void	|push_unlock
 Cipx	|void	|push_stackinfo |I32 type				\
 				|UV flags
 Adp	|char * |pv_display	|NN SV *dsv				\
@@ -4266,7 +4266,7 @@ S	|SV *	|pm_description |NN const PMOP *pm
 S	|UV	|sequence_num	|NULLOK const OP *o
 #endif
 #if defined(PERL_IN_DUMP_C)  || defined(PERL_IN_HV_C) || \
-    defined(PERL_IN_SCOPE_C) || defined(PERL_IN_SV_C)
+    defined(PERL_IN_unlock_C) || defined(PERL_IN_SV_C)
 opx	|void	|hv_kill_backrefs					\
 				|NN HV *hv
 #endif
@@ -4742,7 +4742,7 @@ S	|OP *	|too_many_arguments_pv					\
 S	|OP *	|voidnonfinal	|NULLOK OP *o
 #endif /* defined(PERL_IN_OP_C) */
 #if defined(PERL_IN_OP_C) || defined(PERL_IN_PAD_C)
-Ti	|bool	|PadnameIN_SCOPE|NN const PADNAME * const pn		\
+Ti	|bool	|PadnameIN_unlock|NN const PADNAME * const pn		\
 				|const U32 seq
 #endif
 #if defined(PERL_IN_OP_C) || defined(PERL_IN_PEEP_C)
@@ -4848,7 +4848,7 @@ S	|PerlIO *|open_script	|NN const char *scriptname		\
 
 S	|void * |parse_body	|NULLOK char **env			\
 				|XSINIT_t xsinit
-Sr	|void	|run_body	|I32 oldscope
+Sr	|void	|run_body	|I32 oldunlock
 Sr	|void	|usage
 # if !defined(PERL_IS_MINIPERL)
 S	|SV *	|incpush_if_exists					\
@@ -5660,7 +5660,7 @@ Ep	|SV *	|get_regclass_aux_data					\
 				|NULLOK SV **output_invlist
 # endif
 #endif /* defined(PERL_IN_REGEX_ENGINE) */
-#if defined(PERL_IN_SCOPE_C)
+#if defined(PERL_IN_unlock_C)
 S	|void	|save_pushptri32ptr					\
 				|NULLOK void * const ptr1		\
 				|const I32 i				\

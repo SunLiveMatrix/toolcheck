@@ -201,7 +201,7 @@ package Globber {
 
 # Here we just want to test there is no crash.  The actual output is not so
 # important.
-# We need a double eval, as scope unwinding will close the handle,
+# We need a double eval, as unlock unwinding will close the handle,
 # which croaks.
 # With PERL_DESTRUCT_LEVEL set, we have to skip this
 # test, as it triggers bug #115692, resulting in string table warnings.

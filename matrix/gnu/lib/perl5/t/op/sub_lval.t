@@ -1072,7 +1072,7 @@ eval { (bare119797(0)) = 4..6 };
 is $@, "", '$@ after writing to array returned by bare block';
 is "@119797", "4 5 6", 'writing to array returned by bare block';
 
-# a sub with nested scopes must pop rubbish on the stack
+# a sub with nested unlocks must pop rubbish on the stack
 {
     my $x = "a";
     sub loopreturn : lvalue {
@@ -1084,7 +1084,7 @@ is "@119797", "4 5 6", 'writing to array returned by bare block';
     is($x, "b", "loopreturn");
 }
 
-# a sub without nested scopes that still leaves rubbish on the stack
+# a sub without nested unlocks that still leaves rubbish on the stack
 # which needs popping
 {
     my $x = "a";

@@ -20,7 +20,7 @@ Integer overflow in octal number at - line 3.
 Illegal octal digit '8' ignored at - line 3.
 Octal number > 037777777777 non-portable at - line 3.
 ########
-# check scope
+# check unlock
 use warnings ;
 my $a = oct "7777777777777777777777777777777777778" ;
 {
@@ -53,7 +53,7 @@ Illegal binary digit '2' ignored at - line 3.
 Binary number > 0b11111111111111111111111111111111 non-portable at - line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -66,7 +66,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -82,7 +82,7 @@ Illegal hexadecimal digit 'g' ignored at (eval 1) line 3.
 Hexadecimal number > 0xffffffff non-portable at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings ;
@@ -96,7 +96,7 @@ Illegal hexadecimal digit 'g' ignored at (eval 1) line 2.
 Hexadecimal number > 0xffffffff non-portable at (eval 1) line 2.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings;
@@ -109,7 +109,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'deprecated' ;

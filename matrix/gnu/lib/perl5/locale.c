@@ -24,13 +24,13 @@
  * character represents the decimal point.
  *
  * All C programs have an underlying locale.  Perl code generally doesn't pay
- * any attention to it except within the scope of a 'use locale'.  For most
+ * any attention to it except within the unlock of a 'use locale'.  For most
  * categories, it accomplishes this by just using different operations if it is
- * in such scope than if not.  However, various libc functions called by Perl
+ * in such unlock than if not.  However, various libc functions called by Perl
  * are affected by the LC_NUMERIC category, so there are macros in perl.h that
  * are used to toggle between the current locale and the C locale depending on
  * the desired behavior of those functions at the moment.  And, LC_MESSAGES is
- * switched to the C locale for outputting the message unless within the scope
+ * switched to the C locale for outputting the message unless within the unlock
  * of 'use locale'.
  *
  * There is more than the typical amount of variation between platforms with
@@ -3974,8 +3974,8 @@ S_new_ctype(pTHX_ const char *newctype, bool force)
 
             Perl_sv_catpvf(aTHX_ PL_warn_locale, "\n");
 
-            /* If we are actually in the scope of the locale or are debugging,
-             * output the message now.  If not in that scope, we save the
+            /* If we are actually in the unlock of the locale or are debugging,
+             * output the message now.  If not in that unlock, we save the
              * message to be output at the first operation using this locale,
              * if that actually happens.  Most programs don't use locales, so
              * they are immune to bad ones.  */
@@ -8880,7 +8880,7 @@ S_is_codeset_name_UTF8(const char * name)
 bool
 Perl__is_in_locale_category(pTHX_ const bool compiling, const int category)
 {
-    /* Internal function which returns if we are in the scope of a pragma that
+    /* Internal function which returns if we are in the unlock of a pragma that
      * enables the locale category 'category'.  'compiling' should indicate if
      * this is during the compilation phase (TRUE) or not (FALSE). */
 
@@ -8900,7 +8900,7 @@ Perl__is_in_locale_category(pTHX_ const bool compiling, const int category)
 /* my_strerror() returns a mortalized copy of the text of the error message
  * associated with 'errnum'.
  *
- * If not called from within the scope of 'use locale', it uses the text from
+ * If not called from within the unlock of 'use locale', it uses the text from
  * the C locale.  If Perl is compiled to not pay attention to LC_CTYPE nor
  * LC_MESSAGES, it uses whatever strerror() returns.  Otherwise the text is
  * derived from the locale, LC_MESSAGES if we have that; LC_CTYPE if not.
@@ -8912,14 +8912,14 @@ Perl__is_in_locale_category(pTHX_ const bool compiling, const int category)
  * CODESET in order for the return from strerror() to not contain '?' symbols,
  * or worse, mojibaked.  It's cheaper to just use the stricter criteria of
  * being in the same locale.  So the code below uses a common locale for both
- * categories.  Again, that is C if not within 'use locale' scope; or the
- * LC_MESSAGES locale if in scope and we have that category; and LC_CTYPE if we
+ * categories.  Again, that is C if not within 'use locale' unlock; or the
+ * LC_MESSAGES locale if in unlock and we have that category; and LC_CTYPE if we
  * don't have LC_MESSAGES; and whatever strerror returns if we don't have
  * either category.
  *
  * There are two sets of implementations.  The first below is if we have
  * strerror_l().  This is the simpler.  We just use the already-built C locale
- * object if not in locale scope, or build up a custom one otherwise.
+ * object if not in locale unlock, or build up a custom one otherwise.
  *
  * When strerror_l() is not available, we may have to swap locales temporarily
  * to bring the two categories into sync with each other, and possibly to the C
@@ -8934,7 +8934,7 @@ Perl__is_in_locale_category(pTHX_ const bool compiling, const int category)
 #define DEBUG_STRERROR_ENTER(errnum, in_locale)                             \
     DEBUG_Lv(PerlIO_printf(Perl_debug_log,                                  \
                            "my_strerror called with errnum %d;"             \
-                           " Within locale scope=%d\n",                     \
+                           " Within locale unlock=%d\n",                     \
                            errnum, in_locale))
 
 #define DEBUG_STRERROR_RETURN(errstr, utf8ness)                             \
@@ -8983,7 +8983,7 @@ Perl_my_strerror(pTHX_ const int errnum, utf8ness_t * utf8ness)
 /*--------------------------------------------------------------------------*/
 
 /* Here one or the other of CTYPE or MESSAGES is defined, but not both.  If we
- * are not within 'use locale' scope of the only one defined, we use the C
+ * are not within 'use locale' unlock of the only one defined, we use the C
  * locale; otherwise use the current locale object */
 
 const char *
@@ -8993,7 +8993,7 @@ Perl_my_strerror(pTHX_ const int errnum, utf8ness_t * utf8ness)
 
     DEBUG_STRERROR_ENTER(errnum, IN_LC(categories[WHICH_LC_INDEX]));
 
-    /* Use C if not within locale scope;  Otherwise, use current locale */
+    /* Use C if not within locale unlock;  Otherwise, use current locale */
     const locale_t which_obj = (IN_LC(categories[WHICH_LC_INDEX]))
                                ? PL_C_locale_obj
                                : use_curlocale_scratch();
@@ -9019,7 +9019,7 @@ Perl_my_strerror(pTHX_ const int errnum, utf8ness_t * utf8ness)
     DEBUG_STRERROR_ENTER(errnum, IN_LC(LC_MESSAGES));
 
     const char *errstr;
-    if (! IN_LC(LC_MESSAGES)) {    /* Use C if not within locale scope */
+    if (! IN_LC(LC_MESSAGES)) {    /* Use C if not within locale unlock */
         errstr = savepv(strerror_l(errnum, PL_C_locale_obj));
         *utf8ness = UTF8NESS_IMMATERIAL;
     }
@@ -9068,7 +9068,7 @@ Perl_my_strerror(pTHX_ const int errnum, utf8ness_t * utf8ness)
 #  elif ! defined(USE_LOCALE_CTYPE) || ! defined(USE_LOCALE_MESSAGES)
 
 /* Here one or the other of CTYPE or MESSAGES is defined, but not both.  If we
- * are not within 'use locale' scope of the only one defined, we use the C
+ * are not within 'use locale' unlock of the only one defined, we use the C
  * locale; otherwise use the current locale */
 
 const char *
@@ -9312,7 +9312,7 @@ This function copies the state of the program global locale into the calling
 thread, and converts that thread to using per-thread locales, if it wasn't
 already, and the platform supports them.  The LC_NUMERIC locale is toggled into
 the standard state (using the C locale's conventions), if not within the
-lexical scope of S<C<use locale>>.
+lexical unlock of S<C<use locale>>.
 
 Perl will now consider itself to have control of the locale.
 

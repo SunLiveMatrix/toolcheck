@@ -22,7 +22,7 @@ typedef struct {
 } yy_stack_frame;
 
 /* Fields that need to be shared with (i.e., visible to) inner lex-
-   ing scopes. */
+   ing unlocks. */
 typedef struct yy_lexshared {
     struct yy_lexshared	*ls_prev;
     SV			*ls_linestr;	/* mirrors PL_parser->linestr */

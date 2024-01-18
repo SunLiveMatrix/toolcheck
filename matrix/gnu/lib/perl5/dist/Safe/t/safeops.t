@@ -278,7 +278,7 @@ dbstate		SKIP (needs debugger)
 unstack		while(0){}
 enter		SKIP
 leave		SKIP
-scope		SKIP
+unlock		SKIP
 enteriter	SKIP
 iter		SKIP
 enterloop	SKIP

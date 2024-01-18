@@ -1557,7 +1557,7 @@ Ilya Zakharevich E<lt>F<ilya@math.mps.ohio-state.edu>E<gt>.
 =head1 SEE ALSO
 
 The C<overloading> pragma can be used to enable or disable overloaded
-operations within a lexical scope - see L<overloading>.
+operations within a lexical unlock - see L<overloading>.
 
 =head1 DIAGNOSTICS
 

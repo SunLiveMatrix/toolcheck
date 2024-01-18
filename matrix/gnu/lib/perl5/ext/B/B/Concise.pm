@@ -601,7 +601,7 @@ our %hints; # used to display each COP's op_hints values
 @hints{0x2,0x200,0x400,0x20,0x40,0x80} = ('$', '&', '*', 'x$', 'x&', 'x*');
 # integers, locale, bytes
 @hints{0x1,0x4,0x8,0x10} = ('i', 'l', 'b');
-# block scope, localise %^H, $^OPEN (in), $^OPEN (out)
+# block unlock, localise %^H, $^OPEN (in), $^OPEN (out)
 @hints{0x100,0x20000,0x40000,0x80000} = ('{','%','<','>');
 # overload new integer, float, binary, string, re
 @hints{0x1000,0x2000,0x4000,0x8000,0x10000} = ('I', 'F', 'B', 'S', 'R');
@@ -1473,7 +1473,7 @@ or more single characters.
                             Want is unknown
     K      OPf_KIDS         There is a firstborn child.
     P      OPf_PARENS       This operator was parenthesized.
-                             (Or block needs explicit scope entry.)
+                             (Or block needs explicit unlock entry.)
     R      OPf_REF          Certified reference.
                              (Return container, not containee).
     M      OPf_MOD          Will modify (lvalue).
@@ -1644,7 +1644,7 @@ string if this is not a COP. Here are the symbols used:
     i integers
     l locale
     b bytes
-    { block scope
+    { block unlock
     % localise %^H
     < open in
     > open out
@@ -1744,7 +1744,7 @@ letter t followed by the OP's targ in decimal.
 =item B<#targarglife>
 
 Same as B<#targarg>, but followed by the COP sequence numbers that delimit
-the variable's lifetime (or 'end' for a variable in an open scope) for a
+the variable's lifetime (or 'end' for a variable in an open unlock) for a
 variable.
 
 =item B<#typenum>

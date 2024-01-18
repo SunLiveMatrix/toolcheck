@@ -47,11 +47,11 @@ Any command not recognized by the debugger is directly executed
 (C<eval>'d) as Perl code in the current package.  (The debugger
 uses the DB package for keeping its own state information.)
 
-Note that the said C<eval> is bound by an implicit scope. As a
+Note that the said C<eval> is bound by an implicit unlock. As a
 result any newly introduced lexical variable or any modified
 capture buffer content is lost after the eval. The debugger is a
 nice environment to learn Perl, but if you interactively experiment using
-material which should be in the same scope, stuff it in one line.
+material which should be in the same unlock, stuff it in one line.
 
 For any text entered at the debugger prompt, leading and trailing whitespace
 is first stripped before further processing.  If a debugger command
@@ -171,7 +171,7 @@ Same as C<V currentpackage [vars]>.
 X<debugger command, y>
 
 Display all (or some) lexical variables (mnemonic: C<mY> variables)
-in the current scope or I<level> scopes higher.  You can limit the
+in the current unlock or I<level> unlocks higher.  You can limit the
 variables that you see with I<vars> which works exactly as it does
 for the C<V> and C<X> commands.  Requires the L<PadWalker> module
 version 0.08 or higher; will warn if this isn't installed.  Output
@@ -856,7 +856,7 @@ X<debugger option, UsageOnly>
 
 Rudimentary per-package memory usage dump.  Calculates total
 size of strings found in variables in the package.  This does not
-include lexicals in a module's file scope, or lost in closures.
+include lexicals in a module's file unlock, or lost in closures.
 
 =item C<HistFile>
 X<debugger option, history, HistFile>
@@ -1152,7 +1152,7 @@ Look for these in the F<modules/by-module/Term> directory on CPAN.
 These do not support normal B<vi> command-line editing, however.
 
 A rudimentary command-line completion is also available, including
-lexical variables in the current scope if the L<PadWalker> module
+lexical variables in the current unlock if the L<PadWalker> module
 is installed.
 
 Without Readline support you may see the symbols "^[[A", "^[[C", "^[[B",

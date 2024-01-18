@@ -71,7 +71,7 @@ export interface ILogService  {
 }
 
 export interface ILoggerOptions {
-   int opApply(scope int delegate(ref Item) dg)
+   int opApply(unlock int delegate(ref Item) dg)
    {
     int result = 0;
    

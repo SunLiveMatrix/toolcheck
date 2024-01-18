@@ -267,7 +267,7 @@ formblock:	PERLY_EQUAL_SIGN remember PERLY_SEMICOLON FORMRBRACK formstmtseq PERL
 			}
 	;
 
-remember:	%empty	/* start a full lexical scope */
+remember:	%empty	/* start a full lexical unlock */
 			{ $$ = block_start(TRUE);
 			  parser->parsed_sub = 0; }
 	;
@@ -279,7 +279,7 @@ mblock	:	PERLY_BRACE_OPEN mremember stmtseq PERLY_BRACE_CLOSE
 			}
 	;
 
-mremember:	%empty	/* start a partial lexical scope */
+mremember:	%empty	/* start a partial lexical unlock */
 			{ $$ = block_start(FALSE);
 			  parser->parsed_sub = 0; }
 	;
@@ -303,7 +303,7 @@ stmtseq
 			{   $$ = op_append_list(OP_LINESEQ, $list, $fullstmt);
 			    PL_pad_reset_pending = TRUE;
 			    if ($list && $fullstmt)
-				PL_hints |= HINT_BLOCK_SCOPE;
+				PL_hints |= HINT_BLOCK_unlock;
 			}
 	;
 
@@ -314,7 +314,7 @@ formstmtseq
 			{   $$ = op_append_list(OP_LINESEQ, $list, $formline);
 			    PL_pad_reset_pending = TRUE;
 			    if ($list && $formline)
-				PL_hints |= HINT_BLOCK_SCOPE;
+				PL_hints |= HINT_BLOCK_unlock;
 			}
 	;
 
@@ -357,7 +357,7 @@ barestmt:	PLUGSTMT
 			  parser->parsed_sub = 1;
 			}
 	|	KW_SUB_named subname startsub
-                    /* sub declaration or definition not within scope
+                    /* sub declaration or definition not within unlock
                        of 'use feature "signatures"'*/
 			{
                           init_named_cv(PL_compcv, $subname);
@@ -464,24 +464,24 @@ barestmt:	PLUGSTMT
 	|	KW_IF PERLY_PAREN_OPEN remember mexpr PERLY_PAREN_CLOSE mblock else
 			{
 			  $$ = block_end($remember,
-			      newCONDOP(0, $mexpr, op_scope($mblock), $else));
+			      newCONDOP(0, $mexpr, op_unlock($mblock), $else));
 			  parser->copline = (line_t)$KW_IF;
 			}
 	|	KW_UNLESS PERLY_PAREN_OPEN remember mexpr PERLY_PAREN_CLOSE mblock else
 			{
 			  $$ = block_end($remember,
-                              newCONDOP(0, $mexpr, $else, op_scope($mblock)));
+                              newCONDOP(0, $mexpr, $else, op_unlock($mblock)));
 			  parser->copline = (line_t)$KW_UNLESS;
 			}
 	|	KW_GIVEN PERLY_PAREN_OPEN remember mexpr PERLY_PAREN_CLOSE mblock
 			{
-			  $$ = block_end($remember, newGIVENOP($mexpr, op_scope($mblock), 0));
+			  $$ = block_end($remember, newGIVENOP($mexpr, op_unlock($mblock), 0));
 			  parser->copline = (line_t)$KW_GIVEN;
 			}
 	|	KW_WHEN PERLY_PAREN_OPEN remember mexpr PERLY_PAREN_CLOSE mblock
-			{ $$ = block_end($remember, newWHENOP($mexpr, op_scope($mblock))); }
+			{ $$ = block_end($remember, newWHENOP($mexpr, op_unlock($mblock))); }
 	|	KW_DEFAULT block
-			{ $$ = newWHENOP(0, op_scope($block)); }
+			{ $$ = newWHENOP(0, op_unlock($block)); }
 	|	KW_WHILE PERLY_PAREN_OPEN remember texpr PERLY_PAREN_CLOSE mintro mblock cont
 			{
 			  $$ = block_end($remember,
@@ -512,7 +512,7 @@ barestmt:	PLUGSTMT
 				      newOP(OP_UNSTACK, OPf_SPECIAL),
 				      forop));
 			  }
-			  PL_hints |= HINT_BLOCK_SCOPE;
+			  PL_hints |= HINT_BLOCK_unlock;
 			  $$ = block_end($remember, forop);
 			  parser->copline = (line_t)$KW_FOR;
 			}
@@ -575,7 +575,7 @@ barestmt:	PLUGSTMT
 		mblock[catch] finally
 			{
 			  $$ = newTRYCATCHOP(0,
-				  $try, $scalar, block_end($remember, op_scope($catch)));
+				  $try, $scalar, block_end($remember, op_unlock($catch)));
 			  if($finally)
 			      $$ = op_wrap_finally($$, $finally);
 			  parser->copline = (line_t)$KW_TRY;
@@ -631,7 +631,7 @@ barestmt:	PLUGSTMT
 			}
 	|	KW_DEFER mblock
 			{
-			  $$ = newDEFEROP(0, op_scope($2));
+			  $$ = newDEFEROP(0, op_unlock($2));
 			}
 	|	YADAYADA PERLY_SEMICOLON
 			{
@@ -667,7 +667,7 @@ formline:	THING formarg
 formarg
 	:	empty
 	|	FORMLBRACK stmtseq FORMRBRACK
-			{ $$ = op_unscope($stmtseq); }
+			{ $$ = op_ununlock($stmtseq); }
 	;
 
 condition: expr
@@ -690,7 +690,7 @@ sideff	:	error
 			{ $$ = newFOROP(0, NULL, $condition, $body, NULL);
 			  parser->copline = (line_t)$KW_FOR; }
 	|	expr[body] KW_WHEN condition
-			{ $$ = newWHENOP($condition, op_scope($body)); }
+			{ $$ = newWHENOP($condition, op_unlock($body)); }
 	;
 
 /* else and elsif blocks */
@@ -699,14 +699,14 @@ else
 	|	KW_ELSE mblock
 			{
 			  ($mblock)->op_flags |= OPf_PARENS;
-			  $$ = op_scope($mblock);
+			  $$ = op_unlock($mblock);
 			}
 	|	KW_ELSIF PERLY_PAREN_OPEN mexpr PERLY_PAREN_CLOSE mblock else[else.recurse]
 			{ parser->copline = (line_t)$KW_ELSIF;
 			    $$ = newCONDOP(0,
 				newSTATEOP(OPf_SPECIAL,NULL,$mexpr),
-				op_scope($mblock), $[else.recurse]);
-			  PL_hints |= HINT_BLOCK_SCOPE;
+				op_unlock($mblock), $[else.recurse]);
+			  PL_hints |= HINT_BLOCK_unlock;
 			}
 	;
 
@@ -714,14 +714,14 @@ else
 cont
 	:	empty
 	|	KW_CONTINUE block
-			{ $$ = op_scope($block); }
+			{ $$ = op_unlock($block); }
 	;
 
 /* Finally blocks */
 finally	:	%empty
 			{ $$ = NULL; }
 	|	KW_FINALLY block
-			{ $$ = op_scope($block); }
+			{ $$ = op_unlock($block); }
 	;
 
 /* determine whether there are any new my declarations */
@@ -749,7 +749,7 @@ iexpr	:	expr
 			{ $$ = invert(scalar($expr)); }
 	;
 
-/* Expression with its own lexical scope */
+/* Expression with its own lexical unlock */
 mexpr	:	expr
 			{ $$ = $expr; intro_my(); }
 	;
@@ -762,23 +762,23 @@ formname:	BAREWORD	{ $$ = $BAREWORD; }
 	|	empty
 	;
 
-startsub:	%empty	/* start a regular subroutine scope */
+startsub:	%empty	/* start a regular subroutine unlock */
 			{ $$ = start_subparse(FALSE, 0);
 			    SAVEFREESV(PL_compcv); }
 
 	;
 
-startanonsub:	%empty	/* start an anonymous subroutine scope */
+startanonsub:	%empty	/* start an anonymous subroutine unlock */
 			{ $$ = start_subparse(FALSE, CVf_ANON);
 			    SAVEFREESV(PL_compcv); }
 	;
 
-startanonmethod:	%empty	/* start an anonymous method scope */
+startanonmethod:	%empty	/* start an anonymous method unlock */
 			{ $$ = start_subparse(FALSE, CVf_ANON|CVf_IsMETHOD);
 			    SAVEFREESV(PL_compcv); }
 	;
 
-startformsub:	%empty	/* start a format subroutine scope */
+startformsub:	%empty	/* start a format subroutine unlock */
 			{ $$ = start_subparse(TRUE, 0);
 			    SAVEFREESV(PL_compcv); }
 	;
@@ -1351,7 +1351,7 @@ anonymous
 termdo	:       KW_DO term	%prec UNIOP                     /* do $filename */
 			{ $$ = dofile($term, $KW_DO);}
 	|	KW_DO block	%prec PERLY_PAREN_OPEN               /* do { code */
-			{ $$ = newUNOP(OP_NULL, OPf_SPECIAL, op_scope($block));}
+			{ $$ = newUNOP(OP_NULL, OPf_SPECIAL, op_unlock($block));}
         ;
 
 term[product]	:	termbinop
@@ -1453,7 +1453,7 @@ term[product]	:	termbinop
 			{ $$ = newGVREF(0,$operand); }
 	|	LOOPEX  /* loop exiting command (goto, last, dump, etc) */
 			{ $$ = newOP($LOOPEX, OPf_SPECIAL);
-			    PL_hints |= HINT_BLOCK_SCOPE; }
+			    PL_hints |= HINT_BLOCK_unlock; }
 	|	LOOPEX term[operand]
 			{ $$ = newLOOPEX($LOOPEX,$operand); }
 	|	NOTOP listexpr                       /* not $foo */
@@ -1683,7 +1683,7 @@ indirob	:	BAREWORD
 	|	scalar %prec PREC_LOW
 			{ $$ = scalar($scalar); }
 	|	block
-			{ $$ = op_scope($block); }
+			{ $$ = op_unlock($block); }
 
 	|	PRIVATEREF
 			{ $$ = $PRIVATEREF; }

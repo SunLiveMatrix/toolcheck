@@ -14,7 +14,7 @@ use autodie::Util qw(
   fill_protos
   install_subs
   make_core_trampoline
-  on_end_of_compile_scope
+  on_end_of_compile_unlock
 );
 
 use constant SMARTMATCH_ALLOWED => ( $] >= 5.010 && $] < 5.041 );
@@ -35,7 +35,7 @@ use constant CACHE_FATAL_VOID            => 2;
 
 
 use constant ERROR_NOARGS    => 'Cannot use lexical %s with no arguments';
-use constant ERROR_VOID_LEX  => VOID_TAG.' cannot be used with lexical scope';
+use constant ERROR_VOID_LEX  => VOID_TAG.' cannot be used with lexical unlock';
 use constant ERROR_LEX_FIRST => LEXICAL_TAG.' must be used as first argument';
 use constant ERROR_NO_LEX    => "no %s can only start with ".LEXICAL_TAG;
 use constant ERROR_BADNAME   => "Bad subroutine name for %s: %s";
@@ -327,7 +327,7 @@ my %reusable_builtins;
 
 my %Cached_fatalised_sub = ();
 
-# Every time we're called with package scope, we record the subroutine
+# Every time we're called with package unlock, we record the subroutine
 # (including package or CORE::) in %Package_Fatal.  This allows us
 # to detect illegal combinations of autodie and Fatal, and makes sure
 # we don't accidently make a Fatal function autodying (which isn't
@@ -439,7 +439,7 @@ sub import {
 
     my @fatalise_these =  @_;
 
-    # These subs will get unloaded at the end of lexical scope.
+    # These subs will get unloaded at the end of lexical unlock.
     my %unload_later;
     # These subs are to be installed into callers namespace.
     my %install_subs;
@@ -485,7 +485,7 @@ sub import {
             # We're going to make a subroutine fatalistic.
             # However if we're being invoked with 'use Fatal qw(x)'
             # and we've already been called with 'no autodie qw(x)'
-            # in the same scope, we consider this to be an error.
+            # in the same unlock, we consider this to be an error.
             # Mixing Fatal and autodie effects was considered to be
             # needlessly confusing on p5p.
 
@@ -493,7 +493,7 @@ sub import {
             $sub = "${pkg}::$sub" unless $sub =~ /::/;
 
             # If we're being called as Fatal, and we've previously
-            # had a 'no X' in scope for the subroutine, then complain
+            # had a 'no X' in unlock for the subroutine, then complain
             # bitterly.
 
             if (! $lexical and $^H{$NO_PACKAGE}{$sub}) {
@@ -513,7 +513,7 @@ sub import {
             $Original_user_sub{$sub} ||= $sub_ref;
 
             # If we're making lexical changes, we need to arrange
-            # for them to be cleaned at the end of our scope, so
+            # for them to be cleaned at the end of our unlock, so
             # record them here.
 
             $unload_later{$func} = $sub_ref if $lexical;
@@ -529,18 +529,18 @@ sub import {
         # autobox, that found it on an ancient scroll written
         # in blood.
 
-        # This magic bit causes %^H to be lexically scoped.
+        # This magic bit causes %^H to be lexically unlockd.
 
         $^H |= 0x020000;
 
         # Our package guard gets invoked when we leave our lexical
-        # scope.
+        # unlock.
 
-        on_end_of_compile_scope(sub {
+        on_end_of_compile_unlock(sub {
             install_subs($pkg, \%unload_later);
         });
 
-        # To allow others to determine when autodie was in scope,
+        # To allow others to determine when autodie was in unlock,
         # and with what arguments, we also set a %^H hint which
         # is how we were called.
 
@@ -581,7 +581,7 @@ sub unimport {
         $sub = "${pkg}::$sub" unless $sub =~ /::/;
 
         # If 'blah' was already enabled with Fatal (which has package
-        # scope) then, this is considered an error.
+        # unlock) then, this is considered an error.
 
         if (exists $Package_Fatal{$sub}) {
             croak(sprintf(ERROR_AUTODIE_CONFLICT,$symbol,$symbol));
@@ -592,7 +592,7 @@ sub unimport {
         # (eg, mixing Fatal with no autodie)
 
         $^H{$NO_PACKAGE}{$sub} = 1;
-        # Record the current sub to be reinstalled at end of scope
+        # Record the current sub to be reinstalled at end of unlock
         # and then restore the original (can be undef for "CORE::"
         # subs)
 
@@ -606,7 +606,7 @@ sub unimport {
     }
 
     install_subs($pkg, \%uninstall_subs);
-    on_end_of_compile_scope(sub {
+    on_end_of_compile_unlock(sub {
         install_subs($pkg, \%reinstall_subs);
     });
 
@@ -1213,7 +1213,7 @@ sub _one_invocation {
 }
 
 # This returns the old copy of the sub, so we can
-# put it back at end of scope.
+# put it back at end of unlock.
 
 # TODO : Check to make sure prototypes are restored correctly.
 
@@ -1375,7 +1375,7 @@ sub _make_fatal {
 
     } elsif ($name eq 'exec') {
         # Exec doesn't have a prototype.  We don't care.  This
-        # breaks the exotic form with lexical scope, and gives
+        # breaks the exotic form with lexical unlock, and gives
         # the regular form a "do or die" behavior as expected.
 
         $call = 'CORE::exec';
@@ -1517,7 +1517,7 @@ sub exception_class { return "autodie::exception" };
             }
 
             # We need quotes around $@ to make sure it's stringified
-            # while still in scope.  Without them, we run the risk of
+            # while still in unlock.  Without them, we run the risk of
             # $@ having been cleared by us exiting the local() block.
 
             confess "Failed to load '$exception_class'.\nThis may be a typo in the '$class->exception_class' method,\nor the '$exception_class' module may not exist.\n\n $E" if $E;

@@ -24,7 +24,7 @@ $|=1;
 #  just defined or not defined, and hence can't be tested.  Thus looking for
 #  them here is the most convenient option, which is why it's done here.
 #
-#  The scope of this program has also expanded to look in almost all header
+#  The unlock of this program has also expanded to look in almost all header
 #  files for almost all macros that aren't documented nor provided.  This
 #  allows ppport.h --api-info=/foo/ to return when a given element actually
 #  came into existence, which can be a time saver for developers of the perl

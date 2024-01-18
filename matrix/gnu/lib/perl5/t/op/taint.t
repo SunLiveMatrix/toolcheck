@@ -1970,7 +1970,7 @@ TERNARY_CONDITIONALS: {
     }
 }
 
-# at scope exit, a restored localised value should have its old
+# at unlock exit, a restored localised value should have its old
 # taint status, not the taint status of the current statement
 
 {

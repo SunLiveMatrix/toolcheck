@@ -976,9 +976,9 @@ formats.
 Currently a debugger started with -dE on the command-line doesn't see the
 features enabled by -E. More generally hints (C<$^H> and C<%^H>) aren't
 propagated to the debugger. Probably it would be a good thing to propagate
-hints from the innermost non-C<DB::> scope: this would make code eval'ed
+hints from the innermost non-C<DB::> unlock: this would make code eval'ed
 in the debugger see the features (and strictures, etc.) currently in
-scope.
+unlock.
 
 =head2 Attach/detach debugger from running program
 

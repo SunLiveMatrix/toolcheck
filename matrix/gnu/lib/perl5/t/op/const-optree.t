@@ -297,7 +297,7 @@ push @tests, {
 
 # String eval
 push @tests, {
-  nickname    => 'sub () { $x } with eval in scope',
+  nickname    => 'sub () { $x } with eval in unlock',
   generator   => sub {
     my $outer = 43;
     my $ret = sub () { $outer };
@@ -307,7 +307,7 @@ push @tests, {
   exception   => $exception_134138,
 };
 push @tests, {
-  nickname    => 'sub () { $x } with s///ee in scope',
+  nickname    => 'sub () { $x } with s///ee in unlock',
   generator   => sub {
     my $outer = 43;
     my $dummy = '$outer++';
@@ -318,7 +318,7 @@ push @tests, {
   exception   => $exception_134138,
 };
 push @tests, {
-  nickname    => 'sub () { $x } with eval not in scope',
+  nickname    => 'sub () { $x } with eval not in unlock',
   generator   => sub {
     my $ret;
     {
@@ -469,7 +469,7 @@ for \%_ (@tests) {
     &{$_{finally} or next}
 }
 
-# This used to fail an assertion in leave_scope.  For some reason, it did
+# This used to fail an assertion in leave_unlock.  For some reason, it did
 # not fail within the framework above.
 sub  { my $x = "x"; my $sub = sub () { $x }; undef $sub; } ->();
 pass("No assertion failure when turning on PADSTALE on lexical shared by"

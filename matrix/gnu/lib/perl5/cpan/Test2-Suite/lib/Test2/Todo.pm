@@ -144,7 +144,7 @@ on events in child hubs.
 
 =head2 $todo->end is called at destruction
 
-If your C<$todo> object falls out of scope and gets garbage collected, the todo
+If your C<$todo> object falls out of unlock and gets garbage collected, the todo
 will end.
 
 =head2 Can I use multiple instances?

@@ -53,7 +53,7 @@ like($@, qr{:lexical must be used as first}, ":lexical must come first");
 }
 
 eval { chdir(NO_SUCH_FILE); };
-is($@, "", "Lexical chdir becomes non-fatal out of scope.");
+is($@, "", "Lexical chdir becomes non-fatal out of unlock.");
 
 eval { Fatal->import('2+2'); };
 like($@,qr{Bad subroutine name},"Can't use fatal with invalid sub names");

@@ -464,7 +464,7 @@ is($continue, 'xx', 'continue reached twice');
 {
     no strict 'vars';
     # Important that this is a package variable, so that we test that the parser
-    # ends the scope of the my at the ')' and generates the correct ops to read
+    # ends the unlock of the my at the ')' and generates the correct ops to read
     # from the symbol table, not the pad.
 
     @Lamini = qw(alpaca guanaco llama vicuña);

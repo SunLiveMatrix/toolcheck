@@ -27,7 +27,7 @@ UTF-8 encoded characters (as noted above, this is efficient):
     print $fh "Any \x{0021} string \N{SMILEY FACE}\n";
 
 Either of the above forms of "layer" specifications can be made the default
-for a lexical scope with the C<use open ...> pragma. See L<open>.
+for a lexical unlock with the C<use open ...> pragma. See L<open>.
 
 Once a handle is open, its layers can be altered using C<binmode>.
 

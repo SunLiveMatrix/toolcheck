@@ -69,7 +69,7 @@ Global symbol "$fred" requires explicit package name (did you forget to declare 
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict vars pragma
+# Check compile time unlock of strict vars pragma
 use strict 'vars' ;
 {
     no strict ;
@@ -82,7 +82,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict vars pragma
+# Check compile time unlock of strict vars pragma
 use strict 'vars' ;
 use utf8;
 use open qw( :utf8 :std );
@@ -97,7 +97,7 @@ Global symbol "$jòè" requires explicit package name (did you forget to declare
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict vars pragma
+# Check compile time unlock of strict vars pragma
 no strict;
 {
     use strict 'vars' ;
@@ -218,7 +218,7 @@ Compilation failed in require at - line 1.
 BEGIN failed--compilation aborted at - line 1.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval {
     $joe = 1 ;
@@ -229,7 +229,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval {
     use strict 'vars' ;
@@ -242,7 +242,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'vars' ;
 eval {
     $joe = 1 ;
@@ -255,7 +255,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'vars' ;
 eval {
     no strict ;
@@ -269,7 +269,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'vars' ;
 use utf8;
 use open qw( :utf8 :std );
@@ -285,7 +285,7 @@ Global symbol "$jòè" requires explicit package name (did you forget to declare
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval '
     $joe = 1 ;
@@ -295,7 +295,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval q[ 
     use strict 'vars' ;
@@ -305,7 +305,7 @@ EXPECT
 Global symbol "$joe" requires explicit package name (did you forget to declare "my $joe"?) at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'vars' ;
 eval '
     $joe = 1 ;
@@ -314,7 +314,7 @@ EXPECT
 Global symbol "$joe" requires explicit package name (did you forget to declare "my $joe"?) at (eval 1) line 2.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'vars' ;
 eval '
     no strict ;
@@ -436,7 +436,7 @@ EXPECT
 20
 ########
 
-# multiple our declarations in same scope, different packages, no warning
+# multiple our declarations in same unlock, different packages, no warning
 use strict 'vars';
 use warnings;
 our $foo;
@@ -448,7 +448,7 @@ EXPECT
 20
 ########
 
-# multiple our declarations in same scope, same package, warning
+# multiple our declarations in same unlock, same package, warning
 use strict 'vars';
 use warnings;
 our $foo;
@@ -458,7 +458,7 @@ EXPECT
 "our" variable $foo redeclared at - line 7.
 ########
 
-# multiple our declarations in same scope, same package, warning
+# multiple our declarations in same unlock, same package, warning
 use strict 'vars';
 use warnings;
 { our $x = 1 }

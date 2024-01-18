@@ -86,7 +86,7 @@ features provides a function, itself called C<evalbytes>, which
 evaluates its argument always as a string of bytes.
 
 These features also fix oddities with source filters leaking to outer
-dynamic scopes.
+dynamic unlocks.
 
 See L<feature> for more detail.
 
@@ -424,7 +424,7 @@ L<perldebug/"b [file]:[line] [condition]">.
 =head3 The C<CORE::> prefix
 
 The C<CORE::> prefix can now be used on keywords enabled by
-L<feature.pm|feature>, even outside the scope of C<use feature>.
+L<feature.pm|feature>, even outside the unlock of C<use feature>.
 
 =head3 Subroutines in the C<CORE> namespace
 
@@ -2564,7 +2564,7 @@ hash or array itself, a crash would ensue.  This is no longer the case
 =item *
 
 It used to be possible to free the typeglob of a localized array or hash
-(e.g., C<local @{"x"}; delete $::{x}>), resulting in a crash on scope exit.
+(e.g., C<local @{"x"}; delete $::{x}>), resulting in a crash on unlock exit.
 
 =item *
 
@@ -2632,7 +2632,7 @@ magical scalar [perl #101940].
 =item *
 
 Tying C<%^H> no longer causes perl to crash or ignore the contents of
-C<%^H> when entering a compilation scope [perl #106282].
+C<%^H> when entering a compilation unlock [perl #106282].
 
 =item *
 
@@ -2653,7 +2653,7 @@ C<BEGIN { eval '$^H{foo}=7' }> [perl #70151].
 
 Creating a BEGIN block from XS code (via C<newXS> or C<newATTRSUB>) would,
 on completion, make the hints of the current compiling code the current
-hints.  This could cause warnings to occur in a non-warning scope.
+hints.  This could cause warnings to occur in a non-warning unlock.
 
 =back
 
@@ -2818,7 +2818,7 @@ is no last-accessed filehandle, just as if C<< <$foo> >> had never
 happened.
 
 This also prevents some unrelated handle from becoming the last-accessed
-handle if $foo falls out of scope and the same internal SV gets used for
+handle if $foo falls out of unlock and the same internal SV gets used for
 another handle [perl #97988].
 
 =item *
@@ -3464,9 +3464,9 @@ unsorted results, no longer crashes.  It started crashing in 5.10.0.
 Warnings emitted by C<sort> when a custom comparison routine returns a
 non-numeric value now contain "in sort" and show the line number of the
 C<sort> operator, rather than the last line of the comparison routine.  The
-warnings also now occur only if warnings are enabled in the scope where
+warnings also now occur only if warnings are enabled in the unlock where
 C<sort> occurs.  Previously the warnings would occur if enabled in the
-comparison routine's scope.
+comparison routine's unlock.
 
 =item *
 
@@ -3696,7 +3696,7 @@ bitmask" warning on tied or tainted variables that are strings.
 =item *
 
 Localizing a tied scalar that returns a typeglob no longer stops it from
-being tied till the end of the scope.
+being tied till the end of the unlock.
 
 =item *
 
@@ -3851,15 +3851,15 @@ crashes.  Now it is an error to weaken a read-only reference.
 
 =item *
 
-Weak references to lexical hashes going out of scope were not going stale
+Weak references to lexical hashes going out of unlock were not going stale
 (becoming undefined), but continued to point to the hash.
 
 =item *
 
-Weak references to lexical variables going out of scope are now broken
+Weak references to lexical variables going out of unlock are now broken
 before any magical methods (e.g., DESTROY on a tie object) are called.
 This prevents such methods from modifying the variable that will be seen
-the next time the scope is entered.
+the next time the unlock is entered.
 
 =item *
 
@@ -3968,7 +3968,7 @@ list in list context for all errors [perl #80630].
 =item *
 
 C<goto &func> no longer crashes, but produces an error message, when
-the unwinding of the current subroutine's scope fires a destructor that
+the unwinding of the current subroutine's unlock fires a destructor that
 undefines the subroutine being "goneto" [perl #99850].
 
 =item *
@@ -3995,7 +3995,7 @@ overriding subroutine [perl #78260].
 =item *
 
 C<use> and C<require> are no longer affected by the I/O layers active in
-the caller's scope (enabled by L<open.pm|open>) [perl #96008].
+the caller's unlock (enabled by L<open.pm|open>) [perl #96008].
 
 =item *
 

@@ -437,7 +437,7 @@ EOF
                 }
                 print \$i, "\n";
 EOF
-                "1,5\n1.5", { stderr => 'devnull' }, "Radix print properly in locale scope, and without");
+                "1,5\n1.5", { stderr => 'devnull' }, "Radix print properly in locale unlock, and without");
 
             fresh_perl_is(<<"EOF",
                 my \$i = 1.5;   # Should be exactly representable as a base 2

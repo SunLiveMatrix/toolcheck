@@ -7,7 +7,7 @@ use strict;
 use Test::More tests => 1;
 use XS::APItest;
 
-# This sub must remain outside the ‘use warnings’ scope.
+# This sub must remain outside the ‘use warnings’ unlock.
 sub no_warnings { goto &stringify }
 
 use warnings;

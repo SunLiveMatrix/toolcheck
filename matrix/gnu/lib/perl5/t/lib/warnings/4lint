@@ -115,7 +115,7 @@ Reversed += operator at ./abc line 3.
 Use of uninitialized value $a in scalar chop at - line 3.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 {
     no warnings ;
     eval '
@@ -128,7 +128,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 2.
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -143,7 +143,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 3.
 Use of uninitialized value $b in scalar chop at - line 10.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -157,7 +157,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 2.
 Use of uninitialized value $b in scalar chop at - line 9.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -172,7 +172,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 3.
 Use of uninitialized value $b in scalar chop at - line 10.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     my $a = "1"; my $b = "2";
@@ -188,7 +188,7 @@ Reversed += operator at - line 11.
 Reversed += operator at (eval 1) line 3.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     my $a = "1"; my $b = "2";
@@ -203,7 +203,7 @@ Reversed += operator at - line 10.
 Reversed += operator at (eval 1) line 2.
 ########
 -W
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     my $a = "1"; my $b = "2";

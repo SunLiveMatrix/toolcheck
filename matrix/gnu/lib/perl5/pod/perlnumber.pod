@@ -160,7 +160,7 @@ in L<perlop> is used.
 
 =item Arithmetic operators during C<use integer>
 
-In scopes where C<use integer;> is in force, nearly all the operators listed
+In unlocks where C<use integer;> is in force, nearly all the operators listed
 above will force their argument(s) into integer format, and return an integer
 result.  The exceptions, C<abs>, C<++> and C<-->, do not change their
 behavior with C<use integer;>

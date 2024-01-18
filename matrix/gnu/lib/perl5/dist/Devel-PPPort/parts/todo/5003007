@@ -53,7 +53,7 @@ CopSTASHPV                     # T
 CopSTASH_set                   # T
 Copy                           # T
 CopyD                          # T
-CPERLscope                     # X added by devel/scanprov
+CPERLunlock                     # X added by devel/scanprov
 croak_no_modify                # T
 croak_sv                       # T
 croak_xs_usage                 # T
@@ -273,7 +273,7 @@ IVTYPE                         # T
 ix                             # X added by devel/scanprov
 LATIN1_TO_NATIVE               # T
 LEAVE                          # T
-leave_scope                    # T
+leave_unlock                    # T
 LIKELY                         # T
 load_module                    # T
 LONGSIZE                       # T
@@ -578,7 +578,7 @@ POPl                           # T
 POPn                           # T
 POPp                           # T
 POPs                           # T
-pop_scope                      # T
+pop_unlock                      # T
 pregexec                       # T
 pregfree                       # T
 pTHX                           # T
@@ -595,7 +595,7 @@ PUSHmortal                     # T
 PUSHn                          # T
 PUSHp                          # T
 PUSHs                          # T
-push_scope                     # T
+push_unlock                     # T
 PUSHu                          # T
 PUTBACK                        # T
 pv_display                     # T

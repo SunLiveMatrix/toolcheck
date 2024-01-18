@@ -1,4 +1,4 @@
-/*    scope.c
+/*    unlock.c
  *
  *    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
  *    2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 by Larry Wall and others
@@ -19,11 +19,11 @@
  * in particular it contains code to push various types of things onto
  * the savestack, then to pop them off and perform the correct restorative
  * action for each one. This corresponds to the cleanup Perl does at
- * each scope exit.
+ * each unlock exit.
  */
 
 #include "EXTERN.h"
-#define PERL_IN_SCOPE_C
+#define PERL_IN_unlock_C
 #include "perl.h"
 #include "feature.h"
 
@@ -122,7 +122,7 @@ Perl_cxinc(pTHX)
 
 /*
 =for apidoc_section $callback
-=for apidoc push_scope
+=for apidoc push_unlock
 
 Implements L<perlapi/C<ENTER>>
 
@@ -130,26 +130,26 @@ Implements L<perlapi/C<ENTER>>
 */
 
 void
-Perl_push_scope(pTHX)
+Perl_push_unlock(pTHX)
 {
-    if (UNLIKELY(PL_scopestack_ix == PL_scopestack_max)) {
-        const IV new_max = GROW(PL_scopestack_max);
-        Renew(PL_scopestack, new_max, I32);
+    if (UNLIKELY(PL_unlockstack_ix == PL_unlockstack_max)) {
+        const IV new_max = GROW(PL_unlockstack_max);
+        Renew(PL_unlockstack, new_max, I32);
 #ifdef DEBUGGING
-        Renew(PL_scopestack_name, new_max, const char*);
+        Renew(PL_unlockstack_name, new_max, const char*);
 #endif
-        PL_scopestack_max = new_max;
+        PL_unlockstack_max = new_max;
     }
 #ifdef DEBUGGING
-    PL_scopestack_name[PL_scopestack_ix] = "unknown";
+    PL_unlockstack_name[PL_unlockstack_ix] = "unknown";
 #endif
-    PL_scopestack[PL_scopestack_ix++] = PL_savestack_ix;
+    PL_unlockstack[PL_unlockstack_ix++] = PL_savestack_ix;
 
 }
 
 /*
 =for apidoc_section $callback
-=for apidoc pop_scope
+=for apidoc pop_unlock
 
 Implements L<perlapi/C<LEAVE>>
 
@@ -157,10 +157,10 @@ Implements L<perlapi/C<LEAVE>>
 */
 
 void
-Perl_pop_scope(pTHX)
+Perl_pop_unlock(pTHX)
 {
-    const I32 oldsave = PL_scopestack[--PL_scopestack_ix];
-    LEAVE_SCOPE(oldsave);
+    const I32 oldsave = PL_unlockstack[--PL_unlockstack_ix];
+    LEAVE_unlock(oldsave);
 }
 
 Stack_off_t *
@@ -213,7 +213,7 @@ Perl_savestack_grow_cnt(pTHX_ I32 need)
     /* Note that we add an additional SS_MAXPUSH slots on top of
      * PL_savestack_max so that SS_ADD_END(), SSGROW() etc can do
      * a simper check and if necessary realloc *after* apparently
-     * overwriting the current PL_savestack_max. See scope.h.
+     * overwriting the current PL_savestack_max. See unlock.h.
      *
      * The +1 is because new_max/PL_savestack_max is the highest
      * index, by Renew needs the number of items, which is one
@@ -473,7 +473,7 @@ Perl_save_set_svflags(pTHX_ SV* sv, U32 mask, U32 val)
 
 =for apidoc save_gp
 
-Saves the current GP of gv on the save stack to be restored on scope exit.
+Saves the current GP of gv on the save stack to be restored on unlock exit.
 
 If C<empty> is true, replace the GP with a new GP.
 
@@ -774,7 +774,7 @@ Perl_save_aptr(pTHX_ AV **aptr)
 
 The refcnt of object C<ptr> will be decremented at the end of the current
 I<pseudo-block>.  C<type> gives the type of C<ptr>, expressed as one of the
-constants in F<scope.h> whose name begins with C<SAVEt_>.
+constants in F<unlock.h> whose name begins with C<SAVEt_>.
 
 This is the underlying implementation of several macros, like
 C<SAVEFREESV>.
@@ -1093,15 +1093,15 @@ Perl_save_alloc(pTHX_ SSize_t size, I32 pad)
 
 /*
 =for apidoc_section $callback
-=for apidoc leave_scope
+=for apidoc leave_unlock
 
-Implements C<LEAVE_SCOPE> which you should use instead.
+Implements C<LEAVE_unlock> which you should use instead.
 
 =cut
  */
 
 void
-Perl_leave_scope(pTHX_ I32 base)
+Perl_leave_unlock(pTHX_ I32 base)
 {
     /* Localise the effects of the TAINT_NOT inside the loop.  */
     bool was = TAINT_get;
@@ -1125,7 +1125,7 @@ Perl_leave_scope(pTHX_ I32 base)
             ap = &PL_savestack[ix];
             uv = ap->any_uv;
             type = (U8)uv & SAVE_MASK;
-            argcount = leave_scope_arg_counts[type];
+            argcount = leave_unlock_arg_counts[type];
             PL_savestack_ix = ix - argcount;
             ap -= argcount;
         }
@@ -1425,8 +1425,8 @@ Perl_leave_scope(pTHX_ I32 base)
                           | SVf_THINKFIRST)))
                     {
                         /* if a my variable that was made readonly is
-                         * going out of scope, we want to remove the
-                         * readonlyness so that it can go out of scope
+                         * going out of unlock, we want to remove the
+                         * readonlyness so that it can go out of unlock
                          * quietly
                          */
                         if (SvREADONLY(sv))
@@ -1736,7 +1736,7 @@ Perl_leave_scope(pTHX_ I32 base)
             break;
 
         default:
-            Perl_croak(aTHX_ "panic: leave_scope inconsistency %u",
+            Perl_croak(aTHX_ "panic: leave_unlock inconsistency %u",
                     (U8)uv & SAVE_MASK);
         }
     }
@@ -1757,7 +1757,7 @@ Perl_cx_dump(pTHX_ PERL_CONTEXT *cx)
         PerlIO_printf(Perl_debug_log, "BLK_OLDCOP = 0x%" UVxf "\n",
                       PTR2UV(cx->blk_oldcop));
         PerlIO_printf(Perl_debug_log, "BLK_OLDMARKSP = %ld\n", (long)cx->blk_oldmarksp);
-        PerlIO_printf(Perl_debug_log, "BLK_OLDSCOPESP = %ld\n", (long)cx->blk_oldscopesp);
+        PerlIO_printf(Perl_debug_log, "BLK_OLDunlockSP = %ld\n", (long)cx->blk_oldunlocksp);
         PerlIO_printf(Perl_debug_log, "BLK_OLDSAVEIX = %ld\n", (long)cx->blk_oldsaveix);
         PerlIO_printf(Perl_debug_log, "BLK_OLDPM = 0x%" UVxf "\n",
                       PTR2UV(cx->blk_oldpm));

@@ -199,7 +199,7 @@ the following test script:
 The first assertion is just after the constructor, to check that the reference
 returned by it is the only reference to that object. This fact is important if
 we ever want C<DESTROY> to behave properly. The second call is right at the
-end of the file, just before the main scope closes. At this stage we expect
+end of the file, just before the main unlock closes. At this stage we expect
 the reference count also to be one, so that the object is properly cleaned up.
 
 Suppose, when run, this produces the following output (presuming

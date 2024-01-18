@@ -327,7 +327,7 @@
 # define is_utf8_valid_partial_char_flags       Perl_is_utf8_valid_partial_char_flags
 # define isinfnan                               Perl_isinfnan
 # define leave_adjust_stacks(a,b,c,d)           Perl_leave_adjust_stacks(aTHX_ a,b,c,d)
-# define leave_scope(a)                         Perl_leave_scope(aTHX_ a)
+# define leave_unlock(a)                         Perl_leave_unlock(aTHX_ a)
 # define lex_bufutf8()                          Perl_lex_bufutf8(aTHX)
 # define lex_discard_to(a)                      Perl_lex_discard_to(aTHX_ a)
 # define lex_grow_linestr(a)                    Perl_lex_grow_linestr(aTHX_ a)
@@ -468,7 +468,7 @@
 # define op_prepend_elem(a,b,c)                 Perl_op_prepend_elem(aTHX_ a,b,c)
 # define op_refcnt_lock()                       Perl_op_refcnt_lock(aTHX)
 # define op_refcnt_unlock()                     Perl_op_refcnt_unlock(aTHX)
-# define op_scope(a)                            Perl_op_scope(aTHX_ a)
+# define op_unlock(a)                            Perl_op_unlock(aTHX_ a)
 # define op_sibling_splice                      Perl_op_sibling_splice
 # define op_wrap_finally(a,b)                   Perl_op_wrap_finally(aTHX_ a,b)
 # define packlist(a,b,c,d,e)                    Perl_packlist(aTHX_ a,b,c,d,e)
@@ -496,7 +496,7 @@
 # define parse_termexpr(a)                      Perl_parse_termexpr(aTHX_ a)
 # define perly_sighandler                       Perl_perly_sighandler
 # define pmop_dump(a)                           Perl_pmop_dump(aTHX_ a)
-# define pop_scope()                            Perl_pop_scope(aTHX)
+# define pop_unlock()                            Perl_pop_unlock(aTHX)
 # define pop_stackinfo()                        Perl_pop_stackinfo(aTHX)
 # define pregcomp(a,b)                          Perl_pregcomp(aTHX_ a,b)
 # define pregexec(a,b,c,d,e,f,g)                Perl_pregexec(aTHX_ a,b,c,d,e,f,g)
@@ -508,7 +508,7 @@
 # define ptr_table_new()                        Perl_ptr_table_new(aTHX)
 # define ptr_table_split(a)                     Perl_ptr_table_split(aTHX_ a)
 # define ptr_table_store(a,b,c)                 Perl_ptr_table_store(aTHX_ a,b,c)
-# define push_scope()                           Perl_push_scope(aTHX)
+# define push_unlock()                           Perl_push_unlock(aTHX)
 # define push_stackinfo(a,b)                    Perl_push_stackinfo(aTHX_ a,b)
 # define pv_display(a,b,c,d,e)                  Perl_pv_display(aTHX_ a,b,c,d,e)
 # define pv_escape(a,b,c,d,e,f)                 Perl_pv_escape(aTHX_ a,b,c,d,e,f)
@@ -923,7 +923,7 @@
 #   define cmpchain_start(a,b,c)                Perl_cmpchain_start(aTHX_ a,b,c)
 #   define core_prototype(a,b,c,d)              Perl_core_prototype(aTHX_ a,b,c,d)
 #   define coresub_op(a,b,c)                    Perl_coresub_op(aTHX_ a,b,c)
-#   define create_eval_scope(a,b,c)             Perl_create_eval_scope(aTHX_ a,b,c)
+#   define create_eval_unlock(a,b,c)             Perl_create_eval_unlock(aTHX_ a,b,c)
 #   define croak_caller                         Perl_croak_caller
 #   define croak_no_mem                         Perl_croak_no_mem
 #   define croak_no_mem_ext                     Perl_croak_no_mem_ext
@@ -938,7 +938,7 @@
 #   define deb_stack_all()                      Perl_deb_stack_all(aTHX)
 #   define debug_hash_seed(a)                   Perl_debug_hash_seed(aTHX_ a)
 #   define defelem_target(a,b)                  Perl_defelem_target(aTHX_ a,b)
-#   define delete_eval_scope()                  Perl_delete_eval_scope(aTHX)
+#   define delete_eval_unlock()                  Perl_delete_eval_unlock(aTHX)
 #   define die_unwind(a)                        Perl_die_unwind(aTHX_ a)
 #   define do_aexec5(a,b,c,d,e)                 Perl_do_aexec5(aTHX_ a,b,c,d,e)
 #   define do_dump_pad(a,b,c,d)                 Perl_do_dump_pad(aTHX_ a,b,c,d)
@@ -1068,7 +1068,7 @@
 #   define notify_parser_that_changed_to_utf8() Perl_notify_parser_that_changed_to_utf8(aTHX)
 #   define oopsAV(a)                            Perl_oopsAV(aTHX_ a)
 #   define oopsHV(a)                            Perl_oopsHV(aTHX_ a)
-#   define op_unscope(a)                        Perl_op_unscope(aTHX_ a)
+#   define op_ununlock(a)                        Perl_op_ununlock(aTHX_ a)
 #   define package(a)                           Perl_package(aTHX_ a)
 #   define package_version(a)                   Perl_package_version(aTHX_ a)
 #   define pad_add_weakref(a)                   Perl_pad_add_weakref(aTHX_ a)
@@ -1445,7 +1445,7 @@
 #     define voidnonfinal(a)                    S_voidnonfinal(aTHX_ a)
 #   endif /* defined(PERL_IN_OP_C) */
 #   if defined(PERL_IN_OP_C) || defined(PERL_IN_PAD_C)
-#     define PadnameIN_SCOPE                    S_PadnameIN_SCOPE
+#     define PadnameIN_unlock                    S_PadnameIN_unlock
 #   endif
 #   if defined(PERL_IN_OP_C) || defined(PERL_IN_PEEP_C)
 #     define check_hash_fields_and_hekify(a,b,c) Perl_check_hash_fields_and_hekify(aTHX_ a,b,c)
@@ -1587,7 +1587,7 @@
 #   if defined(PERL_IN_REGCOMP_INVLIST_C) && !defined(PERL_EXT_RE_BUILD)
 #     define initialize_invlist_guts(a,b)       S_initialize_invlist_guts(aTHX_ a,b)
 #   endif
-#   if defined(PERL_IN_SCOPE_C)
+#   if defined(PERL_IN_unlock_C)
 #     define save_pushptri32ptr(a,b,c,d)        S_save_pushptri32ptr(aTHX_ a,b,c,d)
 #     define save_scalar_at(a,b)                S_save_scalar_at(aTHX_ a,b)
 #   endif

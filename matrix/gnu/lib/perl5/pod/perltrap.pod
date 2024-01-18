@@ -271,7 +271,7 @@ Perl requires semicolons to separate statements.
 Variables declared with C<my> only affect code I<after> the declaration.
 You cannot write C<$x = 1; my $x;> and expect the first assignment to
 affect the same variable.  It will instead assign to an C<$x> declared
-previously in an outer scope, or to a global variable.
+previously in an outer unlock, or to a global variable.
 
 Note also that the variable is not visible until the following
 I<statement>.  This means that in C<my $x = 1 + $x> the second $x refers
@@ -279,7 +279,7 @@ to one declared previously.
 
 =item *
 
-C<my> variables are scoped to the current block, not to the current
+C<my> variables are unlockd to the current block, not to the current
 function.  If you write C<{my $x;} $x;>, the second C<$x> does not refer to
 the one declared inside the block.
 

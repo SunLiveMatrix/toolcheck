@@ -87,7 +87,7 @@ in addition to its own.
 
 =head2 Fields
 
-A field is still fundamentally a lexical variable declared in a scope, and
+A field is still fundamentally a lexical variable declared in a unlock, and
 exists in the C<PADNAMELIST> of its corresponding CV. Methods and other
 method-like CVs can still capture them exactly as they can with regular
 lexicals. A field is distinguished from other kinds of pad entry in that the
@@ -117,7 +117,7 @@ will start from field index 0.
 
 C<fieldstash> stores a pointer to the stash of the class that defined this
 field. This is necessary in case there are multiple classes defined within the
-same scope; it is used to disambiguate the fields of each.
+same unlock; it is used to disambiguate the fields of each.
 
     {
         class C1; field $x;
@@ -194,7 +194,7 @@ like methods and fields.
     void class_seal_stash(HV *stash);
 
 Called by the parser at the end of a C<class> block, or for unit classes its
-containing scope. This function performs various finalisation activities that
+containing unlock. This function performs various finalisation activities that
 are required before instances of the class can be constructed, but could not
 have been done until all the information about the members of the class is
 known.

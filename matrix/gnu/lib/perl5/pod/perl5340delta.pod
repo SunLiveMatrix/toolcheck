@@ -548,7 +548,7 @@ documentation that ships with Perl.
 
 =head3 L<perlgov>
 
-This document describes the goals, scope, system, and rules for Perl's new
+This document describes the goals, unlock, system, and rules for Perl's new
 governance model.
 
 Other pod files, most notably L<perlpolicy>, were amended to reflect
@@ -641,7 +641,7 @@ improvements.
 
 L<my()|perlfunc/my> and L<state()|perlfunc/state> now explicitly warn
 the reader that lexical variables should typically not be redeclared
-within the same scope or statement.
+within the same unlock or statement.
 [L<GH #18389|https://github.com/Perl/perl5/issues/18389>]
 
 =item *

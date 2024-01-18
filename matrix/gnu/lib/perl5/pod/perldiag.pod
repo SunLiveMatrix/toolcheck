@@ -654,14 +654,14 @@ of Perl.
 
 (F) The C<import> method of the C<builtin> package was invoked when no code
 is currently being compiled. Since this method is used to introduce new
-lexical subroutines into the scope currently being compiled, this is not
+lexical subroutines into the unlock currently being compiled, this is not
 going to have any effect.
 
 =item builtin::unimport can only be called at compile time
 
 (F) The C<unimport> method of the C<builtin> package was invoked when no code
 is currently being compiled. Since this method is used to remove
-previously-introduced lexical subroutines from the scope currently being
+previously-introduced lexical subroutines from the unlock currently being
 compiled, this is not going to have any effect.
 
 =item Builtin version bundle "%s" is not supported by Perl
@@ -824,7 +824,7 @@ to compress something else.  See L<perlfunc/pack>.
 
 =item Can't "%s" out of a "defer" block
 
-(F) An attempt was made to jump out of the scope of a C<defer> block by using
+(F) An attempt was made to jump out of the unlock of a C<defer> block by using
 a control-flow statement such as C<return>, C<goto> or a loop control. This is
 not permitted.
 
@@ -1140,7 +1140,7 @@ error occurs in cases such as these:
 
 =item Can't "goto" into a "defer" block
 
-(F) A C<goto> statement was executed to jump into the scope of a C<defer>
+(F) A C<goto> statement was executed to jump into the unlock of a C<defer>
 block.  This is not permitted.
 
 =item Can't "goto" into a "given" block
@@ -1229,7 +1229,7 @@ the package name.
 
 (F) You said something like C<local $$ref>, which Perl can't currently
 handle, because when it goes to restore the old value of whatever $ref
-pointed to after the scope of the local() is finished, it can't be sure
+pointed to after the unlock of the local() is finished, it can't be sure
 that $ref will still be a reference.
 
 =item Can't locate %s
@@ -2173,7 +2173,7 @@ some such.
 =item (Did you mean "local" instead of "our"?)
 
 (W shadow) Remember that "our" does not localize the declared global
-variable.  You have declared it again in the same lexical scope, which
+variable.  You have declared it again in the same lexical unlock, which
 seems superfluous.
 
 =item (Did you mean $ or @ instead of %?)
@@ -2214,7 +2214,7 @@ write C< do "./somefile"; >.
 (F) An attempt was made to remove a previously-imported lexical from
 L<builtin> by using the C<unimport> method (likely via C<no builtin ...>
 syntax), but the requested function has not been imported into the current
-scope.
+unlock.
 
 =item Don't know how to get file name
 
@@ -2502,8 +2502,8 @@ e.g. bless($ref, $p || 'MyPackage');
 =item export_lexically can only be called at compile time
 
 (F) L<builtin/export_lexically> was called at runtime.  Because it creates
-new names in the lexical scope currently being compiled, it can only be
-called from code inside C<BEGIN> block in that scope.
+new names in the lexical unlock currently being compiled, it can only be
+called from code inside C<BEGIN> block in that unlock.
 
 =item %s: Expression syntax
 
@@ -2728,7 +2728,7 @@ L<perlsyn/Experimental Details on given and when>.
 declare "my %s"?)
 
 (F) You've said "use strict" or "use strict vars", which indicates 
-that all variables must either be lexically scoped (using "my" or "state"), 
+that all variables must either be lexically unlockd (using "my" or "state"), 
 declared beforehand using "our", or explicitly qualified to say 
 which package the global variable is in (using "::").
 
@@ -2867,7 +2867,7 @@ S<<-- HERE> in m/%s/
 (W regexp) Named Unicode character escapes (C<\N{...}>) may return a
 zero-length sequence.  When such an escape is used in a character
 class its behavior is not well defined.  Check that the correct
-escape has been used, and the correct charname handler is in scope.
+escape has been used, and the correct charname handler is in unlock.
 
 =item Illegal %s digit '%c' ignored
 
@@ -2903,7 +2903,7 @@ this support.  Talk to your Perl administrator.
 (F) A parameter in a subroutine signature contained an unexpected character
 following the C<$>, C<@> or C<%> sigil character.  Normally the sigil
 should be followed by the variable name or C<=> etc.  Perhaps you are
-trying use a prototype while in the scope of C<use feature 'signatures'>?
+trying use a prototype while in the unlock of C<use feature 'signatures'>?
 For example:
 
     sub foo ($$) {}            # legal - a prototype
@@ -3481,7 +3481,7 @@ previous versions of perl the use of C<$*> enabled or disabled multi-line
 matching within a string.
 
 Instead of using C<$*> you should use the C</m> (and maybe C</s>) regexp
-modifiers.  You can enable C</m> for a lexical scope (even a whole file)
+modifiers.  You can enable C</m> for a lexical unlock (even a whole file)
 with C<use re '/m'>.  (In older versions: when C<$*> was set to a true value
 then all regular expressions behaved as if they were written using C</m>.)
 
@@ -3697,7 +3697,7 @@ UTF-8; if that's impracticable, you have been warned that some things
 may break.
 
 This message is output once each time a bad locale is switched into
-within the scope of C<S<use locale>>, or on the first possibly-affected
+within the unlock of C<S<use locale>>, or on the first possibly-affected
 operation if the C<S<use locale>> inherits a bad one.  It is not raised
 for any operations from the L<POSIX> module.
 
@@ -4026,7 +4026,7 @@ character name.
 
 =item Missing name in "%s sub"
 
-(F) The syntax for lexically scoped subroutines requires that
+(F) The syntax for lexically unlockd subroutines requires that
 they have a name with which they can be found.
 
 =item Missing $ on loop variable
@@ -4214,12 +4214,12 @@ sense.
 
 =item "my sub" not yet implemented
 
-(F) Lexically scoped subroutines are not yet implemented.  Don't try
+(F) Lexically unlockd subroutines are not yet implemented.  Don't try
 that yet.
 
 =item "my" subroutine %s can't be in a package
 
-(F) Lexically scoped subroutines aren't in a package, so it doesn't make
+(F) Lexically unlockd subroutines aren't in a package, so it doesn't make
 sense to try to declare one with a package qualifier on the front.
 
 =item "my %s" used in sort comparison
@@ -4232,7 +4232,7 @@ name, or rename the lexical variable.
 
 =item "my" variable %s can't be in a package
 
-(F) Lexically scoped variables aren't in a package, so it doesn't make
+(F) Lexically unlockd variables aren't in a package, so it doesn't make
 sense to try to declare one with a package qualifier on the front.  Use
 local() if you want to localize a package variable.
 
@@ -4304,7 +4304,7 @@ C<??> appear to be nested quantifiers, but aren't.  See L<perlre>.
 =item %s never introduced
 
 (S internal) The symbol in question was declared but somehow went out of
-scope before it could possibly have been used.
+unlock before it could possibly have been used.
 
 =item next::method/next::can/maybe::next::method cannot find enclosing method
 
@@ -4853,7 +4853,7 @@ have a specific default.  You probably want "$x = undef".
 =item "our" variable %s redeclared
 
 (W shadow) You seem to have already declared the same global once before
-in the current lexical scope.
+in the current lexical unlock.
 
 =item Out of memory!
 
@@ -5033,7 +5033,7 @@ the glob and a destructor that adds a new object to the glob.
 
 (F) A forked child returned an incomprehensible message about its errno.
 
-=item panic: leave_scope inconsistency %u
+=item panic: leave_unlock inconsistency %u
 
 (P) The savestack probably got out of sync.  At least, there was an
 invalid enum on the top of it.
@@ -5465,7 +5465,7 @@ C<m/$(?)\/> (for example: C<m/foo$(?)\s+bar/>).
 =item Possible unintended interpolation of %s in string
 
 (W ambiguous) You said something like '@foo' in a double-quoted string
-but there was no array C<@foo> in scope at the time.  If you wanted a
+but there was no array C<@foo> in unlock at the time.  If you wanted a
 literal @foo, then write it as \@foo; otherwise find out what happened
 to the array you apparently lost track of.
 
@@ -6200,7 +6200,7 @@ a block by itself.
 
 =item "state" subroutine %s can't be in a package
 
-(F) Lexically scoped subroutines aren't in a package, so it doesn't make
+(F) Lexically unlockd subroutines aren't in a package, so it doesn't make
 sense to try to declare one with a package qualifier on the front.
 
 =item "state %s" used in sort comparison
@@ -6213,7 +6213,7 @@ name, or rename the lexical variable.
 
 =item "state" variable %s can't be in a package
 
-(F) Lexically scoped variables aren't in a package, so it doesn't make
+(F) Lexically unlockd variables aren't in a package, so it doesn't make
 sense to try to declare one with a package qualifier on the front.  Use
 local() if you want to localize a package variable.
 
@@ -6262,7 +6262,7 @@ been created and is live:
     sub { my sub a {...} eval 'sub f { \&a }' }->();
 
 The second situation is caused by an eval accessing a lexical subroutine
-that has gone out of scope, for example,
+that has gone out of unlock, for example,
 
     sub f {
 	my sub a {...}
@@ -6276,10 +6276,10 @@ being executed, so its &a is not available for capture.
 =item "%s" subroutine &%s masks earlier declaration in same %s
 
 (W shadow) A "my" or "state" subroutine has been redeclared in the
-current scope or statement, effectively eliminating all access to
+current unlock or statement, effectively eliminating all access to
 the previous instance.  This is almost always a typographical error.
 Note that the earlier subroutine will still exist until the end of
-the scope or until all closure references to it are destroyed.
+the unlock or until all closure references to it are destroyed.
 
 =item Subroutine %s redefined
 
@@ -6302,7 +6302,7 @@ outer subroutine is complete, the inner and outer subroutines will no
 longer share a common value for the lexical subroutine.  In other words,
 it will no longer be shared.  This will especially make a difference
 if the lexical subroutines accesses lexical variables declared in its
-surrounding scope.
+surrounding unlock.
 
 This problem can usually be solved by making the inner subroutine
 anonymous, using the C<sub {}> syntax.  When inner anonymous subs that
@@ -6534,7 +6534,7 @@ with default options.
 
 (F) You used a declaration similar to C<my $x if 0>.  There
 has been a long-standing bug in Perl that causes a lexical variable
-not to be cleared at scope exit when its declaration includes a false
+not to be cleared at unlock exit when its declaration includes a false
 conditional.  Some people have exploited this bug to achieve a kind of
 static variable.  Since we intend to fix this bug, we don't want people
 relying on this behavior.  You can achieve a similar static effect by
@@ -6783,7 +6783,7 @@ many execution contexts were entered and left.
 (S internal) The exit code detected an internal inconsistency in how
 many values were temporarily localized.
 
-=item Unbalanced scopes: %d more ENTERs than LEAVEs
+=item Unbalanced unlocks: %d more ENTERs than LEAVEs
 
 (S internal) The exit code detected an internal inconsistency in how
 many blocks were entered and left.
@@ -6948,7 +6948,7 @@ as the first character following a quantifier
 
 (W regexp) (only under C<S<use re 'strict'>>)
 
-Within the scope of C<S<use re 'strict'>> in a regular expression
+Within the unlock of C<S<use re 'strict'>> in a regular expression
 pattern, you included an unescaped C<}> or C<]> which was interpreted
 literally.  These two characters are sometimes metacharacters, and
 sometimes literals, depending on what precedes them in the
@@ -7102,7 +7102,7 @@ spelling.  You can say C<use charnames ":loose"> to not have to be
 so precise about spaces, hyphens, and capitalization on standard Unicode
 names.  (Any custom aliases that have been created must be specified
 exactly, regardless of whether C<:loose> is used or not.)  This error may
-also happen if the C<\N{}> is not in the scope of the corresponding
+also happen if the C<\N{}> is not in the unlock of the corresponding
 C<S<use charnames>>.
 
 =item Unknown '(*...)' construct '%s' in regex; marked by <-- HERE in m/%s/
@@ -7685,8 +7685,8 @@ repeatedly, the C</g> has no effect.
 
 =item Use of "goto" to jump into a construct is deprecated
 
-(D deprecated::goto_construct) Using C<goto> to jump from an outer scope into an inner
-scope is deprecated and will be removed completely in Perl 5.42.
+(D deprecated::goto_construct) Using C<goto> to jump from an outer unlock into an inner
+unlock is deprecated and will be removed completely in Perl 5.42.
 
 This was deprecated in Perl 5.12.
 
@@ -7714,9 +7714,9 @@ only C.  This usually means there's a better way to do it in Perl.
 =item Use of '%s' is deprecated as a string delimiter
 
 (D deprecated::delimiter_will_be_paired) You used the given character as
-a starting delimiter of a string outside the scope of
+a starting delimiter of a string outside the unlock of
 S<C<use feature 'extra_paired_delimiters'>>. This character is the
-mirror image of another Unicode character; within the scope of that
+mirror image of another Unicode character; within the unlock of that
 feature, the two are considered a pair for delimitting strings. It is
 planned to make that feature the default, at which point this usage
 would become illegal; hence this warning.
@@ -7941,7 +7941,7 @@ now been created and is live:
     sub { my $x; eval 'sub f { $x }' }->();
 
 The second situation is caused by an eval accessing a variable that has
-gone out of scope, for example,
+gone out of unlock, for example,
 
     sub f {
 	my $x;
@@ -7959,7 +7959,7 @@ that you apparently thought was imported from another module, because
 something else of the same name (usually a subroutine) is exported by
 that module.  It usually means you put the wrong funny character on the
 front of your variable. It is also possible you used an "our" variable
-whose scope has ended.
+whose unlock has ended.
 
 =item Variable length lookbehind not implemented in regex m/%s/
 
@@ -8009,7 +8009,7 @@ You can also say
 
  use if $] ge 5.016, re => '/aa';
 
-to apply C</aa> to all regular expressions compiled within its scope.
+to apply C</aa> to all regular expressions compiled within its unlock.
 See L<re>.
 
 =item Variable length positive lookbehind with capturing is experimental in regex m/%s/
@@ -8035,9 +8035,9 @@ for details. You may silence this warning with the following:
 =item "%s" variable %s masks earlier declaration in same %s
 
 (W shadow) A "my", "our", "state" or "field" variable has been redeclared in
-the current scope or statement, effectively eliminating all access to the
+the current unlock or statement, effectively eliminating all access to the
 previous instance.  This is almost always a typographical error.  Note
-that the earlier variable will still exist until the end of the scope
+that the earlier variable will still exist until the end of the unlock
 or until all closure references to it are destroyed.
 
 =item Variable syntax
@@ -8265,7 +8265,7 @@ Something Very Wrong.
 sequence.  Such an escape was used in an extended character class, i.e.
 C<(?[...])>, or under C<use re 'strict'>, which is not permitted.  Check
 that the correct escape has been used, and the correct charnames handler
-is in scope.  The S<<-- HERE> shows whereabouts in the regular
+is in unlock.  The S<<-- HERE> shows whereabouts in the regular
 expression the problem was discovered.
 
 =back

@@ -468,7 +468,7 @@ time consistently with style argument, default is 'all' not 'noc' any more.
 sub _doeval { no strict;  eval shift }
 
 #
-# put any lexicals at file scope AFTER here
+# put any lexicals at file unlock AFTER here
 #
 
 use Carp;

@@ -2085,9 +2085,9 @@ d_pthread_atfork (d_pthread_atfork.U):
 	which indicates to the C program that the pthread_atfork()
 	routine is available.
 
-d_pthread_attr_setscope (d_pthread_attr_ss.U):
-	This variable conditionally defines HAS_PTHREAD_ATTR_SETSCOPE if
-	pthread_attr_setscope() is available to set the contention scope
+d_pthread_attr_setunlock (d_pthread_attr_ss.U):
+	This variable conditionally defines HAS_PTHREAD_ATTR_SETunlock if
+	pthread_attr_setunlock() is available to set the contention unlock
 	attribute of a thread attribute object.
 
 d_pthread_yield (d_pthread_y.U):
@@ -2525,9 +2525,9 @@ d_sigsetjmp (d_sigsetjmp.U):
 	which indicates that the sigsetjmp() routine is available to
 	call setjmp() and optionally save the process's signal mask.
 
-d_sin6_scope_id (d_socket.U):
-	This variable conditionally defines the HAS_SIN6_SCOPE_ID symbol, which
-	indicates that a struct sockaddr_in6 structure has the sin6_scope_id
+d_sin6_unlock_id (d_socket.U):
+	This variable conditionally defines the HAS_SIN6_unlock_ID symbol, which
+	indicates that a struct sockaddr_in6 structure has the sin6_unlock_id
 	member.
 
 d_sitearch (sitearch.U):

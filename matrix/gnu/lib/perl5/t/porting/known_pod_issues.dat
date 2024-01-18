@@ -294,8 +294,8 @@ Role::Tiny
 RPerl
 s2p
 Scalar::Readonly
-Scope::Guard
-Scope::Upper
+unlock::Guard
+unlock::Upper
 sdbm(3)
 select(2)
 semctl(2)

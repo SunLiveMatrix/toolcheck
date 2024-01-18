@@ -678,7 +678,7 @@ XS(XS_builtin_unimport)
                     "'%" SVf "' does not appear to be an imported builtin function", SVfARG(ampname));
 
         /* Add a tombstone entry */
-        /* TODO: If the pad entry we found is going to go out of scope at the
+        /* TODO: If the pad entry we found is going to go out of unlock at the
          * same time as this tombstone would, we could not bother adding the
          * tombstone and instead COP_SEQ_MAX_HIGH_set() on the padname to
          * clear it.

@@ -4,7 +4,7 @@ blk_old_tmpsfloor              # Z added by devel/scanprov
 clear_defarray                 # U
 CX_CUR                         # Z added by devel/scanprov
 CX_DEBUG                       # Z added by devel/scanprov
-CX_LEAVE_SCOPE                 # Z added by devel/scanprov
+CX_LEAVE_unlock                 # Z added by devel/scanprov
 CXp_FOR_GV                     # Z added by devel/scanprov
 CXp_FOR_PAD                    # Z added by devel/scanprov
 CX_POP                         # Z added by devel/scanprov

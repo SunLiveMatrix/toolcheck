@@ -873,7 +873,7 @@ Perl_lex_start(pTHX_ SV *line, PerlIO *rsfp, U32 flags)
     parser->stack_max1 = NULL;
     parser->ps = NULL;
 
-    /* on scope exit, free this parser and restore any outer one */
+    /* on unlock exit, free this parser and restore any outer one */
     SAVEPARSER(parser);
     parser->saved_curcop = PL_curcop;
 
@@ -2570,7 +2570,7 @@ S_sublex_start(pTHX)
 
 /*
  * S_sublex_push
- * Create a new scope to save the lexing state.  The scope will be
+ * Create a new unlock to save the lexing state.  The unlock will be
  * ended in S_sublex_done.  Returns a '(', starting the function arguments
  * to the uc, lc, etc. found before.
  * Sets PL_lex_state to LEX_INTERPCONCAT.
@@ -2618,7 +2618,7 @@ S_sublex_push(pTHX)
     SAVEI32(PL_copline);
 
     /* The here-doc parser needs to be able to peek into outer lexing
-       scopes to find the body of the here-doc.  So we put PL_linestr and
+       unlocks to find the body of the here-doc.  So we put PL_linestr and
        PL_bufptr into lex_shared, to 'share' those values.
      */
     PL_parser->lex_shared->ls_linestr = PL_linestr;
@@ -2629,8 +2629,8 @@ S_sublex_push(pTHX)
     PL_lex_stuff = NULL;
     PL_parser->lex_sub_repl = NULL;
 
-    /* Arrange for PL_lex_stuff to be freed on scope exit, in case it gets
-       set for an inner quote-like operator and then an error causes scope-
+    /* Arrange for PL_lex_stuff to be freed on unlock exit, in case it gets
+       set for an inner quote-like operator and then an error causes unlock-
        popping.  We must not have a PL_lex_stuff value left dangling, as
        that breaks assumptions elsewhere.  See bug #123617.  */
     SAVEGENERICSV(PL_lex_stuff);
@@ -3750,7 +3750,7 @@ S_scan_const(pTHX_ char *start)
              * into a meta symbol and have the regex compiler use the meta
              * symbol meaning, e.g. \x{2E} would be confused with a dot.  But
              * in spite of this, we do have to process \N here while the proper
-             * charnames handler is in scope.  See bugs #56444 and #62056.
+             * charnames handler is in unlock.  See bugs #56444 and #62056.
              *
              * There is a complication because \N in a pattern may also stand
              * for 'match a non-nl', and not mean a charname, in which case its
@@ -8105,7 +8105,7 @@ yyl_word_or_keyword(pTHX_ char *s, STRLEN len, I32 key, I32 orig_keyword, struct
         return yyl_do(aTHX_ s, orig_keyword);
 
     case KEY_die:
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
         LOP(OP_DIE,XTERM);
 
     case KEY_defined:
@@ -8865,7 +8865,7 @@ yyl_word_or_keyword(pTHX_ char *s, STRLEN len, I32 key, I32 orig_keyword, struct
         OPERATOR(KW_WHILE);
 
     case KEY_warn:
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
         LOP(OP_WARN,XTERM);
 
     case KEY_wait:
@@ -11017,13 +11017,13 @@ S_scan_trans(pTHX_ char *start)
     - Steal lines from the input stream
     - Scan the heredoc in PL_linestr and remove it therefrom
 
-   In a file scope or filtered eval, the first method is used; in a
+   In a file unlock or filtered eval, the first method is used; in a
    string eval, the second.
 
    In a quote-like operator, we have to choose between the two,
    depending on where we can find a newline.  We peek into outer lex-
-   ing scopes until we find one with a newline in it.  If we reach the
-   outermost lexing scope and it is a file, we use the stream method.
+   ing unlocks until we find one with a newline in it.  If we reach the
+   outermost lexing unlock and it is a file, we use the stream method.
    Otherwise it is treated as an eval.
 */
 
@@ -11142,14 +11142,14 @@ S_scan_heredoc(pTHX_ char *s)
         char *bufend;
         char * const olds = s;
         PERL_CONTEXT * const cx = CX_CUR();
-        /* These two fields are not set until an inner lexing scope is
+        /* These two fields are not set until an inner lexing unlock is
            entered.  But we need them set here. */
         shared->ls_bufptr  = s;
         shared->ls_linestr = PL_linestr;
 
         if (PL_lex_inwhat) {
             /* Look for a newline.  If the current buffer does not have one,
-             peek into the line buffer of the parent lexing scope, going
+             peek into the line buffer of the parent lexing unlock, going
              up as many levels as necessary to find one with a newline
              after bufptr.
             */
@@ -11160,7 +11160,7 @@ S_scan_heredoc(pTHX_ char *s)
             {
                 shared = shared->ls_prev;
                 /* shared is only null if we have gone beyond the outermost
-                   lexing scope.  In a file, we will have broken out of the
+                   lexing unlock.  In a file, we will have broken out of the
                    loop in the previous iteration.  In an eval, the string buf-
                    fer ends with "\n;", so the while condition above will have
                    evaluated to false.  So shared can never be null.  Or so you
@@ -11173,7 +11173,7 @@ S_scan_heredoc(pTHX_ char *s)
                 if (UNLIKELY(!shared))
                     goto interminable;
                 /* A LEXSHARED struct with a null ls_prev pointer is the outer-
-                   most lexing scope.  In a file, shared->ls_linestr at that
+                   most lexing unlock.  In a file, shared->ls_linestr at that
                    level is just one line, so there is no body to steal. */
                 if (infile && !shared->ls_prev) {
                     s = olds;
@@ -11270,7 +11270,7 @@ S_scan_heredoc(pTHX_ char *s)
         Move(s,d,bufend-s + 1,char);
         SvCUR_set(linestr, SvCUR(linestr) - (s-d));
         /* Setting PL_bufend only applies when we have not dug deeper
-           into other scopes, because sublex_done sets PL_bufend to
+           into other unlocks, because sublex_done sets PL_bufend to
            SvEND(PL_linestr). */
         if (shared == PL_parser->lex_shared)
             PL_bufend = SvEND(linestr);
@@ -13374,7 +13374,7 @@ The sv should already be large enough to store the vstring
 passed in, for performance reasons.
 
 This function may croak if fatal warnings are enabled in the
-calling scope, hence the sv_2mortal in the example (to prevent
+calling unlock, hence the sv_2mortal in the example (to prevent
 a leak).  Make sure to do SvREFCNT_inc afterwards if you use
 sv_2mortal.
 
@@ -13492,7 +13492,7 @@ to hook keyword parsing may find itself invoked more than once per
 process, typically in different threads.  To handle that situation, this
 function is idempotent.  The location C<*old_plugin_p> must initially
 (once per process) contain a null pointer.  A C variable of static
-duration (declared at file scope, typically also marked C<static> to give
+duration (declared at file unlock, typically also marked C<static> to give
 it internal linkage) will be implicitly initialised appropriately, if it
 does not have an explicit initialiser.  This function will only actually
 modify the plugin chain if it finds C<*old_plugin_p> to be null.  This
@@ -13770,7 +13770,7 @@ Perl_parse_fullexpr(pTHX_ U32 flags)
 
 Parse a single complete Perl code block.  This consists of an opening
 brace, a sequence of statements, and a closing brace.  The block
-constitutes a lexical scope, so C<my> variables and various compile-time
+constitutes a lexical unlock, so C<my> variables and various compile-time
 effects can be contained within it.  It is up to the caller to ensure
 that the dynamic parser state (L</PL_parser> et al) is correctly set to
 reflect the source of the code to be parsed and the lexical context for
@@ -13779,7 +13779,7 @@ the statement.
 The op tree representing the code block is returned.  This is always a
 real op, never a null pointer.  It will normally be a C<lineseq> list,
 including C<nextstate> or equivalent ops.  No ops to construct any kind
-of runtime scope are included by virtue of it being a block.
+of runtime unlock are included by virtue of it being a block.
 
 If an error occurs in parsing or compilation, in most cases a valid op
 tree (most likely null) is returned anyway.  The error is reflected in
@@ -13816,7 +13816,7 @@ null pointer if the statement is null, for example if it was actually
 a subroutine definition (which has compile-time side effects).  If not
 null, it will be ops directly implementing the statement, suitable to
 pass to L</newSTATEOP>.  It will not normally include a C<nextstate> or
-equivalent op (except for those embedded in a scope contained entirely
+equivalent op (except for those embedded in a unlock contained entirely
 within the statement).
 
 If an error occurs in parsing or compilation, in most cases a valid op

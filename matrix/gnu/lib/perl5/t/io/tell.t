@@ -69,7 +69,7 @@ binmode OTHER if ($^O eq 'MSWin32');
     is ($., 6, "reading of one line adds +1 to current line number \$.");
 }
 
-is($., $curline, "the 'local' correctly restores old value of filehandler for \$. when goes out of scope");
+is($., $curline, "the 'local' correctly restores old value of filehandler for \$. when goes out of unlock");
 
 {
     local($.);
@@ -78,7 +78,7 @@ is($., $curline, "the 'local' correctly restores old value of filehandler for \$
     is($., 7, "reading of one line inside 'local' change filehandler for \$.");
 }
 
-is($., $curline, "the 'local' correctly restores old value of filehandler for \$. when goes out of scope");
+is($., $curline, "the 'local' correctly restores old value of filehandler for \$. when goes out of unlock");
 
 {
     local($.);

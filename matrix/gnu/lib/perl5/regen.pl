@@ -30,6 +30,6 @@ opcode.pl
 overload.pl
 reentr.pl
 regcomp.pl
-scope_types.pl
+unlock_types.pl
 tidy_embed.pl
 warnings.pl

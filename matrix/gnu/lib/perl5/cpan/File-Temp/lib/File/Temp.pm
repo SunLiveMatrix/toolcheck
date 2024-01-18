@@ -1114,7 +1114,7 @@ sub new {
 #pod
 #pod   $dir = File::Temp->newdir();
 #pod
-#pod By default the directory is deleted when the object goes out of scope.
+#pod By default the directory is deleted when the object goes out of unlock.
 #pod
 #pod Supports the same options as the C<tempdir> function. Note that directories
 #pod created with this method default to CLEANUP => 1.
@@ -1195,7 +1195,7 @@ sub NUMIFY {
 #pod
 #pod =item B<unlink_on_destroy>
 #pod
-#pod Control whether the file is unlinked when the object goes out of scope.
+#pod Control whether the file is unlinked when the object goes out of unlock.
 #pod The file is removed if this value is true and $KEEP_ALL is not.
 #pod
 #pod  $fh->unlink_on_destroy( 1 );
@@ -1216,7 +1216,7 @@ sub unlink_on_destroy {
 
 #pod =item B<DESTROY>
 #pod
-#pod When the object goes out of scope, the destructor is called. This
+#pod When the object goes out of unlock, the destructor is called. This
 #pod destructor will attempt to unlink the file (using L<unlink1|"unlink1">)
 #pod if the constructor was called with UNLINK set to 1 (the default state
 #pod if UNLINK is not specified).
@@ -1224,14 +1224,14 @@ sub unlink_on_destroy {
 #pod No error is given if the unlink fails.
 #pod
 #pod If the object has been passed to a child process during a fork, the
-#pod file will be deleted when the object goes out of scope in the parent.
+#pod file will be deleted when the object goes out of unlock in the parent.
 #pod
 #pod For a temporary directory object the directory will be removed unless
 #pod the CLEANUP argument was used in the constructor (and set to false) or
 #pod C<unlink_on_destroy> was modified after creation.  Note that if a temp
 #pod directory is your current directory, it cannot be removed - a warning
 #pod will be given in this case.  C<chdir()> out of the directory before
-#pod letting the object go out of scope.
+#pod letting the object go out of unlock.
 #pod
 #pod If the global variable $KEEP_ALL is true, the file or directory
 #pod will not be removed.
@@ -1578,7 +1578,7 @@ HERE
 #pod either use the CLEANUP option which will trigger removal on program
 #pod exit, or consider using the "newdir" method in the object interface which
 #pod will allow the directory to be cleaned up when the object goes out of
-#pod scope.
+#pod unlock.
 #pod
 #pod The behaviour of the function depends on the arguments:
 #pod
@@ -2857,7 +2857,7 @@ Create a temporary directory using an object oriented interface.
 
   $dir = File::Temp->newdir();
 
-By default the directory is deleted when the object goes out of scope.
+By default the directory is deleted when the object goes out of unlock.
 
 Supports the same options as the C<tempdir> function. Note that directories
 created with this method default to CLEANUP => 1.
@@ -2894,7 +2894,7 @@ This method is called automatically when the object is used in string context.
 
 =item B<unlink_on_destroy>
 
-Control whether the file is unlinked when the object goes out of scope.
+Control whether the file is unlinked when the object goes out of unlock.
 The file is removed if this value is true and $KEEP_ALL is not.
 
  $fh->unlink_on_destroy( 1 );
@@ -2905,7 +2905,7 @@ Current API available since 0.15
 
 =item B<DESTROY>
 
-When the object goes out of scope, the destructor is called. This
+When the object goes out of unlock, the destructor is called. This
 destructor will attempt to unlink the file (using L<unlink1|"unlink1">)
 if the constructor was called with UNLINK set to 1 (the default state
 if UNLINK is not specified).
@@ -2913,14 +2913,14 @@ if UNLINK is not specified).
 No error is given if the unlink fails.
 
 If the object has been passed to a child process during a fork, the
-file will be deleted when the object goes out of scope in the parent.
+file will be deleted when the object goes out of unlock in the parent.
 
 For a temporary directory object the directory will be removed unless
 the CLEANUP argument was used in the constructor (and set to false) or
 C<unlink_on_destroy> was modified after creation.  Note that if a temp
 directory is your current directory, it cannot be removed - a warning
 will be given in this case.  C<chdir()> out of the directory before
-letting the object go out of scope.
+letting the object go out of unlock.
 
 If the global variable $KEEP_ALL is true, the file or directory
 will not be removed.
@@ -3048,7 +3048,7 @@ because of issues with backwards compatibility). To enable removal
 either use the CLEANUP option which will trigger removal on program
 exit, or consider using the "newdir" method in the object interface which
 will allow the directory to be cleaned up when the object goes out of
-scope.
+unlock.
 
 The behaviour of the function depends on the arguments:
 

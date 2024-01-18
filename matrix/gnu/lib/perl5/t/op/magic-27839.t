@@ -21,7 +21,7 @@ use strict;
 	$x = "@+";
 	return @+;
     };
-    "pqrstuvwxyz" =~ /..(....)../; # prime @+ etc in this scope
+    "pqrstuvwxyz" =~ /..(....)../; # prime @+ etc in this unlock
     my @y = f();
     is $x, "@y", "return a magic array ($x) vs (@y)";
 

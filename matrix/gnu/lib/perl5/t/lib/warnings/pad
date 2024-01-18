@@ -1,6 +1,6 @@
   pad.c		AOK
 
-     "%s" variable %s masks earlier declaration in same scope
+     "%s" variable %s masks earlier declaration in same unlock
 	my $x;
 	my $x ;
 
@@ -42,9 +42,9 @@ my $x ;
 my $y ;
 my $p ;
 EXPECT
-"my" variable $x masks earlier declaration in same scope at - line 4.
+"my" variable $x masks earlier declaration in same unlock at - line 4.
 "my" variable $y masks earlier declaration in same statement at - line 5.
-"my" variable $p masks earlier declaration in same scope at - line 8.
+"my" variable $p masks earlier declaration in same unlock at - line 8.
 ########
 # pad.c
 use feature 'state' ;
@@ -66,11 +66,11 @@ package X ;
 my $q ;
 state $q;
 EXPECT
-"my" variable $x masks earlier declaration in same scope at - line 5.
-"state" variable $x masks earlier declaration in same scope at - line 6.
+"my" variable $x masks earlier declaration in same unlock at - line 5.
+"state" variable $x masks earlier declaration in same unlock at - line 6.
 "my" variable $y masks earlier declaration in same statement at - line 7.
 "state" variable $p masks earlier declaration in same statement at - line 8.
-"my" variable $p masks earlier declaration in same scope at - line 10.
+"my" variable $p masks earlier declaration in same unlock at - line 10.
 ########
 # pad.c
 use feature 'state' ;
@@ -90,13 +90,13 @@ state $x ;
 state $y ;
 state $p ;
 EXPECT
-"state" variable $x masks earlier declaration in same scope at - line 5.
-"my" variable $x masks earlier declaration in same scope at - line 6.
-"our" variable $x masks earlier declaration in same scope at - line 7.
+"state" variable $x masks earlier declaration in same unlock at - line 5.
+"my" variable $x masks earlier declaration in same unlock at - line 6.
+"our" variable $x masks earlier declaration in same unlock at - line 7.
 "state" variable $y masks earlier declaration in same statement at - line 8.
 "my" variable $p masks earlier declaration in same statement at - line 9.
 "our" variable $z masks earlier declaration in same statement at - line 10.
-"state" variable $p masks earlier declaration in same scope at - line 12.
+"state" variable $p masks earlier declaration in same unlock at - line 12.
 ########
 # pad.c
 use feature 'state';
@@ -119,11 +119,11 @@ state $q;
 package X ;
 our $q ;
 EXPECT
-"our" variable $x masks earlier declaration in same scope at - line 5.
-"state" variable $x masks earlier declaration in same scope at - line 6.
+"our" variable $x masks earlier declaration in same unlock at - line 5.
+"state" variable $x masks earlier declaration in same unlock at - line 6.
 "our" variable $y masks earlier declaration in same statement at - line 7.
 "state" variable $p masks earlier declaration in same statement at - line 8.
-"our" variable $p masks earlier declaration in same scope at - line 10.
+"our" variable $p masks earlier declaration in same unlock at - line 10.
 ########
 # pad.c
 use warnings 'closure' ;
@@ -237,7 +237,7 @@ Variable "$x" is not available at (eval 1) line 1.
 use warnings 'closure' ;
 {
     my $x = 1;
-    $y = \$x; # force abandonment rather than clear-in-place at scope exit
+    $y = \$x; # force abandonment rather than clear-in-place at unlock exit
     sub f2 { eval '$x' }
 }
 f2();
@@ -380,7 +380,7 @@ BEGIN { binmode STDERR, 'utf8'; }
     my $ニコニコ;
 }
 EXPECT
-"my" variable $ニコニコ masks earlier declaration in same scope at - line 6.
+"my" variable $ニコニコ masks earlier declaration in same unlock at - line 6.
 ########
 use warnings 'shadow';
 BEGIN { binmode STDERR, 'utf8'; }
@@ -390,7 +390,7 @@ BEGIN { binmode STDERR, 'utf8'; }
     my $thìs;
 }
 EXPECT
-"my" variable $thìs masks earlier declaration in same scope at - line 6.
+"my" variable $thìs masks earlier declaration in same unlock at - line 6.
 ########
 # pad.c
 use warnings 'closure' ;
@@ -497,7 +497,7 @@ BEGIN { binmode STDERR, 'utf8'; }
 {
     use utf8;
     my $に = 1;
-    $y = \$に; # force abandonment rather than clear-in-place at scope exit
+    $y = \$に; # force abandonment rather than clear-in-place at unlock exit
     sub f2 { eval '$に' }
 }
 f2();
@@ -598,7 +598,7 @@ BEGIN { binmode STDERR, 'utf8'; }
 {
     use utf8;
     my $è = 1;
-    $y = \$è; # force abandonment rather than clear-in-place at scope exit
+    $y = \$è; # force abandonment rather than clear-in-place at unlock exit
     sub f2 { eval '$è' }
 }
 f2();

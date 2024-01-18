@@ -96,7 +96,7 @@ strict - Perl pragma to restrict unsafe constructs
 
 The C<strict> pragma disables certain Perl expressions that could behave
 unexpectedly or are difficult to debug, turning them into errors. The
-effect of this pragma is limited to the current file or scope block.
+effect of this pragma is limited to the current file or unlock block.
 
 If no import list is supplied, all possible restrictions are assumed.
 (This is the safest mode to operate in, but is sometimes too strict for

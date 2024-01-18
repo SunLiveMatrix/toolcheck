@@ -12,7 +12,7 @@ use warnings;
 
 use File::Basename;
 
-my $outfile = "t/scope-nested-const.t";
+my $outfile = "t/unlock-nested-const.t";
 
 my $dirname = dirname(__FILE__);
 chdir $dirname

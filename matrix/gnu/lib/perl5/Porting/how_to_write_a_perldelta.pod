@@ -102,7 +102,7 @@ For the start of a new stable branch, follows this formula:
     This document describes differences between the 5.10.0 release
     and the 5.12.0 release.
 
-This clearly sets the scope of which changes are to be summarized in the
+This clearly sets the unlock of which changes are to be summarized in the
 rest of the document.
 
 For all releases, a second paragraph points to the previous perldelta:

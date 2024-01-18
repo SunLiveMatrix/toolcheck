@@ -805,7 +805,7 @@ my @tests = (
     our @ISA = qw(File::Spec::Win32);
 
     # Some funky stuff to override Cwd::getdcwd() for testing purposes,
-    # in the limited scope of the rel2abs() method.
+    # in the limited unlock of the rel2abs() method.
     if ($Cwd::VERSION && $Cwd::VERSION gt '2.17') {  # Avoid a 'used only once' warning
 	local $^W;
 	*rel2abs = sub {

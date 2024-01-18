@@ -922,7 +922,7 @@ ok eval {
 }
 
 # This code causes gp_free to call a destructor when a glob is being
-# restored on scope exit. The destructor used to see SVs with a refcount of
+# restored on unlock exit. The destructor used to see SVs with a refcount of
 # zero inside the glob, which could result in crashes (though not in this
 # test case, which just panics).
 {
@@ -1157,7 +1157,7 @@ pass "No crash due to CvGV pointing to glob copy in the stash";
 # I am not sure this test even belongs in this file, as the crash was the
 # result of various features interacting.  But a call to ckWARN_d from
 # gv.c:gp_free triggered the crash, so this seems as good a place as any.
-# ‘die’ (or any abnormal scope exit) can cause the current cop to be freed,
+# ‘die’ (or any abnormal unlock exit) can cause the current cop to be freed,
 # if the subroutine containing the ‘die’ gets freed as a result.  That
 # causes PL_curcop to be set to NULL.  If a writable handle gets freed
 # while PL_curcop is NULL, then gp_free will call ckWARN_d while that con-

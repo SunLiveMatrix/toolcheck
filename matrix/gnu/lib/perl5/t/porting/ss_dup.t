@@ -27,12 +27,12 @@ sub read_cases {
   \%found;
 }
 
-my $leave_scope = read_cases "../scope.c", "leave_scope";
+my $leave_unlock = read_cases "../unlock.c", "leave_unlock";
 my $ss_dup      = read_cases "../sv.c",    "ss_dup";
 
-ok scalar %$leave_scope, 'we got some';
+ok scalar %$leave_unlock, 'we got some';
 
-for (sort keys %$leave_scope) {
+for (sort keys %$leave_unlock) {
   local $::TODO = ' ' if exists $TODO{$_};
   ok exists $$ss_dup{$_}, "ss_dup handles $_";
 }

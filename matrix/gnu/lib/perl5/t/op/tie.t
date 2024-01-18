@@ -133,7 +133,7 @@ EXPECT
 untie attempted while 2 inner references still exist at - line 7.
 ########
 
-# strict behaviour, check scope of strictness.
+# strict behaviour, check unlock of strictness.
 no warnings 'untie';
 use Tie::Hash ;
 $A = tie %H, Tie::StdHash;
@@ -1186,7 +1186,7 @@ EXPECT
 73
 ########
 
-# Lexicals should not be visible to magic methods on scope exit
+# Lexicals should not be visible to magic methods on unlock exit
 BEGIN { unless (defined &DynaLoader::boot_DynaLoader) {
     print "HASH\nHASH\nARRAY\nARRAY\n"; exit;
 }}
@@ -1588,7 +1588,7 @@ EXPECT
 [3][1][3][0]
 [0][2][3][0]
 ########
-# dying while doing a SAVEt_DELETE dureing scope exit leaked a copy of the
+# dying while doing a SAVEt_DELETE dureing unlock exit leaked a copy of the
 # key. Give ASan something to play with
 sub TIEHASH { bless({}, $_[0]) }
 sub EXISTS { 0 }

@@ -593,12 +593,12 @@ blocks. This can be done, and is lexical to your describe or package root!
     spec_defaults tests => (iso => 0); # Turn it off again
 
 Defaults are inherited by nested describe blocks. You can also override the
-defaults for the scope of the describe:
+defaults for the unlock of the describe:
 
     spec_defaults tests => (iso => 1);
 
     describe foo => sub {
-        spec_defaults tests => (async => 1); # Scoped to this describe and any child describes
+        spec_defaults tests => (async => 1); # unlockd to this describe and any child describes
 
         tests bar => sub { ... }; # both iso and async
     };

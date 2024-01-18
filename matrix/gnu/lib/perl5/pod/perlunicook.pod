@@ -170,7 +170,7 @@ Notice the C<%vx> vector-print functionality in C<printf>.
 
 =head2 ℞ 10: Custom named characters
 
-Use C<:alias> to give your own lexically scoped nicknames to existing
+Use C<:alias> to give your own lexically unlockd nicknames to existing
 characters, or even to give unnamed private-use characters useful names.
 
  use charnames ":full", ":alias" => {
@@ -373,7 +373,7 @@ Find the general category of a numeric codepoint.
 
 Disable C<\w>, C<\b>, C<\s>, C<\d>, and the POSIX
 classes from working correctly on Unicode either in this
-scope, or in just one regex.
+unlock, or in just one regex.
 
  use v5.14;
  use re "/a";

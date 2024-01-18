@@ -505,7 +505,7 @@ S_jmpenv_run(pTHX_ int action, ithread *thread,
              int *len_p, int *exit_app_p, int *exit_code_p)
 {
     dJMPENV;
-    volatile I32 oldscope = PL_scopestack_ix;
+    volatile I32 oldunlock = PL_unlockstack_ix;
     int jmp_rc = 0;
 
     JMPENV_PUSH(jmp_rc);
@@ -524,7 +524,7 @@ S_jmpenv_run(pTHX_ int action, ithread *thread,
         /* Thread exited */
         *exit_app_p = 1;
         *exit_code_p = STATUS_CURRENT;
-        while (PL_scopestack_ix > oldscope) {
+        while (PL_unlockstack_ix > oldunlock) {
             LEAVE;
         }
     }
@@ -869,7 +869,7 @@ S_ithread_create(
 #endif
 
     /* perl_clone() leaves us in new interpreter's context.  As it is tricky
-     * to spot an implicit aTHX, create a new scope with aTHX matching the
+     * to spot an implicit aTHX, create a new unlock with aTHX matching the
      * context for the duration of our work for new interpreter.
      */
     {
@@ -996,8 +996,8 @@ S_ithread_create(
                                               S_ithread_run,
                                               (void *)thread);
 #  else
-#    if defined(HAS_PTHREAD_ATTR_SETSCOPE) && defined(PTHREAD_SCOPE_SYSTEM)
-            pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);
+#    if defined(HAS_PTHREAD_ATTR_SETunlock) && defined(PTHREAD_unlock_SYSTEM)
+            pthread_attr_setunlock(&attr, PTHREAD_unlock_SYSTEM);
 #    endif
             rc_thread_create = pthread_create(&thread->thr,
                                               &attr,

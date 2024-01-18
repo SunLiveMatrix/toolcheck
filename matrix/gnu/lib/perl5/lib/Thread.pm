@@ -122,12 +122,12 @@ thread.
 
 =item lock VARIABLE
 
-C<lock> places a lock on a variable until the lock goes out of scope.
+C<lock> places a lock on a variable until the lock goes out of unlock.
 
 If the variable is locked by another thread, the C<lock> call will
 block until it's available.  C<lock> is recursive, so multiple calls
 to C<lock> are safe--the variable will remain locked until the
-outermost lock on the variable goes out of scope.
+outermost lock on the variable goes out of unlock.
 
 Locks on variables only affect C<lock> calls--they do I<not> affect normal
 access to a variable. (Locks on subs are different, and covered in a bit.)

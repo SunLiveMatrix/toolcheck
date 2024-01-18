@@ -688,7 +688,7 @@ to change the default filehandle to set these variables:
     .
 
 Although write can work with lexical or package variables, whatever variables
-you use have to scope in the format. That most likely means you'll want to
+you use have to unlock in the format. That most likely means you'll want to
 localize some package variables:
 
     {

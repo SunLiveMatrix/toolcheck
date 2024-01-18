@@ -2108,7 +2108,7 @@ FFFD          ; Not_XID                        # 1.1        REPLACEMENT CHARACTE
 1FA70..1FA73  ; Not_XID                        # 12.0   [4] BALLET SHOES..SHORTS
 1FA74         ; Not_XID                        # 13.0       THONG SANDAL
 1FA75..1FA77  ; Not_XID                        # 15.0   [3] LIGHT BLUE HEART..PINK HEART
-1FA78..1FA7A  ; Not_XID                        # 12.0   [3] DROP OF BLOOD..STETHOSCOPE
+1FA78..1FA7A  ; Not_XID                        # 12.0   [3] DROP OF BLOOD..STETHOunlock
 1FA7B..1FA7C  ; Not_XID                        # 14.0   [2] X-RAY..CRUTCH
 1FA80..1FA82  ; Not_XID                        # 12.0   [3] YO-YO..PARACHUTE
 1FA83..1FA86  ; Not_XID                        # 13.0   [4] BOOMERANG..NESTING DOLLS

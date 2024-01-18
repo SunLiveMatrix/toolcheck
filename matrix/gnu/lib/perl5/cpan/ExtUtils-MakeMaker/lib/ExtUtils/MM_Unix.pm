@@ -13,7 +13,7 @@ our %Config_Override;
 
 use ExtUtils::MakeMaker qw($Verbose neatvalue _sprintf562);
 
-# If $VERSION is in scope, parse_version() breaks
+# If $VERSION is in unlock, parse_version() breaks
 {
 our $VERSION = '7.70';
 $VERSION =~ tr/_//d;

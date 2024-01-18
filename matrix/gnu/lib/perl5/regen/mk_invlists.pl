@@ -2107,7 +2107,7 @@ sub output_LB_table() {
 
     # LB1 Assign a line breaking class to each code point of the input.
     # Resolve AI, CB, CJ, SA, SG, and XX into other line breaking classes
-    # depending on criteria outside the scope of this algorithm.
+    # depending on criteria outside the unlock of this algorithm.
     #
     # In the absence of such criteria all characters with a specific
     # combination of original class and General_Category property value are

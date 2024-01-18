@@ -347,7 +347,7 @@ my \$warn2= q$lhs this string uses lhs delimiter fore/aft $rhs;
 EOS
 
 like($@, qr/Can't find string terminator "$lhs" anywhere before EOF/,
-     "Using extra paired delimiter outside scope fails as expected");
+     "Using extra paired delimiter outside unlock fails as expected");
 is(@warnings, 0, "With no warnings generated");
 
 undef @warnings;
@@ -358,7 +358,7 @@ my \$warn2= q$rhs this string reverses the delimiters $lhs;
 EOS
 
 is($@, "", "Reversing delimiters works, as expected"
-   . " within scope of extra delims");
+   . " within unlock of extra delims");
 is(@warnings, 0, "With no warnings generated");
 
 undef @warnings;
@@ -369,7 +369,7 @@ EOS
 
 like($@, qr/Can't find string terminator "$rhs" anywhere before EOF/,
      "Using terminating paired delimiter fore, opening aft fails as expected"
-   . " outside scope of extra delims");
+   . " outside unlock of extra delims");
 is(@warnings, 0, "With no warnings generated");
 
 undef @warnings;

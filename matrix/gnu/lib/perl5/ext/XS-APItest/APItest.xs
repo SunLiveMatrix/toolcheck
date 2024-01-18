@@ -61,7 +61,7 @@ typedef PerlIO * OutputStream;
 #define croak_fail_nep(h, w) croak("fail %p!=%p at " __FILE__ " line %d", (h), (w), __LINE__)
 #define croak_fail_nei(h, w) croak("fail %d!=%d at " __FILE__ " line %d", (int)(h), (int)(w), __LINE__)
 
-/* assumes that there is a 'failed' variable in scope */
+/* assumes that there is a 'failed' variable in unlock */
 #define TEST_EXPR(s) STMT_START {           \
     if (s) {                                \
         printf("# ok: %s\n", #s);           \
@@ -470,7 +470,7 @@ blockhook_csc_pre_end(pTHX_ OP **o)
     dMY_CXT;
 
     PERL_UNUSED_ARG(o);
-    /* if we hit the end of a scope we missed the start of, we need to
+    /* if we hit the end of a unlock we missed the start of, we need to
      * unconditionally clear @CSC */
     if (GvAV(MY_CXT.cscgv) == MY_CXT.cscav && MY_CXT.cscav) {
         av_clear(MY_CXT.cscav);
@@ -712,7 +712,7 @@ test_op_linklist_describe(OP *start)
     return SvPVX(rv);
 }
 
-/** establish_cleanup operator, ripped off from Scope::Cleanup **/
+/** establish_cleanup operator, ripped off from unlock::Cleanup **/
 
 STATIC void
 THX_run_cleanup(pTHX_ void *cleanup_code_ref)
@@ -762,7 +762,7 @@ THX_ck_entersub_establish_cleanup(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 
     estop = mkUNOP(OP_RAND, argop);
     estop->op_ppaddr = THX_pp_establish_cleanup;
-    PL_hints |= HINT_BLOCK_SCOPE;
+    PL_hints |= HINT_BLOCK_unlock;
     return estop;
 }
 
@@ -847,7 +847,7 @@ THX_ck_entersub_pad_scalar(pTHX_ OP *entersubop, GV *namegv, SV *ckobj)
 
 static SV *hintkey_rpn_sv, *hintkey_calcrpn_sv, *hintkey_stufftest_sv;
 static SV *hintkey_swaptwostmts_sv, *hintkey_looprest_sv;
-static SV *hintkey_scopelessblock_sv;
+static SV *hintkey_unlocklessblock_sv;
 static SV *hintkey_stmtasexpr_sv, *hintkey_stmtsasexpr_sv;
 static SV *hintkey_loopblock_sv, *hintkey_blockasexpr_sv;
 static SV *hintkey_swaplabel_sv, *hintkey_labelconst_sv;
@@ -1024,7 +1024,7 @@ static OP *THX_parse_keyword_swaptwostmts(pTHX)
     a = parse_fullstmt(0);
     b = parse_fullstmt(0);
     if(a && b)
-        PL_hints |= HINT_BLOCK_SCOPE;
+        PL_hints |= HINT_BLOCK_unlock;
     return op_append_list(OP_LINESEQ, b, a);
 }
 
@@ -1035,8 +1035,8 @@ static OP *THX_parse_keyword_looprest(pTHX)
                         parse_stmtseq(0), NULL, 1);
 }
 
-#define parse_keyword_scopelessblock() THX_parse_keyword_scopelessblock(aTHX)
-static OP *THX_parse_keyword_scopelessblock(pTHX)
+#define parse_keyword_unlocklessblock() THX_parse_keyword_unlocklessblock(aTHX)
+static OP *THX_parse_keyword_unlocklessblock(pTHX)
 {
     I32 c;
     OP *body;
@@ -1055,8 +1055,8 @@ static OP *THX_parse_keyword_stmtasexpr(pTHX)
 {
     OP *o = parse_barestmt(0);
     if (!o) o = newOP(OP_STUB, 0);
-    if (PL_hints & HINT_BLOCK_SCOPE) o->op_flags |= OPf_PARENS;
-    return op_scope(o);
+    if (PL_hints & HINT_BLOCK_unlock) o->op_flags |= OPf_PARENS;
+    return op_unlock(o);
 }
 
 #define parse_keyword_stmtsasexpr() THX_parse_keyword_stmtsasexpr(aTHX)
@@ -1071,8 +1071,8 @@ static OP *THX_parse_keyword_stmtsasexpr(pTHX)
     if(lex_peek_unichar(0) != /*{*/'}') croak("syntax error");
     lex_read_unichar(0);
     if (!o) o = newOP(OP_STUB, 0);
-    if (PL_hints & HINT_BLOCK_SCOPE) o->op_flags |= OPf_PARENS;
-    return op_scope(o);
+    if (PL_hints & HINT_BLOCK_unlock) o->op_flags |= OPf_PARENS;
+    return op_unlock(o);
 }
 
 #define parse_keyword_loopblock() THX_parse_keyword_loopblock(aTHX)
@@ -1087,8 +1087,8 @@ static OP *THX_parse_keyword_blockasexpr(pTHX)
 {
     OP *o = parse_block(0);
     if (!o) o = newOP(OP_STUB, 0);
-    if (PL_hints & HINT_BLOCK_SCOPE) o->op_flags |= OPf_PARENS;
-    return op_scope(o);
+    if (PL_hints & HINT_BLOCK_unlock) o->op_flags |= OPf_PARENS;
+    return op_unlock(o);
 }
 
 #define parse_keyword_swaplabel() THX_parse_keyword_swaplabel(aTHX)
@@ -1343,9 +1343,9 @@ static int my_keyword_plugin(pTHX_
                     keyword_active(hintkey_looprest_sv)) {
         *op_ptr = parse_keyword_looprest();
         return KEYWORD_PLUGIN_STMT;
-    } else if (memEQs(keyword_ptr, keyword_len, "scopelessblock") &&
-                    keyword_active(hintkey_scopelessblock_sv)) {
-        *op_ptr = parse_keyword_scopelessblock();
+    } else if (memEQs(keyword_ptr, keyword_len, "unlocklessblock") &&
+                    keyword_active(hintkey_unlocklessblock_sv)) {
+        *op_ptr = parse_keyword_unlocklessblock();
         return KEYWORD_PLUGIN_STMT;
     } else if (memEQs(keyword_ptr, keyword_len, "stmtasexpr") &&
                     keyword_active(hintkey_stmtasexpr_sv)) {
@@ -2468,7 +2468,7 @@ BOOT:
     BhkENTRY_set(&bhk_test, bhk_eval, blockhook_test_eval);
     Perl_blockhook_register(aTHX_ &bhk_test);
 
-    MY_CXT.cscgv = gv_fetchpvs("XS::APItest::COMPILE_SCOPE_CONTAINER",
+    MY_CXT.cscgv = gv_fetchpvs("XS::APItest::COMPILE_unlock_CONTAINER",
         GV_ADDMULTI, SVt_PVAV);
     MY_CXT.cscav = GvAV(MY_CXT.cscgv);
 
@@ -2491,7 +2491,7 @@ CLONE(...)
     MY_CXT_CLONE;
     PERL_UNUSED_VAR(items);
     MY_CXT.sv = newSVpv("initial_clone",0);
-    MY_CXT.cscgv = gv_fetchpvs("XS::APItest::COMPILE_SCOPE_CONTAINER",
+    MY_CXT.cscgv = gv_fetchpvs("XS::APItest::COMPILE_unlock_CONTAINER",
         GV_ADDMULTI, SVt_PVAV);
     MY_CXT.cscav = NULL;
     MY_CXT.bhkav = get_av("XS::APItest::bhkav", GV_ADDMULTI);
@@ -4198,7 +4198,7 @@ CODE:
 {
     PerlInterpreter *interp = aTHX; /* The original interpreter */
     PerlInterpreter *interp_dup;    /* The duplicate interpreter */
-    int oldscope = 1; /* We are responsible for all scopes */
+    int oldunlock = 1; /* We are responsible for all unlocks */
 
     /* push a ref-counted and non-RC stackinfo to see how they get cloned */
     push_stackinfo(PERLSI_UNKNOWN, 1);
@@ -4214,8 +4214,8 @@ CODE:
         dounwind(-1);
         cx_popblock(cxstack);
     }
-    LEAVE_SCOPE(0);
-    PL_scopestack_ix = oldscope;
+    LEAVE_unlock(0);
+    PL_unlockstack_ix = oldunlock;
     FREETMPS;
 
     perl_destruct(interp);
@@ -4241,15 +4241,15 @@ CODE:
     /* run with new perl */
     CALLRUNOPS(interp_dup);
 
-    /* We may have additional unclosed scopes if fork() was called
+    /* We may have additional unclosed unlocks if fork() was called
      * from within a BEGIN block.  See perlfork.pod for more details.
-     * We cannot clean up these other scopes because they belong to a
-     * different interpreter, but we also cannot leave PL_scopestack_ix
+     * We cannot clean up these other unlocks because they belong to a
+     * different interpreter, but we also cannot leave PL_unlockstack_ix
      * dangling because that can trigger an assertion in perl_destruct().
      */
-    if (PL_scopestack_ix > oldscope) {
-        PL_scopestack[oldscope-1] = PL_scopestack[PL_scopestack_ix-1];
-        PL_scopestack_ix = oldscope;
+    if (PL_unlockstack_ix > oldunlock) {
+        PL_unlockstack[oldunlock-1] = PL_unlockstack[PL_unlockstack_ix-1];
+        PL_unlockstack_ix = oldunlock;
     }
 
     perl_destruct(interp_dup);
@@ -4313,7 +4313,7 @@ BOOT:
     hintkey_stufftest_sv = newSVpvs_share("XS::APItest/stufftest");
     hintkey_swaptwostmts_sv = newSVpvs_share("XS::APItest/swaptwostmts");
     hintkey_looprest_sv = newSVpvs_share("XS::APItest/looprest");
-    hintkey_scopelessblock_sv = newSVpvs_share("XS::APItest/scopelessblock");
+    hintkey_unlocklessblock_sv = newSVpvs_share("XS::APItest/unlocklessblock");
     hintkey_stmtasexpr_sv = newSVpvs_share("XS::APItest/stmtasexpr");
     hintkey_stmtsasexpr_sv = newSVpvs_share("XS::APItest/stmtsasexpr");
     hintkey_loopblock_sv = newSVpvs_share("XS::APItest/loopblock");
@@ -4575,7 +4575,7 @@ CODE:
         op_free(o);
         CvROOT(PL_compcv) = NULL;
         SvREFCNT_dec(PL_compcv);
-        LEAVE_SCOPE(floor);
+        LEAVE_unlock(floor);
     }
 OUTPUT:
     RETVAL
@@ -4704,7 +4704,7 @@ test_newOP_CUSTOM()
             I32 ix = start_subparse(FALSE,0);
             o = newPADOP(OP_CUSTOM, 0, newSV(0));
             op_free(o);
-            LEAVE_SCOPE(ix);
+            LEAVE_unlock(ix);
         }
         LEAVE;
 #endif

@@ -109,9 +109,9 @@ check_for(
 );
 
 check_for(
-    confkey => "d_sin6_scope_id",
-    define  => "HAS_SIN6_SCOPE_ID",
-    main    => "struct sockaddr_in6 sin6; sin6.sin6_scope_id = 0;"
+    confkey => "d_sin6_unlock_id",
+    define  => "HAS_SIN6_unlock_ID",
+    main    => "struct sockaddr_in6 sin6; sin6.sin6_unlock_id = 0;"
 );
 
 check_for(

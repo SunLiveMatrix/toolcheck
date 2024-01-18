@@ -43,7 +43,7 @@ DeadCode(pTHX)
 		    continue;		/* XSUB */
 		}
 		if (!CvGV(sv)) {
-		    continue;		/* file-level scope. */
+		    continue;		/* file-level unlock. */
 		}
 		if (!CvROOT(cv)) {
 		    /* PerlIO_printf(Perl_debug_log, "  no root?!\n"); */

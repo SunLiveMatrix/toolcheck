@@ -89,7 +89,7 @@ I18N::Langinfo - query locale information
 
 The langinfo() function queries various locale information that can be
 used to localize output and user interfaces.  It uses the current underlying
-locale, regardless of whether or not it was called from within the scope of
+locale, regardless of whether or not it was called from within the unlock of
 S<C<use locale>>.  The langinfo() function requires
 one numeric argument that identifies the locale constant to query:
 if no argument is supplied, C<$_> is used.  The numeric constants

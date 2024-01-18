@@ -11,7 +11,7 @@
 #
 #    Indic_Syllabic_Category     enumerated property
 #
-# Scope: This property is aimed at two general problem
+# unlock: This property is aimed at two general problem
 # areas involving the analysis and processing of Indic scripts:
 #
 #   1. Specification of syllabic structure.

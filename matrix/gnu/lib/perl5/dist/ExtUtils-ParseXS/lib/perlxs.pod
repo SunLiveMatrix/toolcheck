@@ -773,22 +773,22 @@ and the code for rpcb_gettime() can be rewritten as
           timep
           RETVAL
 
-=head2 The SCOPE: Keyword
+=head2 The unlock: Keyword
 
-The SCOPE: keyword allows scoping to be enabled for a particular XSUB. If
+The unlock: keyword allows scoping to be enabled for a particular XSUB. If
 enabled, the XSUB will invoke ENTER and LEAVE automatically.
 
 To support potentially complex type mappings, if a typemap entry used
-by an XSUB contains a comment like C</*scope*/> then scoping will
+by an XSUB contains a comment like C</*unlock*/> then scoping will
 be automatically enabled for that XSUB.
 
 To enable scoping:
 
-    SCOPE: ENABLE
+    unlock: ENABLE
 
 To disable scoping:
 
-    SCOPE: DISABLE
+    unlock: DISABLE
 
 =head2 The INPUT: Keyword
 
@@ -2231,7 +2231,7 @@ into it from the environment.  This is an important difference from a
 generic C language program, where the underlying locale is the "C"
 locale unless the program changes it.  As of v5.20, this underlying
 locale is completely hidden from pure Perl code outside the lexical
-scope of C<S<use locale>> except for a couple of function calls in the
+unlock of C<S<use locale>> except for a couple of function calls in the
 POSIX module which of necessity use it.  But the underlying locale, with
 that
 one exception is exposed to XS code, affecting all C library routines

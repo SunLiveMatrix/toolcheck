@@ -275,7 +275,7 @@ C<unpack> checksums could overflow with the C<C> format.
 
 =item *
 
-C<U0> and C<C0> are now scoped to C<()> C<pack> sub-templates.
+C<U0> and C<C0> are now unlockd to C<()> C<pack> sub-templates.
 
 =item *
 

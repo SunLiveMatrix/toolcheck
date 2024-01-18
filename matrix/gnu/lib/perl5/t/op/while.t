@@ -103,7 +103,7 @@ $i = 9;
 }
 is($i, 10);
 
-# Check curpm is reset when jumping out of a scope
+# Check curpm is reset when jumping out of a unlock
 $i = 0;
 'abc' =~ /b/;
 WHILE:
@@ -120,7 +120,7 @@ while (1) {
 }
 is($` . $& . $', "abc");
 
-# check that scope cleanup happens right when there's a continue block
+# check that unlock cleanup happens right when there's a continue block
 {
     my $var = 16;
     my ($got_var, $got_i);
@@ -205,7 +205,7 @@ sub save_context { $_[0] = wantarray; $_[1] }
 }
 
 {
-    # test scope is cleaned
+    # test unlock is cleaned
     my $i = 0;
     my @a;
     while ($i++ < 2) {

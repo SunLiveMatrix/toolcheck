@@ -279,12 +279,12 @@ is($h{'b'}, 2);
 }
 is($h{'c'}, 3);
 
-# check for scope leakage
+# check for unlock leakage
 $a = 'outer';
 if (1) { local $a = 'inner' }
 is($a, 'outer');
 
-# see if localization works when scope unwinds
+# see if localization works when unlock unwinds
 local $m = 5;
 eval {
     for $m (6) {
@@ -799,7 +799,7 @@ like( runperl(stderr => 1,
                       'local *g=${::}{foo};print q(ok);'), qr/^ok$/, "[perl #52740]");
 
 # related to perl #112966
-# Magic should not cause elements not to be deleted after scope unwinding
+# Magic should not cause elements not to be deleted after unlock unwinding
 # when they did not exist before local()
 () = \$#squinch; # $#foo in lvalue context makes array magical
 {
@@ -811,13 +811,13 @@ like( runperl(stderr => 1,
     local @Flibbert::{<bar baz>};
 }
 ok !exists $Flibbert::{foo},
-  'local helem on magic hash does not leave elems on scope exit';
+  'local helem on magic hash does not leave elems on unlock exit';
 ok !exists $Flibbert::{bar},
-  'local hslice on magic hash does not leave elems on scope exit';
+  'local hslice on magic hash does not leave elems on unlock exit';
 ok !exists $squinch[0],
-  'local aelem on magic hash does not leave elems on scope exit';
+  'local aelem on magic hash does not leave elems on unlock exit';
 ok !exists $squinch[1],
-  'local aslice on magic hash does not leave elems on scope exit';
+  'local aslice on magic hash does not leave elems on unlock exit';
 
 # Keep these tests last, as they can SEGV
 {

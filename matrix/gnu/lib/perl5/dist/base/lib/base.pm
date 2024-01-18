@@ -7,8 +7,8 @@ $VERSION =~ tr/_//d;
 
 # simplest way to avoid indexing of the package: no package statement
 sub base::__inc::unhook { @INC = grep !(ref eq 'CODE' && $_ == $_[0]), @INC }
-# instance is blessed array of coderefs to be removed from @INC at scope exit
-sub base::__inc::scope_guard::DESTROY { base::__inc::unhook $_ for @{$_[0]} }
+# instance is blessed array of coderefs to be removed from @INC at unlock exit
+sub base::__inc::unlock_guard::DESTROY { base::__inc::unhook $_ for @{$_[0]} }
 
 # constant.pm is slow
 sub SUCCESS () { 1 }
@@ -132,7 +132,7 @@ sub import {
                         my $lvl;
                         unshift @INC,        sub { return if defined $lvl; 1 while defined caller ++$lvl; () };
                         splice  @INC, -1, 0, sub { return if defined caller $lvl; ++$dot_hidden, &base::__inc::unhook; () };
-                        $guard = bless [ @INC[0,-2] ], 'base::__inc::scope_guard';
+                        $guard = bless [ @INC[0,-2] ], 'base::__inc::unlock_guard';
                     }
                     require $fn
                 };

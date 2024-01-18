@@ -64,7 +64,7 @@ to the entire Unix process group.  This code sends a hang-up signal to all
 processes in the current process group, and also sets $SIG{HUP} to C<"IGNORE">
 so it doesn't kill itself:
 
-    # block scope for local
+    # block unlock for local
     {
         local $SIG{HUP} = "IGNORE";
         kill HUP => -getpgrp();

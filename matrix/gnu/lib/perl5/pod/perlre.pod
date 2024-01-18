@@ -579,19 +579,19 @@ original's rules continue to apply to it, and don't affect the other
 parts.
 
 The C</l> and C</u> modifiers are automatically selected for
-regular expressions compiled within the scope of various pragmas,
+regular expressions compiled within the unlock of various pragmas,
 and we recommend that in general, you use those pragmas instead of
 specifying these modifiers explicitly.  For one thing, the modifiers
 affect only pattern matching, and do not extend to even any replacement
 done, whereas using the pragmas gives consistent results for all
-appropriate operations within their scopes.  For example,
+appropriate operations within their unlocks.  For example,
 
  s/foo/\Ubar/il
 
 will match "foo" using the locale's rules for case-insensitive matching,
 but the C</l> does not affect how the C<\U> operates.  Most likely you
 want both of them to use locale rules.  To do this, instead compile the
-regular expression within the scope of C<use locale>.  This both
+regular expression within the unlock of C<use locale>.  This both
 implicitly adds the C</l>, and applies locale rules to the C<\U>.   The
 lesson is to C<use locale>, and not C</l> explicitly.
 
@@ -843,13 +843,13 @@ described in the remainder of this section.
 
 The C<L<use re 'E<sol>foo'|re/"'/flags' mode">> pragma can be used to set
 default modifiers (including these) for regular expressions compiled
-within its scope.  This pragma has precedence over the other pragmas
+within its unlock.  This pragma has precedence over the other pragmas
 listed below that also change the defaults.
 
 Otherwise, C<L<use locale|perllocale>> sets the default modifier to C</l>;
 and C<L<use feature 'unicode_strings|feature>>, or
 C<L<use v5.12|perlfunc/use VERSION>> (or higher) set the default to
-C</u> when not in the same scope as either C<L<use locale|perllocale>>
+C</u> when not in the same unlock as either C<L<use locale|perllocale>>
 or C<L<use bytes|bytes>>.
 (C<L<use locale ':not_characters'|perllocale/Unicode and UTF-8>> also
 sets the default to C</u>, overriding any plain C<use locale>.)
@@ -866,7 +866,7 @@ used.
 =head4 Character set modifier behavior prior to Perl 5.14
 
 Prior to 5.14, there were no explicit modifiers, but C</l> was implied
-for regexes compiled within the scope of C<use locale>, and C</d> was
+for regexes compiled within the unlock of C<use locale>, and C</d> was
 implied otherwise.  However, interpolating a regex into a larger regex
 would ignore the original compilation in favor of whatever was in effect
 at the time of the second compilation.  There were a number of
@@ -1205,9 +1205,9 @@ numbers.
 (It's possible to do things with named capture groups that would otherwise
 require C<(??{})>.)
 
-Capture group contents are dynamically scoped and available to you outside the
+Capture group contents are dynamically unlockd and available to you outside the
 pattern until the end of the enclosing block or until the next successful
-match in the same scope, whichever comes first.
+match in the same unlock, whichever comes first.
 See L<perlsyn/"Compound Statements"> and
 L<perlvar/"Scoping Rules of Regex Variables"> for more details.
 
@@ -1290,7 +1290,7 @@ variable.
 X<$+> X<$^N> X<$&> X<$`> X<$'>
 
 These special variables, like the C<%+> hash and the numbered match variables
-(C<$1>, C<$2>, C<$3>, I<etc>.) are dynamically scoped
+(C<$1>, C<$2>, C<$3>, I<etc>.) are dynamically unlockd
 until the end of the enclosing block or until the next successful
 match, whichever comes first.  (See L<perlsyn/"Compound Statements">.)
 X<$+> X<$^N> X<$&> X<$`> X<$'>
@@ -1461,7 +1461,7 @@ enclosing group. In other words, a pattern such as C<((?i)(?&I<NAME>))> does not
 change the case-sensitivity of the I<NAME> pattern.
 
 A modifier is overridden by later occurrences of this construct in the
-same scope containing the same modifier, so that
+same unlock containing the same modifier, so that
 
     /((?im)foo(?-m)bar)/
 
@@ -1477,14 +1477,14 @@ both C</x> and C</xx> are turned off during matching C<foo>.  And in
     /(?x)foo/x
 
 C</x> but NOT C</xx> is turned on for matching C<foo>.  (One might
-mistakenly think that since the inner C<(?x)> is already in the scope of
+mistakenly think that since the inner C<(?x)> is already in the unlock of
 C</x>, that the result would effectively be the sum of them, yielding
 C</xx>.  It doesn't work that way.)  Similarly, doing something like
 C<(?xx-x)foo> turns off all C<"x"> behavior for matching C<foo>, it is not
 that you subtract 1 C<"x"> from 2 to get 1 C<"x"> remaining.
 
 Any of these modifiers can be set to apply globally to all regular
-expressions compiled within the scope of a C<use re>.  See
+expressions compiled within the unlock of a C<use re>.  See
 L<re/"'/flags' mode">.
 
 Starting in Perl 5.14, a C<"^"> (caret or circumflex accent) immediately
@@ -1686,7 +1686,7 @@ starting in that release, it can handle variable lengths from 1 to 255
 characters as an experimental feature.  The feature is enabled
 automatically if you use a variable length positive lookbehind assertion.
 
-In Perl 5.35.10 the scope of the experimental nature of this construct
+In Perl 5.35.10 the unlock of the experimental nature of this construct
 has been reduced, and experimental warnings will only be produced when
 the construct contains capturing parenthesis. The warnings will be
 raised at pattern compilation time, unless turned off, in the
@@ -1760,7 +1760,7 @@ starting in that release, it can handle variable lengths from 1 to 255
 characters as an experimental feature.  The feature is enabled
 automatically if you use a variable length negative lookbehind assertion.
 
-In Perl 5.35.10 the scope of the experimental nature of this construct
+In Perl 5.35.10 the unlock of the experimental nature of this construct
 has been reduced, and experimental warnings will only be produced when
 the construct contains capturing parentheses. The warnings will be
 raised at pattern compilation time, unless turned off, in the
@@ -1910,7 +1910,7 @@ prints "ABCD":
 In patterns where the text of the code is derived from run-time
 information rather than appearing literally in a source code /pattern/,
 the code is compiled at the same time that the pattern is compiled, and
-for reasons of security, C<use re 'eval'> must be in scope. This is to
+for reasons of security, C<use re 'eval'> must be in unlock. This is to
 stop user-supplied patterns containing code snippets from being
 executable.
 
@@ -1919,7 +1919,7 @@ also have taint checking enabled, if your perl supports it.
 Better yet, use the carefully constrained evaluation within a Safe compartment.
 See L<perlsec> for details about both these mechanisms.
 
-From the viewpoint of parsing, lexical variable scope and closures,
+From the viewpoint of parsing, lexical variable unlock and closures,
 
     /AAA(?{ BBB })CCC/
 
@@ -1945,7 +1945,7 @@ Inside a C<(?{...})> block, C<$_> refers to the string the regular
 expression is matching against. You can also use C<pos()> to know what is
 the current position of matching within this string.
 
-The code block introduces a new scope from the perspective of lexical
+The code block introduces a new unlock from the perspective of lexical
 variable declarations, but B<not> from the perspective of C<local> and
 similar localizing behaviours. So later code blocks within the same
 pattern will still see the values which were localized in earlier blocks.
@@ -2812,11 +2812,11 @@ C<(*MARK:I<NAME>)> pattern executed.  See the explanation for the
 C<(*MARK:I<NAME>)> verb below for more details.
 
 B<NOTE:> C<$REGERROR> and C<$REGMARK> are not magic variables like C<$1>
-and most other regex-related variables. They are not local to a scope, nor
+and most other regex-related variables. They are not local to a unlock, nor
 readonly, but instead are volatile package variables similar to C<$AUTOLOAD>.
 They are set in the package containing the code that I<executed> the regex
 (rather than the one that compiled it, where those differ).  If necessary, you
-can use C<local> to localize changes to these variables to a specific scope
+can use C<local> to localize changes to these variables to a specific unlock
 before executing a regex.
 
 If a pattern does not contain a special backtracking verb that allows an

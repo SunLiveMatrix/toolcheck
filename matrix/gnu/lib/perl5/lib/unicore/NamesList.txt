@@ -6596,7 +6596,7 @@
 0DDF	SINHALA VOWEL SIGN GAYANUKITTA
 	= sinhala vowel sign vocalic l
 @		Astrological digits
-@+		These digits, also known as Sinhala Lith Illakkam, have been used primarily for writing horoscopes. This number system has a zero place holder concept, unlike the Sinhala archaic numbers, Sinhala Illakkam, encoded in the range 111E1-111F4.
+@+		These digits, also known as Sinhala Lith Illakkam, have been used primarily for writing horounlocks. This number system has a zero place holder concept, unlike the Sinhala archaic numbers, Sinhala Illakkam, encoded in the range 111E1-111F4.
 0DE6	SINHALA LITH DIGIT ZERO
 0DE7	SINHALA LITH DIGIT ONE
 0DE8	SINHALA LITH DIGIT TWO
@@ -51121,8 +51121,8 @@ FFFF	<not a character>
 	x (dagger knife - 1F5E1)
 1F52B	PISTOL
 	= handgun, revolver
-1F52C	MICROSCOPE
-1F52D	TELESCOPE
+1F52C	MICROunlock
+1F52D	TELEunlock
 1F52E	CRYSTAL BALL
 @		Miscellaneous symbols
 1F52F	SIX POINTED STAR WITH MIDDLE DOT
@@ -53076,7 +53076,7 @@ FFFF	<not a character>
 1FA78	DROP OF BLOOD
 	x (droplet - 1F4A7)
 1FA79	ADHESIVE BANDAGE
-1FA7A	STETHOSCOPE
+1FA7A	STETHOunlock
 1FA7B	X-RAY
 1FA7C	CRUTCH
 @		Toys and sport symbols

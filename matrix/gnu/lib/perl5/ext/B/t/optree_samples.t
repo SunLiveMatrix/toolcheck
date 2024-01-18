@@ -28,7 +28,7 @@ checkOptree ( name	=> '-basic sub {if shift print then,else}',
 # -        <1> null K/1 ->-
 # 3           <|> cond_expr(other->4) K/1 ->8
 # 2              <0> shift s* ->3
-# -              <@> scope K ->-
+# -              <@> unlock K ->-
 # -                 <;> ex-nextstate(main 1594 optree_samples.t:25) v:>,<,% ->4
 # 6                 <@> print sK ->7
 # 4                    <0> pushmark s ->5
@@ -46,7 +46,7 @@ EOT_EOT
 # -        <1> null K/1 ->-
 # 3           <|> cond_expr(other->4) K/1 ->8
 # 2              <0> shift s* ->3
-# -              <@> scope K ->-
+# -              <@> unlock K ->-
 # -                 <;> ex-nextstate(main 1594 optree_samples.t:25) v:>,<,% ->4
 # 6                 <@> print sK ->7
 # 4                    <0> pushmark s ->5
@@ -77,7 +77,7 @@ checkOptree ( name	=> '-basic (see above, with my $a = shift)',
 # -        <1> null K/1 ->-
 # 6           <|> cond_expr(other->7) K/1 ->b
 # 5              <0> padsv[$a:666,670] s ->6
-# -              <@> scope K ->-
+# -              <@> unlock K ->-
 # -                 <;> ex-nextstate(main 1510 optree_samples.t:66) v:>,<,% ->7
 # 9                 <@> print sK ->a
 # 7                    <0> pushmark s ->8
@@ -99,7 +99,7 @@ EOT_EOT
 # -        <1> null K/1 ->-
 # 6           <|> cond_expr(other->7) K/1 ->b
 # 5              <0> padsv[$a:666,670] s ->6
-# -              <@> scope K ->-
+# -              <@> unlock K ->-
 # -                 <;> ex-nextstate(main 1510 optree_samples.t:70) v:>,<,% ->7
 # 9                 <@> print sK ->a
 # 7                    <0> pushmark s ->8

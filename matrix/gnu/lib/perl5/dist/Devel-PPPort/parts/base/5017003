@@ -11,7 +11,7 @@ NPOSIXA                        # Z added by devel/scanprov
 NPOSIXD                        # Z added by devel/scanprov
 NPOSIXL                        # Z added by devel/scanprov
 NPOSIXU                        # Z added by devel/scanprov
-op_unscope                     # F added by devel/scanprov
+op_ununlock                     # F added by devel/scanprov
 padadd_STALEOK                 # Z added by devel/scanprov
 POSIXA                         # Z added by devel/scanprov
 POSIXD                         # Z added by devel/scanprov

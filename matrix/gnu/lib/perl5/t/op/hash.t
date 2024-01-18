@@ -109,7 +109,7 @@ sub guard::DESTROY {
         weaken($ref = \%hash);
         1;  # the previous statement must not be the last
     }
-    is $ref, undef, 'weak refs to pad hashes go stale on scope exit';
+    is $ref, undef, 'weak refs to pad hashes go stale on unlock exit';
 }
 
 # [perl #107440]

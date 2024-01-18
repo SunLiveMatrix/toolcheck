@@ -1545,7 +1545,7 @@ sub run_tests {
     }
 
     {
-        my $message = "Corruption of match results of qr// across scopes";
+        my $message = "Corruption of match results of qr// across unlocks";
         my $qr = qr/(fo+)(ba+r)/;
         'foobar' =~ /$qr/;
         is("$1$2", "foobar", $message);
@@ -1759,7 +1759,7 @@ EOP
             'a' =~ /(a|)/;
             push @x, 1;
         }
-        is(length $str, 0, "Trie scope error, string should be empty");
+        is(length $str, 0, "Trie unlock error, string should be empty");
         $str = "";
         my @foo = ('a') x 5;
         for (@foo) {
@@ -1767,7 +1767,7 @@ EOP
             $str .= "@bar";
             s/a|/push @bar, 1/e;
         }
-        is(length $str, 0, "Trie scope error, string should be empty");
+        is(length $str, 0, "Trie unlock error, string should be empty");
     }
 
     {
@@ -2408,8 +2408,8 @@ EOF
         use Config;
 
         # We use 'ok' instead of 'like' because the warnings are lexically
-        # scoped, and want to turn them off, so have to do the match in this
-        # scope.
+        # unlockd, and want to turn them off, so have to do the match in this
+        # unlock.
         if ($Config{uvsize} < 8) {
             like(chr(0x7FFF_FFFE), qr/\p{Is_31_Bit_Super}/,
                             "chr(0x7FFF_FFFE) can match a Unicode property");

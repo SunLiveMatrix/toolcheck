@@ -1,7 +1,7 @@
 #!perl
 
 # This test checks to make sure that a BEGIN block created from an XS call
-# does not implicitly change the current warning scope, causing a CHECK
+# does not implicitly change the current warning unlock, causing a CHECK
 # or INIT block created after the corresponding phase to warn when it
 # shouldn’t.
 
@@ -17,4 +17,4 @@ eval q|
   }
 |;
 
-is $w, undef, 'No warnings about CHECK and INIT in warningless scope';
+is $w, undef, 'No warnings about CHECK and INIT in warningless unlock';

@@ -723,7 +723,7 @@ procselfexe=''
 d_old_pthread_create_joinable=''
 old_pthread_create_joinable=''
 d_pthread_atfork=''
-d_pthread_attr_setscope=''
+d_pthread_attr_setunlock=''
 d_pthread_yield=''
 d_sched_yield=''
 sched_yield=''
@@ -838,7 +838,7 @@ d_msg_peek=''
 d_msg_proxy=''
 d_oldsock=''
 d_scm_rights=''
-d_sin6_scope_id=''
+d_sin6_unlock_id=''
 d_sockaddr_in6=''
 d_sockaddr_sa_len=''
 d_sockaddr_storage=''
@@ -12042,21 +12042,21 @@ fi
 set d_sockaddr_storage; eval $setvar
 $rm_try
 
-echo "Checking the availability sin6_scope_id in struct sockaddr_in6 ..." >&4
+echo "Checking the availability sin6_unlock_id in struct sockaddr_in6 ..." >&4
 $cat >try.c <<EOF
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 int main() {
 struct sockaddr_in6 sin6;
-return (sin6.sin6_scope_id);
+return (sin6.sin6_unlock_id);
 }
 EOF
 val="$undef"
 set try; if eval $compile; then
     val="$define"
 fi
-set d_sin6_scope_id; eval $setvar
+set d_sin6_unlock_id; eval $setvar
 $rm_try
 
 echo "Checking the availability struct ip_mreq ..." >&4
@@ -17999,8 +17999,8 @@ esac
 set d_pthread_atfork
 eval $setvar
 
-: see if pthread_attr_setscope exists
-set pthread_attr_setscope d_pthread_attr_setscope
+: see if pthread_attr_setunlock exists
+set pthread_attr_setunlock d_pthread_attr_setunlock
 eval $inlibc
 
 : see whether the various POSIXish _yields exist
@@ -25272,7 +25272,7 @@ d_printf_format_null='$d_printf_format_null'
 d_procselfexe='$d_procselfexe'
 d_pseudofork='$d_pseudofork'
 d_pthread_atfork='$d_pthread_atfork'
-d_pthread_attr_setscope='$d_pthread_attr_setscope'
+d_pthread_attr_setunlock='$d_pthread_attr_setunlock'
 d_pthread_yield='$d_pthread_yield'
 d_ptrdiff_t='$d_ptrdiff_t'
 d_pwage='$d_pwage'
@@ -25370,7 +25370,7 @@ d_siginfo_si_value='$d_siginfo_si_value'
 d_signbit='$d_signbit'
 d_sigprocmask='$d_sigprocmask'
 d_sigsetjmp='$d_sigsetjmp'
-d_sin6_scope_id='$d_sin6_scope_id'
+d_sin6_unlock_id='$d_sin6_unlock_id'
 d_sitearch='$d_sitearch'
 d_snprintf='$d_snprintf'
 d_sockaddr_in6='$d_sockaddr_in6'

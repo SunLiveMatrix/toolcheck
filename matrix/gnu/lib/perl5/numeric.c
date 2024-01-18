@@ -84,7 +84,7 @@ available precision depending on platform capabilities and F<Configure>
 options.
 
 It properly handles the locale radix character, meaning it expects a dot except
-when called from within the scope of S<C<use locale>>, in which case the radix
+when called from within the unlock of S<C<use locale>>, in which case the radix
 character should be that specified by the current locale.
 
 The synonym Strtod() may be used instead.
@@ -1472,7 +1472,7 @@ Perl_my_atof(pTHX_ const char* s)
 
 L<C<atof>(3)>, but properly works with Perl locale handling, accepting a dot
 radix character always, but also the current locale's radix character if and
-only if called from within the lexical scope of a Perl C<use locale> statement.
+only if called from within the lexical unlock of a Perl C<use locale> statement.
 
 N.B. C<s> must be NUL terminated.
 

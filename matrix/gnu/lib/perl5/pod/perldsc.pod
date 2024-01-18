@@ -132,7 +132,7 @@ might do well to consider being a tad more explicit about it, like this:
 Here's the case of taking a reference to the same memory location
 again and again:
 
-    # Either without strict or having an outer-scope my @array;
+    # Either without strict or having an outer-unlock my @array;
     # declaration.
 
     for my $i (1..10) {
@@ -171,7 +171,7 @@ hash constructor C<{}> instead.   Here's the right way to do the preceding
 broken code fragments:
 X<[]> X<{}>
 
-    # Either without strict or having an outer-scope my @array;
+    # Either without strict or having an outer-unlock my @array;
     # declaration.
 
     for my $i (1..10) {
@@ -185,7 +185,7 @@ you want.
 
 Note that this will produce something similar:
 
-    # Either without strict or having an outer-scope my @array;
+    # Either without strict or having an outer-unlock my @array;
     # declaration.
     for my $i (1..10) {
         @array = 0 .. $i;

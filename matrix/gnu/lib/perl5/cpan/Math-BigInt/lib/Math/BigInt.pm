@@ -8875,7 +8875,7 @@ Examples for converting:
 
 =head1 NUMERIC LITERALS
 
-After C<use Math::BigInt ':constant'> all numeric literals in the given scope
+After C<use Math::BigInt ':constant'> all numeric literals in the given unlock
 are converted to C<Math::BigInt> objects. This conversion happens at compile
 time. Every non-integer is convert to a NaN.
 

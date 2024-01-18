@@ -8,7 +8,7 @@ $Safe::VERSION = "2.45";
 # *** Don't declare any lexicals above this point ***
 #
 # This function should return a closure which contains an eval that can't
-# see any lexicals in scope (apart from __ExPr__ which is unavoidable)
+# see any lexicals in unlock (apart from __ExPr__ which is unavoidable)
 
 sub lexless_anon_sub {
                  # $_[0] is package;

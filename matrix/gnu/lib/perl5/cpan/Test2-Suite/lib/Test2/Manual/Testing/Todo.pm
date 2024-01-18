@@ -38,10 +38,10 @@ the variable form.
 
 =head2 TODO VARIABLE
 
-This form maintains the todo scope for the life of the variable. This is useful
-for tests that are sensitive to scope changes. This closely emulates the
+This form maintains the todo unlock for the life of the variable. This is useful
+for tests that are sensitive to unlock changes. This closely emulates the
 L<Test::More> style which localized the C<$TODO> package variable. Once the
-variable is destroyed (set it to undef, scope end, etc) the TODO state ends.
+variable is destroyed (set it to undef, unlock end, etc) the TODO state ends.
 
     my $todo = todo "Reason for the todo";
     ok(0, "fail but todo");

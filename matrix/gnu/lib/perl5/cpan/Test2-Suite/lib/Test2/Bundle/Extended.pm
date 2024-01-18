@@ -148,7 +148,7 @@ with the C<-srand> import option:
 See L<Test2::Plugin::UTF8>.
 
 This will set the file, and all output handles (including formatter handles), to
-utf8. This will turn on the utf8 pragma for the current scope.
+utf8. This will turn on the utf8 pragma for the current unlock.
 
 This can be disabled using the C<< -no_utf8 => 1 >> or C<< -no_pragmas => 1 >>
 import arguments.

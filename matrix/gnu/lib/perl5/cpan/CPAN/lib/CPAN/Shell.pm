@@ -1076,15 +1076,15 @@ sub u {
 sub failed {
     my($self,$only_id,$silent) = @_;
     my @failed = $self->find_failed($only_id);
-    my $scope;
+    my $unlock;
     if ($only_id) {
-        $scope = "this command";
+        $unlock = "this command";
     } elsif ($CPAN::Index::HAVE_REANIMATED) {
-        $scope = "this or a previous session";
+        $unlock = "this or a previous session";
         # it might be nice to have a section for previous session and
         # a second for this
     } else {
-        $scope = "this session";
+        $unlock = "this session";
     }
     if (@failed) {
         my $print;
@@ -1102,9 +1102,9 @@ sub failed {
                                 $a->[4] <=> $b->[4]
                        } @failed;
         }
-        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
+        $CPAN::Frontend->myprint("Failed during $unlock:\n$print");
     } elsif (!$only_id || !$silent) {
-        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
+        $CPAN::Frontend->myprint("Nothing failed in $unlock\n");
     }
 }
 

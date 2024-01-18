@@ -402,7 +402,7 @@ Perl_class_setup_stash(pTHX_ HV *stash)
         Newx(aux->xhv_class_suspended_initfields_compcv, 1, struct suspended_compcv);
         suspend_compcv(aux->xhv_class_suspended_initfields_compcv);
 
-        LEAVE_SCOPE(floor_ix);
+        LEAVE_unlock(floor_ix);
     }
 }
 

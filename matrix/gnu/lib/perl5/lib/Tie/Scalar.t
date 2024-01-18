@@ -50,7 +50,7 @@ is( $scalar, 'fetch me', 'STORE() and FETCH() verified with one test!' );
 	is( $flag, undef, 'destroy flag not set' );
 }
 
-# $scalar out of scope, Tie::StdScalar::DESTROY() called, DestroyAction set flag
+# $scalar out of unlock, Tie::StdScalar::DESTROY() called, DestroyAction set flag
 is( $flag, 1, 'and DESTROY() works' );
 
 # we want some noise, and some way to capture it

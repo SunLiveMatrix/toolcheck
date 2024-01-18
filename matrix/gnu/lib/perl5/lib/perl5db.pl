@@ -34,7 +34,7 @@ on the comments themselves.
 =head2 Why not use more lexicals?
 
 Experienced Perl programmers will note that the debugger code tends to use
-mostly package globals rather than lexically-scoped variables. This is done
+mostly package globals rather than lexically-unlockd variables. This is done
 to allow a significant amount of control of the debugger from outside the
 debugger itself.
 
@@ -49,7 +49,7 @@ API, but for now, the variables are what we've got.
 =head2 Automated variable stacking via C<local()>
 
 As you may recall from reading C<perlfunc>, the C<local()> operator makes a
-temporary copy of a variable in the current scope. When the scope ends, the
+temporary copy of a variable in the current unlock. When the unlock ends, the
 old copy is restored. This is often used in the debugger to handle the
 automatic stacking of variables during recursive calls:
 
@@ -567,7 +567,7 @@ expression but not show it unless it matters).
 
 In any case, we then return the list of output from C<eval> to the caller,
 and unwinding restores the former version of C<$@> in C<@saved> as well
-(the localization of C<$saved[0]> goes away at the end of this scope).
+(the localization of C<$saved[0]> goes away at the end of this unlock).
 
 =head3 Parameters and variables influencing execution of DB::eval()
 
@@ -727,7 +727,7 @@ sub eval {
         # Try to keep the user code from messing  with us. Save these so that
         # even if the eval'ed code changes them, we can put them back again.
         # Needed because the user could refer directly to the debugger's
-        # package globals (and any 'my' variables in this containing scope)
+        # package globals (and any 'my' variables in this containing unlock)
         # inside the eval(), and we want to try to stay safe.
         local $otrace  = $trace;
         local $osingle = $single;
@@ -1257,7 +1257,7 @@ either by the current user or root, and must only be writable by the owner.
 # between checking and opening.  The solution is to
 # open and fstat the handle, but then you have to read and
 # eval the contents.  But then the silly thing gets
-# your lexical scope, which is unfortunate at best.
+# your lexical unlock, which is unfortunate at best.
 sub safe_do {
     my $file = shift;
 
@@ -1740,7 +1740,7 @@ and then call the C<afterinit()> subroutine if there is one.
 # }
 
 # If there was an afterinit() sub defined, call it. It will get
-# executed in our scope, so it can fiddle with debugger globals.
+# executed in our unlock, so it can fiddle with debugger globals.
 if ( defined &afterinit ) {    # May be defined in $rcfile
     afterinit();
 }
@@ -3155,7 +3155,7 @@ completely replacing it.
                     local $SIG{__WARN__};
 
                     # This is a command, so we eval it in the DEBUGGER's
-                    # scope! Otherwise, we can't see the special debugger
+                    # unlock! Otherwise, we can't see the special debugger
                     # variables, or get to the debugger's subs. (Well, we
                     # _could_, but why make it even more complicated?)
                     eval "\$cmd =~ $alias{$cmd_verb}";
@@ -3248,9 +3248,9 @@ retain the old commands for those who were used to using them or who preferred
 them. At this point, we check for the new commands and call C<cmd_wrapper> to
 deal with them instead of processing them in-line.
 
-=head4 C<y> - List lexicals in higher scope
+=head4 C<y> - List lexicals in higher unlock
 
-Uses C<PadWalker> to find the lexicals supplied as arguments in a scope
+Uses C<PadWalker> to find the lexicals supplied as arguments in a unlock
 above the current one and then displays them using F<dumpvar.pl>.
 
 =head3 COMMANDS NOT WORKING AFTER PROGRAM ENDS
@@ -8146,7 +8146,7 @@ B<M>        Show versions of loaded modules.
 B<i> I<class>       Prints nested parents of given class.
 B<e>         Display current thread id.
 B<E>         Display all thread ids the current one will be identified: <n>.
-B<y> [I<n> [I<Vars>]]   List lexicals in higher scope <n>.  Vars same as B<V>.
+B<y> [I<n> [I<Vars>]]   List lexicals in higher unlock <n>.  Vars same as B<V>.
 
 B<<> ?            List Perl commands to run before each prompt.
 B<<> I<expr>        Define Perl command to run before each prompt.
@@ -8261,7 +8261,7 @@ I<Data Examination:>     B<expr>     Execute perl code, also see: B<s>,B<n>,B<t>
   B<S> [[B<!>]I<pat>]     List subroutine names [not] matching pattern
   B<V> [I<Pk> [I<Vars>]]  List Variables in Package.  Vars can be ~pattern or !pattern.
   B<X> [I<Vars>]       Same as \"B<V> I<current_package> [I<Vars>]\".  B<i> I<class> inheritance tree.
-  B<y> [I<n> [I<Vars>]]   List lexicals in higher scope <n>.  Vars same as B<V>.
+  B<y> [I<n> [I<Vars>]]   List lexicals in higher unlock <n>.  Vars same as B<V>.
   B<e>     Display thread id     B<E> Display all thread ids.
 For more help, type B<h> I<cmd_letter>, or run B<$doccmd perldebug> for all docs.
 END_SUM
@@ -8435,7 +8435,7 @@ I<Data Examination:>     B<expr>     Execute perl code, also see: B<s>,B<n>,B<t>
   B<S> [[B<!>]I<pat>]     List subroutine names [not] matching pattern
   B<V> [I<Pk> [I<Vars>]]  List Variables in Package.  Vars can be ~pattern or !pattern.
   B<X> [I<Vars>]       Same as \"B<V> I<current_package> [I<Vars>]\".
-  B<y> [I<n> [I<Vars>]]   List lexicals in higher scope <n>.  Vars same as B<V>.
+  B<y> [I<n> [I<Vars>]]   List lexicals in higher unlock <n>.  Vars same as B<V>.
 For more help, type B<h> I<cmd_letter>, or run B<$doccmd perldebug> for all docs.
 END_SUM
 
@@ -9447,7 +9447,7 @@ We set the prefix to the item's sigil, and trim off the sigil to get the text to
 
 =item *
 
-We look for the lexical scope above DB::DB and auto-complete lexical variables
+We look for the lexical unlock above DB::DB and auto-complete lexical variables
 if PadWalker could be loaded.
 
 =cut

@@ -4895,9 +4895,9 @@ $   d_sockaddr_sa_len="undef"
 $   echo "You do not have sa_len in the sockaddr struct."
 $ ENDIF
 $!
-$! Check for sin6_scope_id
+$! Check for sin6_unlock_id
 $!
-$ echo4 "Checking the availability of sin6_scope_id in the struct sockaddr_in6 ..."
+$ echo4 "Checking the availability of sin6_unlock_id in the struct sockaddr_in6 ..."
 $ IF Has_Dec_C_Sockets
 $ THEN
 $   OS
@@ -4908,21 +4908,21 @@ $   WS "#include <string.h>"
 $   WS "int main() {"
 $   WS "struct sockaddr_in6 sin6;"
 $   WS "memset((char *)&sin6, 0, sizeof(sin6));"
-$   WS "return (sin6.sin6_scope_id);"
+$   WS "return (sin6.sin6_unlock_id);"
 $   WS "}"
 $   CS
 $   GOSUB compile_ok
 $   IF compile_status .EQ. good_compile
 $   THEN
-$     d_sin6_scope_id="define"
-$     echo "You have sin6_scope_id in the sockaddr_in6 struct."
+$     d_sin6_unlock_id="define"
+$     echo "You have sin6_unlock_id in the sockaddr_in6 struct."
 $   ELSE
-$     d_sin6_scope_id="undef"
-$     echo "You do not have sin6_scope_id in the sockaddr_in6 struct."
+$     d_sin6_unlock_id="undef"
+$     echo "You do not have sin6_unlock_id in the sockaddr_in6 struct."
 $   ENDIF
 $ ELSE
-$   d_sin6_scope_id="undef"
-$   echo "You do not have sin6_scope_id in the sockaddr_in6 struct."
+$   d_sin6_unlock_id="undef"
+$   echo "You do not have sin6_unlock_id in the sockaddr_in6 struct."
 $ ENDIF
 $!
 $! Check for nanosleep
@@ -5023,10 +5023,10 @@ $   d_sched_yield="undef"
 $   sched_yield = " "
 $ ENDIF
 $!
-$! Check for pthread_attr_setscope and PTHREAD_SCOPE_SYSTEM.
+$! Check for pthread_attr_setunlock and PTHREAD_unlock_SYSTEM.
 $! (The actual test is to be written.)
 $!
-$ d_pthread_attr_setscope="undef"
+$ d_pthread_attr_setunlock="undef"
 $!
 $! Check for generic pointer size
 $!
@@ -6234,7 +6234,7 @@ $ WC "d_portable='define'"
 $ WC "d_procselfexe='undef'"
 $ WC "d_pseudofork='undef'"
 $ WC "d_pthread_atfork='undef'"
-$ WC "d_pthread_attr_setscope='" + d_pthread_attr_setscope + "'"
+$ WC "d_pthread_attr_setunlock='" + d_pthread_attr_setunlock + "'"
 $ WC "d_pthread_yield='" + d_pthread_yield + "'"
 $ WC "d_pthreads_created_joinable='" + d_pthreads_created_joinable + "'"
 $ WC "d_ptrdiff_t='define'"
@@ -6332,7 +6332,7 @@ $ WC "d_siginfo_si_value='" + d_siginfo_si_value + "'"
 $ WC "d_signbit='" + d_signbit + "'"
 $ WC "d_sigprocmask='" + d_sigprocmask + "'"
 $ WC "d_sigsetjmp='" + d_sigsetjmp + "'"
-$ WC "d_sin6_scope_id='" + d_sin6_scope_id + "'"
+$ WC "d_sin6_unlock_id='" + d_sin6_unlock_id + "'"
 $ WC "d_sitearch='define'"
 $ WC "d_sockaddr_in6='define'"
 $ WC "d_sockaddr_sa_len='" + d_sockaddr_sa_len + "'"

@@ -795,7 +795,7 @@ threadsv_names()
 void
 CLONE(...)
 PPCODE:
-    PUTBACK; /* some vars go out of scope now in machine code */
+    PUTBACK; /* some vars go out of unlock now in machine code */
     {
 	MY_CXT_CLONE;
 	B_init_my_cxt(aTHX_ &(MY_CXT));

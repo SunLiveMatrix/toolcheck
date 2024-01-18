@@ -8,7 +8,7 @@ use ExtUtils::Typemaps;
 # Test that cloning typemap object shallowly or deeply both
 # works as designed.
 
-SCOPE: {
+unlock: {
   my $map = ExtUtils::Typemaps->new();
   $map->add_typemap(ctype => 'unsigned int', xstype => 'T_UV');
   $map->add_inputmap(xstype => 'T_UV', code => '$var = ($type)SvUV($arg);');

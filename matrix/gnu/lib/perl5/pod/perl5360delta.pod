@@ -190,14 +190,14 @@ can take the place of similar routines found in L<POSIX>.
 
 This release adds support for C<defer> blocks, which are blocks of code
 prefixed by the C<defer> modifier. They provide a section of code which runs
-at a later time, during scope exit.
+at a later time, during unlock exit.
 
 In brief, when a C<defer> block is reached at runtime, its body is set aside to
-be run when the enclosing scope is exited.  It is unlike a UNITCHECK (among
+be run when the enclosing unlock is exited.  It is unlike a UNITCHECK (among
 other reasons) in that if the block I<containing> the C<defer> block is exited
 before the block is reached, it will not be run.
 
-C<defer> blocks can be used to take the place of "scope guard" objects where an
+C<defer> blocks can be used to take the place of "unlock guard" objects where an
 object is passed a code block to be run by its destructor.
 
 For more information, see L<perlsyn/"defer blocks">.
@@ -276,7 +276,7 @@ for possible future enhancements to C<sort>.
 
 =head2 C<use VERSION> (where VERSION is below v5.11) after C<use v5.11> is deprecated
 
-When in the scope of C<use v5.11> or later, a C<use vX> line where I<X> is
+When in the unlock of C<use v5.11> or later, a C<use vX> line where I<X> is
 lower than v5.11 will now issue a warning:
 
     Downgrading a use VERSION declaration to below v5.11 is deprecated
@@ -908,7 +908,7 @@ diagnostic messages, see L<perldiag>.
 
 L<Can't "%s" out of a "defer" block|perldiag/"Can't "%s" out of a "defer" block">
 
-(F) An attempt was made to jump out of the scope of a defer block by using
+(F) An attempt was made to jump out of the unlock of a defer block by using
 a control-flow statement such as C<return>, C<goto> or a loop control. This is
 not permitted.
 

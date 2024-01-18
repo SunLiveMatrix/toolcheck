@@ -22,7 +22,7 @@ of your email client when you send subsequent responses so that the
 entire security team receives the message.
 
 The security team will evaluate your report and make an initial
-determination of whether it is likely to fit the scope of issues the
+determination of whether it is likely to fit the unlock of issues the
 team handles. General guidelines about how this is determined are
 detailed in the ["WHAT ARE SECURITY ISSUES"] section of [perlsecpolicy].
 

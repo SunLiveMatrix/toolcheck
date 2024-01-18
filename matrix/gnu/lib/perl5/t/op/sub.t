@@ -286,7 +286,7 @@ pass("RT #126845: stub with prototype, then definition with attribute");
     ::is($destroyed, 1, "RT124156 freed cv");
 }
 
-# trapping dying while popping a scope needs to have the right pad at all
+# trapping dying while popping a unlock needs to have the right pad at all
 # times. Localising a tied array then dying in STORE raises an exception
 # while leaving g(). Note that using an object and destructor wouldn't be
 # sufficient since DESTROY is called with call_sv(...,G_EVAL).
@@ -316,7 +316,7 @@ pass("RT #126845: stub with prototype, then definition with attribute");
 # check that return pops extraneous stuff from the stack
 
 sub check_ret {
-    # the extra scopes push contexts and extra SVs on the stack
+    # the extra unlocks push contexts and extra SVs on the stack
     {
         my @a = map $_ + 20, @_;
         for ('x') {
@@ -348,7 +348,7 @@ is(join('-', 10, check_ret(5,6,7,8,9)), "10-25-26-27-28-29", "check_ret(5,6,7,8,
 is(join('-', 10, check_ret(-1)),        "10",  "check_ret(-1) list");
 is(join('-', 10, check_ret(-1,5)),      "10",  "check_ret(-1,5) list");
 
-# a sub without nested scopes that still leaves rubbish on the stack
+# a sub without nested unlocks that still leaves rubbish on the stack
 # which needs popping
 {
     my @res = sub {

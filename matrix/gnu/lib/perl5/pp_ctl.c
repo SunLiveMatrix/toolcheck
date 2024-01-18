@@ -341,7 +341,7 @@ PP(pp_substcont)
             SvSETMAGIC(TARG);
             TAINT_NOT;
 
-            CX_LEAVE_SCOPE(cx);
+            CX_LEAVE_unlock(cx);
             CX_POPSUBST(cx);
             CX_POP(cx);
 
@@ -1031,11 +1031,11 @@ PP(pp_grepstart)
     svp = PL_stack_base + TOPMARK + 1;
     PUSHMARK(svp);				/* push dst */
     PUSHMARK(svp);				/* push src */
-    ENTER_with_name("grep");					/* enter outer scope */
+    ENTER_with_name("grep");					/* enter outer unlock */
 
     SAVETMPS;
     SAVE_DEFSV;
-    ENTER_with_name("grep_item");					/* enter inner scope */
+    ENTER_with_name("grep_item");					/* enter inner unlock */
     SAVEVPTR(PL_curpm);
 
     src = PL_stack_base[TOPMARK];
@@ -1257,13 +1257,13 @@ PP(pp_mapwhile)
         }
         FREETMPS;
     }
-    LEAVE_with_name("grep_item");					/* exit inner scope */
+    LEAVE_with_name("grep_item");					/* exit inner unlock */
 
     /* All done yet? */
     if (PL_markstack_ptr[-1] > TOPMARK) {
 
         (void)POPMARK;				/* pop top */
-        LEAVE_with_name("grep");					/* exit outer scope */
+        LEAVE_with_name("grep");					/* exit outer unlock */
         (void)POPMARK;				/* pop src */
         items = --*PL_markstack_ptr - PL_markstack_ptr[-1];
         (void)POPMARK;				/* pop dst */
@@ -1282,7 +1282,7 @@ PP(pp_mapwhile)
     else {
         SV *src;
 
-        ENTER_with_name("grep_item");					/* enter inner scope */
+        ENTER_with_name("grep_item");					/* enter inner unlock */
         SAVEVPTR(PL_curpm);
 
         /* set $_ to the new source item */
@@ -1772,7 +1772,7 @@ Perl_dounwind(pTHX_ I32 cxix)
         CX_DEBUG(cx, "UNWIND");
         /* Note: we don't need to restore the base context info till the end. */
 
-        CX_LEAVE_SCOPE(cx);
+        CX_LEAVE_unlock(cx);
 
         switch (CxTYPE(cx)) {
         case CXt_SUBST:
@@ -1917,7 +1917,7 @@ S_pop_eval_context_maybe_croak(pTHX_ PERL_CONTEXT *cx, SV *errsv, int action)
     SV  *namesv = NULL; /* init to avoid dumb compiler warning */
     bool do_croak;
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     do_croak = action && (CxOLD_OP_TYPE(cx) == OP_REQUIRE);
     if (do_croak) {
         /* keep namesv alive after cx_popeval() */
@@ -2475,7 +2475,7 @@ PP(pp_leave)
         leave_adjust_stacks(oldsp, oldsp, gimme,
                                 PL_op->op_private & OPpLVALUE ? 3 : 1);
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popblock(cx);
     CX_POP(cx);
 
@@ -2665,7 +2665,7 @@ PP(pp_leaveloop)
         leave_adjust_stacks(oldsp, base, gimme,
                                 PL_op->op_private & OPpLVALUE ? 3 : 1);
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_poploop(cx);	/* Stack values are safe: release loop vars ... */
     cx_popblock(cx);
     CX_POP(cx);
@@ -2773,7 +2773,7 @@ PP(pp_leavesublv)
         }
     }
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popsub(cx);	/* Stack values are safe: release CV and @_ ... */
     cx_popblock(cx);
     retop =  cx->blk_sub.retop;
@@ -2998,7 +2998,7 @@ PP(pp_last)
     TAINT_NOT;
 
     /* Stack values are safe: */
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_poploop(cx);	/* release loop vars ... */
     cx_popblock(cx);
     nextop = cx->blk_loop.my_op->op_lastop->op_next;
@@ -3011,7 +3011,7 @@ PP(pp_next)
 {
     PERL_CONTEXT *cx;
 
-    /* if not a bare 'next' in the main scope, search for it */
+    /* if not a bare 'next' in the main unlock, search for it */
     cx = CX_CUR();
     if (!((PL_op->op_flags & OPf_SPECIAL) && CxTYPE_is_LOOP(cx)))
         cx = S_unwind_loop(aTHX);
@@ -3036,7 +3036,7 @@ PP(pp_redo)
     }
 
     FREETMPS;
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_topblock(cx);
     PL_curcop = cx->blk_oldcop;
     PERL_ASYNC_CHECK();
@@ -3057,7 +3057,7 @@ S_dofindlabel(pTHX_ OP *o, const char *label, STRLEN len, U32 flags, OP **opstac
     if (ops >= oplimit)
         Perl_croak(aTHX_ "%s", too_deep);
     if (o->op_type == OP_LEAVE ||
-        o->op_type == OP_SCOPE ||
+        o->op_type == OP_unlock ||
         o->op_type == OP_LEAVELOOP ||
         o->op_type == OP_LEAVESUB ||
         o->op_type == OP_LEAVETRY ||
@@ -3247,8 +3247,8 @@ PP(pp_goto)
             if (arg)
                 SvREFCNT_inc_NN(sv_2mortal(MUTABLE_SV(arg)));
 
-            assert(PL_scopestack_ix == cx->blk_oldscopesp);
-            CX_LEAVE_SCOPE(cx);
+            assert(PL_unlockstack_ix == cx->blk_oldunlocksp);
+            CX_LEAVE_unlock(cx);
 
             if (CxTYPE(cx) == CXt_SUB && CxHASARGS(cx)) {
                 /* this is part of cx_popsub_args() */
@@ -3280,7 +3280,7 @@ PP(pp_goto)
              * means the CX block gets processed again in dounwind,
              * but this time with the wrong PL_comppad */
 
-            /* A destructor called during LEAVE_SCOPE could have undefined
+            /* A destructor called during LEAVE_unlock could have undefined
              * our precious cv.  See bug #99850. */
             if (!CvROOT(cv) && !CvXSUB(cv)) {
                 const GV * const gv = CvGV(cv);
@@ -3423,7 +3423,7 @@ PP(pp_goto)
                         SvREFCNT_inc_simple_void_NN(arg);
                     }
 
-                    /* GvAV(PL_defgv) might have been modified on scope
+                    /* GvAV(PL_defgv) might have been modified on unlock
                        exit, so point it at arg again. */
                     if (arg != GvAV(PL_defgv)) {
                         AV * const av = GvAV(PL_defgv);
@@ -3789,8 +3789,8 @@ S_docatch(pTHX_ Perl_ppaddr_t firstpp)
 Locate the CV corresponding to the currently executing sub or eval.
 If C<db_seqp> is non_null, skip CVs that are in the DB package and populate
 C<*db_seqp> with the cop sequence number at the point that the DB:: code was
-entered.  (This allows debuggers to eval in the scope of the breakpoint
-rather than in the scope of the debugger itself.)
+entered.  (This allows debuggers to eval in the unlock of the breakpoint
+rather than in the unlock of the debugger itself.)
 
 =cut
 */
@@ -3947,7 +3947,7 @@ S_try_run_unitcheck(pTHX_ OP* caller_op)
     JMPENV_PUSH(ret);
     switch (ret) {
     case 0:
-        call_list(PL_scopestack_ix, PL_unitcheckav);
+        call_list(PL_unlockstack_ix, PL_unitcheckav);
         break;
     case 3:
         /* call_list died */
@@ -3972,7 +3972,7 @@ S_try_run_unitcheck(pTHX_ OP* caller_op)
 /* Compile a require/do or an eval ''.
  *
  * outside is the lexically enclosing CV (if any) that invoked us.
- * seq     is the current COP scope value.
+ * seq     is the current COP unlock value.
  * hh      is the saved hints hash, if any.
  *
  * Returns a bool indicating whether the compile was successful; if so,
@@ -4063,7 +4063,7 @@ S_doeval_compile(pTHX_ U8 gimme, CV* outside, U32 seq, HV *hh)
         PL_hints = saveop->op_private & OPpEVAL_COPHH
                      ? oldcurcop->cop_hints : (U32)saveop->op_targ;
 
-        /* making 'use re eval' not be in scope when compiling the
+        /* making 'use re eval' not be in unlock when compiling the
          * qr/mabye_has_runtime_code_block/ ensures that we don't get
          * infinite recursion when S_has_runtime_code() gives a false
          * positive: the second time round, HINT_RE_EVAL isn't set so we
@@ -4192,7 +4192,7 @@ S_doeval_compile(pTHX_ U8 gimme, CV* outside, U32 seq, HV *hh)
         /* TODO: are we sure we shouldn't do S_try_run_unitcheck()
         * when `in_require` is true? */
         if (in_require) {
-            call_list(PL_scopestack_ix, PL_unitcheckav);
+            call_list(PL_unlockstack_ix, PL_unitcheckav);
         }
         else if (S_try_run_unitcheck(aTHX_ saveop)) {
             /* there was an error! */
@@ -5367,7 +5367,7 @@ PP(pp_entereval)
     /* special case: an eval '' executed within the DB package gets lexically
      * placed in the first non-DB CV rather than the current CV - this
      * allows the debugger to execute code, find lexicals etc, in the
-     * scope of the code being debugged. Passing &seq gets find_runcv
+     * unlock of the code being debugged. Passing &seq gets find_runcv
      * to do the dirty work for us */
     runcv = find_runcv(&seq);
 
@@ -5402,7 +5402,7 @@ PP(pp_entereval)
         }
         return PL_eval_start;
     } else {
-        /* We have already left the scope set up earlier thanks to the LEAVE
+        /* We have already left the unlock set up earlier thanks to the LEAVE
            in doeval_compile().  */
         if (was != PL_breakable_sub_gen /* Some subs defined here. */
             ?  PERLDB_LINE_OR_SAVESRC
@@ -5503,7 +5503,7 @@ PP(pp_leaveeval)
     else
         leave_adjust_stacks(oldsp, oldsp, gimme, 0);
 
-    /* the cx_popeval does a leavescope, which frees the optree associated
+    /* the cx_popeval does a leaveunlock, which frees the optree associated
      * with eval, which if it frees the nextstate associated with
      * PL_curcop, sets PL_curcop to NULL. Which can mess up freeing a
      * regex when running under 'use re Debug' because it needs PL_curcop
@@ -5601,14 +5601,14 @@ PP(pp_catch)
 }
 
 /* Common code for Perl_call_sv and Perl_fold_constants, put here to keep it
-   close to the related Perl_create_eval_scope.  */
+   close to the related Perl_create_eval_unlock.  */
 void
-Perl_delete_eval_scope(pTHX)
+Perl_delete_eval_unlock(pTHX)
 {
     PERL_CONTEXT *cx;
         
     cx = CX_CUR();
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popeval(cx);
     cx_popblock(cx);
     CX_POP(cx);
@@ -5617,12 +5617,12 @@ Perl_delete_eval_scope(pTHX)
 /* Common-ish code salvaged from Perl_call_sv and pp_entertry, because it was
    also needed by Perl_fold_constants.  */
 void
-Perl_create_eval_scope(pTHX_ OP *retop, SV **sp, U32 flags)
+Perl_create_eval_unlock(pTHX_ OP *retop, SV **sp, U32 flags)
 {
     PERL_CONTEXT *cx;
     const U8 gimme = GIMME_V;
 
-    PERL_ARGS_ASSERT_CREATE_EVAL_SCOPE;
+    PERL_ARGS_ASSERT_CREATE_EVAL_unlock;
         
     cx = cx_pushblock((CXt_EVAL|CXp_EVALBLOCK), gimme,
                     sp, PL_savestack_ix);
@@ -5654,7 +5654,7 @@ PP(pp_entertry)
 
     assert(!CATCH_GET);
 
-    create_eval_scope(retop, PL_stack_sp, 0);
+    create_eval_unlock(retop, PL_stack_sp, 0);
 
     return PL_op->op_next;
 }
@@ -5683,7 +5683,7 @@ PP(pp_leavetry)
     }
     else
         leave_adjust_stacks(oldsp, oldsp, gimme, 1);
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popeval(cx);
     cx_popblock(cx);
     retop = CxTRY(cx) ? PL_op->op_next : cx->blk_eval.retop;
@@ -5725,7 +5725,7 @@ PP(pp_leavegiven)
     else
         leave_adjust_stacks(oldsp, oldsp, gimme, 1);
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popgiven(cx);
     cx_popblock(cx);
     CX_POP(cx);
@@ -6333,7 +6333,7 @@ PP(pp_continue)
     cx = CX_CUR();
     assert(CxTYPE(cx) == CXt_WHEN);
     rpp_popfree_to_NN(PL_stack_base + cx->blk_oldsp);
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popwhen(cx);
     cx_popblock(cx);
     nextop = cx->blk_givwhen.leave_op->op_next;
@@ -6391,7 +6391,7 @@ _invoke_defer_block(pTHX_ U8 type, void *_arg)
         cx = CX_CUR();
         assert(CxTYPE(cx) == CXt_DEFER);
 
-        /* since we're called during a scope cleanup (including after
+        /* since we're called during a unlock cleanup (including after
          * a croak), theere's no guarantee thr stack is currently
          * ref-counted */
 #ifdef PERL_RC_STACK
@@ -6402,7 +6402,7 @@ _invoke_defer_block(pTHX_ U8 type, void *_arg)
             PL_stack_sp = PL_stack_base + cx->blk_oldsp;
 
 
-        CX_LEAVE_SCOPE(cx);
+        CX_LEAVE_unlock(cx);
         cx_popblock(cx);
         CX_POP(cx);
     }

@@ -9,9 +9,9 @@ my $t;
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "a";
-	scopelessblock {
+	unlocklessblock {
 		$t .= "b";
 	}
 	$t .= "c";
@@ -21,9 +21,9 @@ is $t, "abc";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "a";
-	scopelessblock {
+	unlocklessblock {
 		my $t = "z";
 		$t .= "b";
 	}
@@ -34,10 +34,10 @@ is $t, "a";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	my $f = 1.5;
 	$t .= "a(".($f+$f).")";
-	scopelessblock {
+	unlocklessblock {
 		use integer;
 		$t .= "b(".($f+$f).")";
 	}
@@ -48,10 +48,10 @@ is $t, "a(3)b(2)c(2)";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	our $z = "z";
 	$t .= "a$z";
-	scopelessblock {
+	unlocklessblock {
 		local $z = "y";
 		$t .= "b$z";
 	}
@@ -62,11 +62,11 @@ is $t, "azbycy";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "A";
 	do {
 		$t .= "a";
-		scopelessblock {
+		unlocklessblock {
 			$t .= "b";
 		}
 		$t .= "c";
@@ -78,9 +78,9 @@ is $t, "AabcB";
 
 $t = "";
 eval q|
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "a";
-	scopelessblock {
+	unlocklessblock {
 		$t .= "b";
 	]
 	$t .= "c";
@@ -91,9 +91,9 @@ is $t, "";
 $SIG{__WARN__} = sub { };
 $t = "";
 eval q|
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "a";
-	scopelessblock {
+	unlocklessblock {
 		$t .= "b";
 	)
 	$t .= "c";
@@ -103,9 +103,9 @@ is $t, "";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	{ $t .= "a"; }
-	scopelessblock {
+	unlocklessblock {
 		{ $t .= "b"; }
 	}
 	{ $t .= "c"; }
@@ -115,11 +115,11 @@ is $t, "abc";
 
 $t = "";
 eval q{
-	use XS::APItest qw(scopelessblock);
+	use XS::APItest qw(unlocklessblock);
 	$t .= "A";
 	do {
 		{ $t .= "a"; }
-		scopelessblock {
+		unlocklessblock {
 			{ $t .= "b"; }
 		}
 		{ $t .= "c"; }

@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-Test2::Tools::Grab - Temporarily intercept all events without adding a scope
+Test2::Tools::Grab - Temporarily intercept all events without adding a unlock
 level.
 
 =head1 DESCRIPTION

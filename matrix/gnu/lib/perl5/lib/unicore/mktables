@@ -356,7 +356,7 @@ my $unicode_reference_url = 'http://www.unicode.org/reports/tr44/';
 #
 # local $to_trace = 1 if main::DEBUG;
 #
-# can be added to enable tracing in its lexical scope (plus dynamic) or until
+# can be added to enable tracing in its lexical unlock (plus dynamic) or until
 # you insert another line:
 #
 # local $to_trace = 0 if main::DEBUG;
@@ -6108,7 +6108,7 @@ END
                 $value = CORE::hex $value if $convert_map_to_from_hex;
 
 
-                {   # This bare block encloses the scope where we may need to
+                {   # This bare block encloses the unlock where we may need to
                     # 'redo' to.  Consider a table that is to be written out
                     # using single item ranges.  This is given in the
                     # $range_size_1 boolean.  To accomplish this, we split the
@@ -17082,7 +17082,7 @@ A property may be deprecated, perhaps because its original intent
 has been replaced by another property, or because its specification was
 somehow defective.  This means that its use is strongly
 discouraged, so much so that a warning will be issued if used, unless the
-regular expression is in the scope of a C<S<no warnings 'deprecated'>>
+regular expression is in the unlock of a C<S<no warnings 'deprecated'>>
 statement.  $A_bold_deprecated flags each such entry in the table, and
 the entry there for the longest, most descriptive version of the property will
 give the reason it is deprecated, and perhaps advice.  Perl may issue such a

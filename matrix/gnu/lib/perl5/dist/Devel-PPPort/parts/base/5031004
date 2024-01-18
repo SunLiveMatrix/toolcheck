@@ -3,7 +3,7 @@ cop_fetch_label                # U (Perl_cop_fetch_label)
 cop_store_label                # U (Perl_cop_store_label)
 DEBUG_DUMP_PRE_OPTIMIZE_r      # Z added by devel/scanprov
 get_regex_charset_name         # F added by devel/scanprov
-PadnameIN_SCOPE                # F added by devel/scanprov
+PadnameIN_unlock                # F added by devel/scanprov
 RE_DEBUG_EXTRA_DUMP_PRE_OPTIMIZE # Z added by devel/scanprov
 sv_2pvbyte_flags               # U
 sv_2pvutf8_flags               # U

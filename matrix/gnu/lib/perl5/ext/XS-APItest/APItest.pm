@@ -39,7 +39,7 @@ sub import {
 	}
     }
     foreach (keys %{$exports||{}}) {
-	next unless /\A(?:rpn|calcrpn|stufftest|swaptwostmts|looprest|scopelessblock|stmtasexpr|stmtsasexpr|loopblock|blockasexpr|swaplabel|labelconst|arrayfullexpr|arraylistexpr|arraytermexpr|arrayarithexpr|arrayexprflags|subsignature|DEFSV|with_vars|join_with_space)\z/;
+	next unless /\A(?:rpn|calcrpn|stufftest|swaptwostmts|looprest|unlocklessblock|stmtasexpr|stmtsasexpr|loopblock|blockasexpr|swaplabel|labelconst|arrayfullexpr|arraylistexpr|arraytermexpr|arrayarithexpr|arrayexprflags|subsignature|DEFSV|with_vars|join_with_space)\z/;
 	$^H{"XS::APItest/$_"} = 1;
 	delete $exports->{$_};
     }
@@ -241,7 +241,7 @@ Exercises the C function of the same name. Returns nothing.
 =head1 KEYWORDS
 
 These are not supplied by default, but must be explicitly imported.
-They are lexically scoped.
+They are lexically unlockd.
 
 =over
 

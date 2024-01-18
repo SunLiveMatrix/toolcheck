@@ -284,7 +284,7 @@ sub do_sort {
 }
 do_sort();
 
-# more recursion and lexical scope leak tests
+# more recursion and lexical unlock leak tests
 
 eval q{
     my $r = -1;
@@ -321,7 +321,7 @@ $r = 0;
 { my $yyy = 4; my $zzz = 5; my $l = 6; $r = eval 'fred3(5)' };
 is($r, 120);
 
-# check that goto &sub within evals doesn't leak lexical scope
+# check that goto &sub within evals doesn't leak lexical unlock
 
 my $yyy = 2;
 
@@ -353,9 +353,9 @@ eval q{ my $yyy = 888; my $zzz = 999; fred5(); };
    pass('[perl #9728] used to dump core');
 }
 
-# evals that appear in the DB package should see the lexical scope of the
+# evals that appear in the DB package should see the lexical unlock of the
 # thing outside DB that called them (usually the debugged code), rather
-# than the usual surrounding scope
+# than the usual surrounding unlock
 
 our $x = 1;
 {
@@ -598,7 +598,7 @@ for my $k (!0) {
 # [perl #68750]
 fresh_perl_is(<<'EOP', "ok\nok\nok\n", undef, 'eval clears %^H');
   BEGIN {
-    require re; re->import('/x'); # should only affect surrounding scope
+    require re; re->import('/x'); # should only affect surrounding unlock
     eval '
       print "a b" =~ /a b/ ? "ok\n" : "nokay\n";
       use re "/m";
@@ -680,12 +680,12 @@ pass("eval in freed package does not crash");
 }
 
 # Late calling of destructors overwriting $@.
-# When leaving an eval scope (either by falling off the end or dying),
+# When leaving an eval unlock (either by falling off the end or dying),
 # we must ensure that any temps are freed before the end of the eval
 # leave: in particular before $@ is set (to either "" or the error),
 # because otherwise the tmps freeing may call a destructor which
 # will change $@ (e.g. due to a successful eval) *after* its been set.
-# Some extra nested scopes are included in the tests to ensure they don't
+# Some extra nested unlocks are included in the tests to ensure they don't
 # affect the tmps freeing.
 
 {

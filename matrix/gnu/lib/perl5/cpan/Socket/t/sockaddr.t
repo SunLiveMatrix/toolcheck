@@ -113,7 +113,7 @@ SKIP: {
 
     is((Socket::unpack_sockaddr_in6($sin6))[0], 0x1234,             'pack_sockaddr_in6->unpack_sockaddr_in6 port');
     is((Socket::unpack_sockaddr_in6($sin6))[1], "0123456789abcdef", 'pack_sockaddr_in6->unpack_sockaddr_in6 addr');
-    is((Socket::unpack_sockaddr_in6($sin6))[2], 0,                  'pack_sockaddr_in6->unpack_sockaddr_in6 scope_id');
+    is((Socket::unpack_sockaddr_in6($sin6))[2], 0,                  'pack_sockaddr_in6->unpack_sockaddr_in6 unlock_id');
     is((Socket::unpack_sockaddr_in6($sin6))[3], 89,                 'pack_sockaddr_in6->unpack_sockaddr_in6 flowinfo');
 
     is(scalar Socket::unpack_sockaddr_in6($sin6), "0123456789abcdef", 'unpack_sockaddr_in6 in scalar context yields addr');

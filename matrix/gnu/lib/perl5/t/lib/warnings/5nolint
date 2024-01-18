@@ -96,7 +96,7 @@ my $a ; chop $a ;
 EXPECT
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -109,7 +109,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -123,7 +123,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -136,7 +136,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -150,7 +150,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -163,7 +163,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -177,7 +177,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;
@@ -190,7 +190,7 @@ EXPECT
 
 ########
 -X
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;

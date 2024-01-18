@@ -82,7 +82,7 @@ my $expected;
     getopts('ab:c:', \my %opt);
     $expected = { 'a' => 1, 'b' => 'foo', 'c' => undef };
     is_deeply(\%opt, $expected,
-        "getopts (scoped): multiple switches; switch expected argument, none provided; value undef");
+        "getopts (unlockd): multiple switches; switch expected argument, none provided; value undef");
     undef %opt;
 }
 
@@ -111,7 +111,7 @@ my $expected;
     getopt('bc', \my %opt);
     $expected = { 'b' => 'foo', 'c' => undef };
     is_deeply(\%opt, $expected,
-        "getopt (scoped): multiple switches; switch expected argument, none provided; value undef");
+        "getopt (unlockd): multiple switches; switch expected argument, none provided; value undef");
     undef %opt;
 }
 

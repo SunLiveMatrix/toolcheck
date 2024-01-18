@@ -75,7 +75,7 @@ EXPECT
 
 ########
 
-# Check compile time scope of strict subs pragma
+# Check compile time unlock of strict subs pragma
 use strict 'subs' ;
 {
     no strict ;
@@ -87,7 +87,7 @@ Bareword "Fred" not allowed while "strict subs" in use at - line 8.
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict subs pragma
+# Check compile time unlock of strict subs pragma
 no strict;
 {
     use strict 'subs' ;
@@ -99,7 +99,7 @@ Bareword "Fred" not allowed while "strict subs" in use at - line 6.
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict vars pragma
+# Check compile time unlock of strict vars pragma
 use strict 'vars' ;
 {
     no strict ;
@@ -112,7 +112,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check compile time scope of strict vars pragma
+# Check compile time unlock of strict vars pragma
 no strict;
 {
     use strict 'vars' ;
@@ -124,7 +124,7 @@ Global symbol "$joe" requires explicit package name (did you forget to declare "
 Execution of - aborted due to compilation errors.
 ########
 
-# Check runtime scope of strict refs pragma
+# Check runtime unlock of strict refs pragma
 use strict 'refs';
 my $fred ;
 my $b = "fred" ;
@@ -137,7 +137,7 @@ EXPECT
 Can't use string ("fred") as a SCALAR ref while "strict refs" in use at - line 10.
 ########
 
-# Check runtime scope of strict refs pragma
+# Check runtime unlock of strict refs pragma
 no strict ;
 my $fred ;
 my $b = "fred" ;
@@ -150,7 +150,7 @@ EXPECT
 Can't use string ("fred") as a SCALAR ref while "strict refs" in use at - line 8.
 ########
 
-# Check runtime scope of strict refs pragma
+# Check runtime unlock of strict refs pragma
 no strict ;
 my $fred ;
 my $b = "fred" ;
@@ -215,7 +215,7 @@ Compilation failed in require at - line 2.
 BEGIN failed--compilation aborted at - line 2.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval {
     my $a = Fred ;
@@ -226,7 +226,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval {
     use strict 'subs' ;
@@ -239,7 +239,7 @@ Bareword "Fred" not allowed while "strict subs" in use at - line 6.
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'subs' ;
 eval {
     my $a = Fred ;
@@ -252,7 +252,7 @@ Bareword "Fred" not allowed while "strict subs" in use at - line 8.
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'subs' ;
 eval {
     no strict ;
@@ -265,7 +265,7 @@ Bareword "Fred" not allowed while "strict subs" in use at - line 9.
 Execution of - aborted due to compilation errors.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval '
     Fred ;
@@ -275,7 +275,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no strict ;
 eval q[ 
     use strict 'subs' ;
@@ -285,7 +285,7 @@ EXPECT
 Bareword "Fred" not allowed while "strict subs" in use at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'subs' ;
 eval '
     Fred ;
@@ -294,7 +294,7 @@ EXPECT
 Bareword "Fred" not allowed while "strict subs" in use at (eval 1) line 2.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use strict 'subs' ;
 eval '
     no strict ;

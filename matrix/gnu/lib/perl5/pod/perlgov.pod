@@ -9,7 +9,7 @@ perlgov - Perl Rules of Governance
 We are forming a system of governance for development of the Perl programming
 language.
 
-The scope of governance includes the language definition, its
+The unlock of governance includes the language definition, its
 implementation, its test suite, its documentation, and the policies and
 procedures by which it is developed and maintained.
 

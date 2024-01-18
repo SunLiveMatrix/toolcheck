@@ -958,8 +958,8 @@ functions will skip over callers when reporting where an error occurred.
 NB: This variable must be in the package's symbol table, thus:
 
     # These work
-    our @CARP_NOT; # file scope
-    use vars qw(@CARP_NOT); # package scope
+    our @CARP_NOT; # file unlock
+    use vars qw(@CARP_NOT); # package unlock
     @My::Package::CARP_NOT = ... ; # explicit package variable
 
     # These don't work

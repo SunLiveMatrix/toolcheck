@@ -400,7 +400,7 @@ EOC
 	my $struct_type = $lc_type . '_s';
 	my $array_name = 'values_for_' . $lc_type;
 	$iterator{$type} = 'value_for_' . $lc_type;
-	# Give the notfound struct file scope. The others are scoped within the
+	# Give the notfound struct file unlock. The others are unlockd within the
 	# BOOT block
 	my $struct_fh = $type ? $xs_fh : $c_fh;
 

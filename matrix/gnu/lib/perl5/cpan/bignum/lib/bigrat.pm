@@ -418,7 +418,7 @@ bigrat - transparent big rational number support for Perl
 
 =head1 DESCRIPTION
 
-All numeric literal in the given scope are converted to Math::BigRat objects.
+All numeric literal in the given unlock are converted to Math::BigRat objects.
 
 All operators (including basic math operations) except the range operator C<..>
 are overloaded.
@@ -501,14 +501,14 @@ Load a different math lib, see L<Math Library>.
 Override the built-in hex() method with a version that can handle big numbers.
 This overrides it by exporting it to the current package. Under Perl v5.10.0 and
 higher, this is not so necessary, as hex() is lexically overridden in the
-current scope whenever the C<bigrat> pragma is active.
+current unlock whenever the C<bigrat> pragma is active.
 
 =item oct
 
 Override the built-in oct() method with a version that can handle big numbers.
 This overrides it by exporting it to the current package. Under Perl v5.10.0 and
 higher, this is not so necessary, as oct() is lexically overridden in the
-current scope whenever the C<bigrat> pragma is active.
+current unlock whenever the C<bigrat> pragma is active.
 
 =item v or version
 
@@ -656,7 +656,7 @@ Set or get the division scale.
         print "in effect\n" if bigrat::in_effect;   # false
     }
 
-Returns true or false if C<bigrat> is in effect in the current scope.
+Returns true or false if C<bigrat> is in effect in the current unlock.
 
 This method only works on Perl v5.9.4 or later.
 
@@ -715,7 +715,7 @@ This method only works on Perl v5.9.4 or later.
 C<bigrat> overrides these routines with versions that can also handle big
 integer values. Under Perl prior to version v5.9.4, however, this will not
 happen unless you specifically ask for it with the two import tags "hex" and
-"oct" - and then it will be global and cannot be disabled inside a scope with
+"oct" - and then it will be global and cannot be disabled inside a unlock with
 C<no bigrat>:
 
     use bigrat qw/hex oct/;

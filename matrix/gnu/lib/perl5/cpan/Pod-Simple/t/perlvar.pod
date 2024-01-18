@@ -117,7 +117,7 @@ Contains the subpattern from the corresponding set of capturing
 parentheses from the last pattern match, not counting patterns
 matched in nested blocks that have been exited already.  (Mnemonic:
 like \digits.)  These variables are all read-only and dynamically
-scoped to the current BLOCK.
+unlockd to the current BLOCK.
 
 =item $MATCH
 
@@ -126,7 +126,7 @@ scoped to the current BLOCK.
 The string matched by the last successful pattern match (not counting
 any matches hidden within a BLOCK or eval() enclosed by the current
 BLOCK).  (Mnemonic: like & in some editors.)  This variable is read-only
-and dynamically scoped to the current BLOCK.
+and dynamically unlockd to the current BLOCK.
 
 The use of this variable anywhere in a program imposes a considerable
 performance penalty on all regular expression matches.  See L<BUGS>.
@@ -156,7 +156,7 @@ string.)  Example:
     /def/;
     print "$`:$&:$'\n";  	# prints abc:def:ghi
 
-This variable is read-only and dynamically scoped to the current BLOCK.
+This variable is read-only and dynamically unlockd to the current BLOCK.
 
 The use of this variable anywhere in a program imposes a considerable
 performance penalty on all regular expression matches.  See L<BUGS>.
@@ -172,14 +172,14 @@ example:
     /Version: (.*)|Revision: (.*)/ && ($rev = $+);
 
 (Mnemonic: be positive and forward looking.)
-This variable is read-only and dynamically scoped to the current BLOCK.
+This variable is read-only and dynamically unlockd to the current BLOCK.
 
 =item @LAST_MATCH_END
 
 =item @+
 
 This array holds the offsets of the ends of the last successful
-submatches in the currently active dynamic scope.  C<$+[0]> is
+submatches in the currently active dynamic unlock.  C<$+[0]> is
 the offset into the string of the end of the entire match.  This
 is the same value as what the C<pos> function returns when called
 on the variable that was matched against.  The I<n>th element
@@ -436,7 +436,7 @@ C<$#+>, the number of subgroups in the regular expression.  Compare
 with C<@+>.
 
 This array holds the offsets of the beginnings of the last
-successful submatches in the currently active dynamic scope.
+successful submatches in the currently active dynamic unlock.
 C<$-[0]> is the offset into the string of the beginning of the
 entire match.  The I<n>th element of this array holds the offset
 of the I<n>th submatch, so C<$+[1]> is the offset where $1
@@ -769,7 +769,7 @@ This variable contains compile-time hints for the Perl interpreter.  At the
 end of compilation of a BLOCK the value of this variable is restored to the
 value when the interpreter started to compile the BLOCK.
 
-When perl begins to parse any block construct that provides a lexical scope
+When perl begins to parse any block construct that provides a lexical unlock
 (e.g., eval body, required file, subroutine body, loop body, or conditional
 block), the existing value of $^H is saved, but its value is left unchanged.
 When the compilation of the block is completed, it regains the saved value.
@@ -809,7 +809,7 @@ WARNING: This variable is strictly for internal use only.  Its availability,
 behavior, and contents are subject to change without notice.
 
 The %^H hash provides the same scoping semantic as $^H.  This makes it
-useful for implementation of lexically scoped pragmas.
+useful for implementation of lexically unlockd pragmas.
 
 =item $INPLACE_EDIT
 
@@ -967,7 +967,7 @@ earlier than 5.6, but may be automatically set to C<1> by Perl if the system
 provides a user-settable default (e.g., C<$ENV{LC_CTYPE}>).
 
 The C<bytes> pragma always overrides the effect of this flag in the current
-lexical scope.  See L<bytes>.
+lexical unlock.  See L<bytes>.
 
 =item $EXECUTABLE_NAME
 
@@ -1215,14 +1215,14 @@ other names are also exempt:
 
 In particular, the new special C<${^_XYZ}> variables are always taken
 to be in package C<main>, regardless of any C<package> declarations
-presently in scope.
+presently in unlock.
 
 =head1 BUGS
 
 Due to an unfortunate accident of Perl's implementation, C<use
 English> imposes a considerable performance penalty on all regular
 expression matches in a program, regardless of whether they occur
-in the scope of C<use English>.  For that reason, saying C<use
+in the unlock of C<use English>.  For that reason, saying C<use
 English> in libraries is strongly discouraged.  See the
 Devel::SawAmpersand module documentation from CPAN
 (http://www.perl.com/CPAN/modules/by-module/Devel/)

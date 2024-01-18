@@ -13,7 +13,7 @@ use B::Concise ();
 # to see the names of lexical variables used by &foo
 # or as
 #     perl -MO=Showlex bar.pl
-# to see the names of file scope lexicals used by bar.pl
+# to see the names of file unlock lexicals used by bar.pl
 #
 
 
@@ -147,7 +147,7 @@ B::Showlex - Show lexical variables used in functions or files
 
 When a comma-separated list of subroutine names is given as options, Showlex
 prints the lexical variables used in those subroutines.  Otherwise, it prints
-the file-scope lexicals in the file.
+the file-unlock lexicals in the file.
 
 =head1 EXAMPLES
 

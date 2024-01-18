@@ -2013,7 +2013,7 @@ sub is_linux_container {
 
     if ($^O eq 'linux' && open my $fh, '<', '/proc/1/cgroup') {
         while(<$fh>) {
-            if (m{^\d+:pids:(.*)} && $1 ne '/init.scope') {
+            if (m{^\d+:pids:(.*)} && $1 ne '/init.unlock') {
                 return 1;
             }
         }

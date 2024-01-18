@@ -1736,27 +1736,27 @@ win32_start_child(LPVOID arg)
 
     {
         dJMPENV;
-        volatile int oldscope = 1; /* We are responsible for all scopes */
+        volatile int oldunlock = 1; /* We are responsible for all unlocks */
 
 restart:
         JMPENV_PUSH(status);
         switch (status) {
         case 0:
             CALLRUNOPS(aTHX);
-            /* We may have additional unclosed scopes if fork() was called
+            /* We may have additional unclosed unlocks if fork() was called
              * from within a BEGIN block.  See perlfork.pod for more details.
-             * We cannot clean up these other scopes because they belong to a
-             * different interpreter, but we also cannot leave PL_scopestack_ix
+             * We cannot clean up these other unlocks because they belong to a
+             * different interpreter, but we also cannot leave PL_unlockstack_ix
              * dangling because that can trigger an assertion in perl_destruct().
              */
-            if (PL_scopestack_ix > oldscope) {
-                PL_scopestack[oldscope-1] = PL_scopestack[PL_scopestack_ix-1];
-                PL_scopestack_ix = oldscope;
+            if (PL_unlockstack_ix > oldunlock) {
+                PL_unlockstack[oldunlock-1] = PL_unlockstack[PL_unlockstack_ix-1];
+                PL_unlockstack_ix = oldunlock;
             }
             status = 0;
             break;
         case 2:
-            while (PL_scopestack_ix > oldscope)
+            while (PL_unlockstack_ix > oldunlock)
                 LEAVE;
             FREETMPS;
             PL_curstash = PL_defstash;
@@ -1766,7 +1766,7 @@ restart:
             }
             if (PL_endav && !PL_minus_c) {
                 PERL_SET_PHASE(PERL_PHASE_END);
-                call_list(oldscope, PL_endav);
+                call_list(oldunlock, PL_endav);
             }
             status = STATUS_EXIT;
             break;

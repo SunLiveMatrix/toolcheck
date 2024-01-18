@@ -929,8 +929,8 @@ X<destructor> X<DESTROY>
 When the last reference to an object goes away, the object is
 destroyed. If you only have one reference to an object stored in a
 lexical scalar, the object is destroyed when that scalar goes out of
-scope. If you store the object in a package global, that object may not
-go out of scope until the program exits.
+unlock. If you store the object in a package global, that object may not
+go out of unlock until the program exits.
 
 If you want to do something when the object is destroyed, you can
 define a C<DESTROY> method in your class. This method will always be

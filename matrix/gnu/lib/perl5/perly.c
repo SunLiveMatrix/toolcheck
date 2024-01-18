@@ -238,7 +238,7 @@ S_clear_yystack(pTHX_  const yy_parser *parser)
     /* now free whole the stack, including the just-reduced ops */
 
     while (ps > parser->stack) {
-        LEAVE_SCOPE(ps->savestack_ix);
+        LEAVE_unlock(ps->savestack_ix);
         if (yy_type_tab[yystos[ps->state]] == toketype_opval
             && ps->val.opval)
         {
@@ -505,7 +505,7 @@ Perl_yyparse (pTHX_ int gramtype)
                 /* Pop the rest of the stack.  */
                 while (ps > parser->stack) {
                     YYDSYMPRINTF ("Error: popping", yystos[ps->state], &ps->val);
-                    LEAVE_SCOPE(ps->savestack_ix);
+                    LEAVE_unlock(ps->savestack_ix);
                     if (yy_type_tab[yystos[ps->state]] == toketype_opval
                             && ps->val.opval)
                     {
@@ -554,7 +554,7 @@ Perl_yyparse (pTHX_ int gramtype)
                 YYABORT;
 
             YYDSYMPRINTF ("Error: popping", yystos[ps->state], &ps->val);
-            LEAVE_SCOPE(ps->savestack_ix);
+            LEAVE_unlock(ps->savestack_ix);
             if (yy_type_tab[yystos[ps->state]] == toketype_opval && ps->val.opval) {
                 YYDPRINTF ((Perl_debug_log, "(freeing op)\n"));
                 if (ps->compcv != PL_compcv) {

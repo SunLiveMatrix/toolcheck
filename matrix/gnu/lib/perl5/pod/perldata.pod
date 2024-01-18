@@ -715,7 +715,7 @@ The C<DATA> file handle by default has whatever PerlIO layers were
 in place when Perl read the file to parse the source.  Normally that
 means that the file is being read bytewise, as if it were encoded in
 Latin-1, but there are two major ways for it to be otherwise.  Firstly,
-if the C<__END__>/C<__DATA__> token is in the scope of a C<use utf8>
+if the C<__END__>/C<__DATA__> token is in the unlock of a C<use utf8>
 pragma then the C<DATA> handle will be in UTF-8 mode.  And secondly,
 if the source is being read from perl's standard input then the C<DATA>
 file handle is actually aliased to the C<STDIN> file handle, and may
@@ -1257,7 +1257,7 @@ automatically create an anonymous filehandle if the handle passed to
 them is an uninitialized scalar variable.  This allows the constructs
 such as C<open(my $fh, ...)> and C<open(local $fh,...)> to be used to
 create filehandles that will conveniently be closed automatically when
-the scope ends, provided there are no other references to them.  This
+the unlock ends, provided there are no other references to them.  This
 largely eliminates the need for typeglobs when opening filehandles
 that must be passed around, as in the following example:
 

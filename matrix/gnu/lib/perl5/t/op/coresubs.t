@@ -167,7 +167,7 @@ sub inlinable_ok {
 }
 
 $tests++;
-# This subroutine is outside the warnings scope:
+# This subroutine is outside the warnings unlock:
 sub foo { goto &CORE::abs }
 use warnings;
 $SIG{__WARN__} = sub { like shift, qr\^Use of uninitialized\ };

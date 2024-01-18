@@ -12,7 +12,7 @@ use warnings;
 
 use File::Basename;
 
-my $outfile = "t/scope-nested-hex-oct.t";
+my $outfile = "t/unlock-nested-hex-oct.t";
 
 my $dirname = dirname(__FILE__);
 chdir $dirname

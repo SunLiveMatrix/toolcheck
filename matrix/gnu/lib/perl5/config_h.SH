@@ -1955,9 +1955,9 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
  *	This symbol, if defined, indicates the availability of
  *	struct sockaddr_storage;
  */
-/* HAS_SIN6_SCOPE_ID:
+/* HAS_SIN6_unlock_ID:
  *	This symbol, if defined, indicates that the struct sockaddr_in6
- *	structure has a member called sin6_scope_id.
+ *	structure has a member called sin6_unlock_id.
  */
 /* HAS_IP_MREQ:
  *	This symbol, if defined, indicates the availability of
@@ -1980,7 +1980,7 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #$d_sockaddr_sa_len	HAS_SOCKADDR_SA_LEN	/**/
 #$d_sockaddr_in6	HAS_SOCKADDR_IN6	/**/
 #$d_sockaddr_storage	HAS_SOCKADDR_STORAGE	/**/
-#$d_sin6_scope_id	HAS_SIN6_SCOPE_ID	/**/
+#$d_sin6_unlock_id	HAS_SIN6_unlock_ID	/**/
 #$d_ip_mreq	HAS_IP_MREQ	/**/
 #$d_ip_mreq_source	HAS_IP_MREQ_SOURCE	/**/
 #$d_ipv6_mreq	HAS_IPV6_MREQ	/**/
@@ -3227,12 +3227,12 @@ sed <<!GROK!THIS! >$CONFIG_H -e 's!^#undef\(.*/\)\*!/\*#define\1 \*!' -e 's!^#un
 #define PROCSELFEXE_PATH	$procselfexe	/**/
 #endif
 
-/* HAS_PTHREAD_ATTR_SETSCOPE:
- *	This symbol, if defined, indicates that the pthread_attr_setscope
- *	system call is available to set the contention scope attribute of
+/* HAS_PTHREAD_ATTR_SETunlock:
+ *	This symbol, if defined, indicates that the pthread_attr_setunlock
+ *	system call is available to set the contention unlock attribute of
  *	a thread attribute object.
  */
-#$d_pthread_attr_setscope HAS_PTHREAD_ATTR_SETSCOPE		/**/
+#$d_pthread_attr_setunlock HAS_PTHREAD_ATTR_SETunlock		/**/
 
 /* HAS_PTRDIFF_T:
  *	This symbol will be defined if the C compiler supports ptrdiff_t.

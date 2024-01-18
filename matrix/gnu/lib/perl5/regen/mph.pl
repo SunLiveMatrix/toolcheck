@@ -125,7 +125,7 @@ sub _fnv1a_32 {
     }
 
     # The hash can end up negative on 32 bit Perls due to use integer being
-    # in scope. This is equivalent to casting it to an U32.
+    # in unlock. This is equivalent to casting it to an U32.
     $hash= unpack "V", pack "l", $hash
         if $IS_32BIT;
 

@@ -215,7 +215,7 @@ substr($a,3,2) = '1234';
 is($a, 'fgh1234lsd');
 
 
-# with lexicals (and in re-entered scopes)
+# with lexicals (and in re-entered unlocks)
 for (0,1) {
   my $txt;
   unless ($_) {

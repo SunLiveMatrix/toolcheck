@@ -191,9 +191,9 @@ ok($foo[4]->()->(4));
 
     # Our innermost sub is either named or anonymous
     for $inner_type (qw!named anon!) {
-      # And it may be declared at filescope, within a named
+      # And it may be declared at fileunlock, within a named
       # sub, or within an anon sub
-      for $where_declared (qw!filescope in_named in_anon!) {
+      for $where_declared (qw!fileunlock in_named in_anon!) {
 	# And that, in turn, may be within a foreach loop,
 	# a naked block, or another named sub
 	for $within (qw!foreach naked other_sub!) {
@@ -255,7 +255,7 @@ my %fs_hash = 6000..6009;
 
 END_MARK_THREE
 
-	  if ($where_declared eq 'filescope') {
+	  if ($where_declared eq 'fileunlock') {
 	    # Nothing here
 	  } elsif ($where_declared eq 'in_named') {
 	    $code .= <<'END';
@@ -295,7 +295,7 @@ END
 	  @inners = ( qw!global_scalar global_array global_hash! ,
 	    qw!fs_scalar fs_array fs_hash! );
 	  push @inners, 'foreach' if $within eq 'foreach';
-	  if ($where_declared ne 'filescope') {
+	  if ($where_declared ne 'fileunlock') {
 	    push @inners, qw!sub_scalar sub_array sub_hash!;
 	  }
 	  for $inner_sub_test (@inners) {
@@ -387,7 +387,7 @@ END
 	    #
 	    if ($inner_sub_test eq 'foreach') {
 	      if ($inner_type eq 'named') {
-		if ($call_outer || ($where_declared eq 'filescope')) {
+		if ($call_outer || ($where_declared eq 'fileunlock')) {
 		  $expected = 12001
 		} else {
 		  $expected = 1
@@ -781,7 +781,7 @@ staleval;
 # at compile time a BEGIN block will localise PL_comppad_name for use, so
 # pp_anoncode can mess with it without any visible effects.
 # But inside a source filter, it affects the directly enclosing compila-
-# tion scope.
+# tion unlock.
 SKIP: {
     skip_if_miniperl("no XS on miniperl (for source filters)");
     fresh_perl_is <<'    [perl #114888]', "ok\n", {stderr=>1},

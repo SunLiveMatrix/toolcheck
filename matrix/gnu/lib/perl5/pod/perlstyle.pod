@@ -203,12 +203,12 @@ few sparse bytes.
 
 =item *
 
-You may find it helpful to use letter case to indicate the scope
+You may find it helpful to use letter case to indicate the unlock
 or nature of a variable. For example:
 
     $ALL_CAPS_HERE   constants only (beware clashes with perl vars!)
     $Some_Caps_Here  package-wide global/static
-    $no_caps_here    function scope my() or local() variables
+    $no_caps_here    function unlock my() or local() variables
 
 Function and method names seem to work best as all lowercase.
 E.g., C<$obj-E<gt>as_string()>.

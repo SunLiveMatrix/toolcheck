@@ -342,9 +342,9 @@ S_MgBYTEPOS(pTHX_ MAGIC *mg, SV *sv, const char *s, STRLEN len)
 
 #if defined(PERL_IN_PAD_C) || defined(PERL_IN_OP_C)
 PERL_STATIC_INLINE bool
-S_PadnameIN_SCOPE(const PADNAME * const pn, const U32 seq)
+S_PadnameIN_unlock(const PADNAME * const pn, const U32 seq)
 {
-    PERL_ARGS_ASSERT_PADNAMEIN_SCOPE;
+    PERL_ARGS_ASSERT_PADNAMEIN_unlock;
 
     /* is seq within the range _LOW to _HIGH ?
      * This is complicated by the fact that PL_cop_seqmax
@@ -353,7 +353,7 @@ S_PadnameIN_SCOPE(const PADNAME * const pn, const U32 seq)
         return FALSE; /* not yet introduced */
 
     if (COP_SEQ_RANGE_HIGH(pn) == PERL_PADSEQ_INTRO) {
-    /* in compiling scope */
+    /* in compiling unlock */
         if (
             (seq >  COP_SEQ_RANGE_LOW(pn))
             ? (seq - COP_SEQ_RANGE_LOW(pn) < (U32_MAX >> 1))
@@ -3577,7 +3577,7 @@ Perl_cx_pushblock(pTHX_ U8 type, U8 gimme, SV** sp, I32 saveix)
             || cx->blk_oldsp >= (cx-1)->blk_oldsp);
     cx->blk_oldcop     = PL_curcop;
     cx->blk_oldmarksp  = (I32)(PL_markstack_ptr - PL_markstack);
-    cx->blk_oldscopesp = PL_scopestack_ix;
+    cx->blk_oldunlocksp = PL_unlockstack_ix;
     cx->blk_oldpm      = PL_curpm;
     cx->blk_old_tmpsfloor = PL_tmps_floor;
 
@@ -3597,10 +3597,10 @@ Perl_cx_popblock(pTHX_ PERL_CONTEXT *cx)
     CX_DEBUG(cx, "POP");
     /* these 3 are common to cx_popblock and cx_topblock */
     PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp;
-    PL_scopestack_ix = cx->blk_oldscopesp;
+    PL_unlockstack_ix = cx->blk_oldunlocksp;
     PL_curpm         = cx->blk_oldpm;
 
-    /* LEAVE_SCOPE() should have made this true. /(?{})/ cheats
+    /* LEAVE_unlock() should have made this true. /(?{})/ cheats
      * and leaves a CX entry lying around for repeated use, so
      * skip for multicall */                  \
     assert(   (CxTYPE(cx) == CXt_SUB && CxMULTICALL(cx))
@@ -3622,7 +3622,7 @@ Perl_cx_topblock(pTHX_ PERL_CONTEXT *cx)
     CX_DEBUG(cx, "TOP");
     /* these 3 are common to cx_popblock and cx_topblock */
     PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp;
-    PL_scopestack_ix = cx->blk_oldscopesp;
+    PL_unlockstack_ix = cx->blk_oldunlocksp;
     PL_curpm         = cx->blk_oldpm;
     Perl_rpp_popfree_to(aTHX_ PL_stack_base + cx->blk_oldsp);
 }
@@ -4283,7 +4283,7 @@ Perl_mortal_getenv(const char * str)
     /* Can't mortalize without stacks.  khw believes that no other threads
      * should be running, so no need to lock things, and this may be during a
      * phase when locking isn't even available */
-    if (UNLIKELY(PL_scopestack_ix == 0)) {
+    if (UNLIKELY(PL_unlockstack_ix == 0)) {
         return getenv(str);
     }
 

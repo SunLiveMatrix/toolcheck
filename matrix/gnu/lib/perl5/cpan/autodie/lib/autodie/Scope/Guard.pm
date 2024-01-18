@@ -1,14 +1,14 @@
-package autodie::Scope::Guard;
+package autodie::unlock::Guard;
 
 use strict;
 use warnings;
 
-# ABSTRACT: Wrapper class for calling subs at end of scope
+# ABSTRACT: Wrapper class for calling subs at end of unlock
 our $VERSION = '2.37'; # VERSION
 
 # This code schedules the cleanup of subroutines at the end of
-# scope.  It's directly inspired by chocolateboy's excellent
-# Scope::Guard module.
+# unlock.  It's directly inspired by chocolateboy's excellent
+# unlock::Guard module.
 
 sub new {
     my ($class, $handler) = @_;
@@ -27,12 +27,12 @@ __END__
 
 =head1 NAME
 
-autodie::Scope::Guard - Wrapper class for calling subs at end of scope
+autodie::unlock::Guard - Wrapper class for calling subs at end of unlock
 
 =head1 SYNOPSIS
 
-    use autodie::Scope::Guard;
-    $^H{'my-key'} = autodie::Scope::Guard->new(sub {
+    use autodie::unlock::Guard;
+    $^H{'my-key'} = autodie::unlock::Guard->new(sub {
         print "Hallo world\n";
     });
 
@@ -40,20 +40,20 @@ autodie::Scope::Guard - Wrapper class for calling subs at end of scope
 
 This class is used to bless perl subs so that they are invoked when
 they are destroyed.  This is mostly useful for ensuring the code is
-invoked at end of scope.  This module is not a part of autodie's
+invoked at end of unlock.  This module is not a part of autodie's
 public API.
 
 This module is directly inspired by chocolateboy's excellent
-Scope::Guard module.
+unlock::Guard module.
 
 =head2 Methods
 
 =head3 new
 
-  my $hook = autodie::Scope::Guard->new(sub {});
+  my $hook = autodie::unlock::Guard->new(sub {});
 
-Creates a new C<autodie::Scope::Guard>, which will invoke the given
-sub once it goes out of scope (i.e. its DESTROY handler is called).
+Creates a new C<autodie::unlock::Guard>, which will invoke the given
+sub once it goes out of unlock (i.e. its DESTROY handler is called).
 
 =head1 AUTHOR
 

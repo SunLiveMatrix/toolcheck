@@ -343,9 +343,9 @@ sub set_up_relative_test {
 		$h->{extra} = 'RELATIVE';
 		$h->{arg} .= ' RELATIVE' if $h->{name} eq 'leavesub';
 	    }
-	    elsif ($style eq 'scope') {
+	    elsif ($style eq 'unlock') {
 		# suppress printout entirely
-		$$format="" unless grep { $h->{name} eq $_ } @scopeops;
+		$$format="" unless grep { $h->{name} eq $_ } @unlockops;
 	    }
 	});
 }
@@ -429,17 +429,17 @@ EONT_EONT
 
 #################################
 
-@scopeops = qw( leavesub enter leave nextstate );
+@unlockops = qw( leavesub enter leave nextstate );
 add_style
-	( 'scope'  # concise copy
+	( 'unlock'  # concise copy
 	  , "#hyphseq2 (*(   (x( ;)x))*)<#classsym> "
 	  . "#exname#arg(?([#targarglife])?)~#flags(?(/#private)?)(x(;~->#next)x) "
 	  , "  (*(    )*)     goto #seq\n"
 	  , "(?(<#seq>)?)#exname#arg(?([#targarglife])?)"
 	 );
 
-checkOptree ( name	=> "both -exec -scope",
-	      bcopts	=> [qw/ -exec -scope /],
+checkOptree ( name	=> "both -exec -unlock",
+	      bcopts	=> [qw/ -exec -unlock /],
 	      code	=> sub{$a=$b+42},
 	      expect	=> <<'EOT_EOT', expect_nt => <<'EONT_EONT');
 1  <;> nextstate(main 50 optree_concise.t:337) v 
@@ -450,8 +450,8 @@ EOT_EOT
 EONT_EONT
 
 
-checkOptree ( name	=> "both -basic -scope",
-	      bcopts	=> [qw/ -basic -scope /],
+checkOptree ( name	=> "both -basic -unlock",
+	      bcopts	=> [qw/ -basic -unlock /],
 	      code	=> sub{$a=$b+42},
 	      expect	=> <<'EOT_EOT', expect_nt => <<'EONT_EONT');
 7  <1> leavesub[1 ref] K/REFC,1 ->(end) 

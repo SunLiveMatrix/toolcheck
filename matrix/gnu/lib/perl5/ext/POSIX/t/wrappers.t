@@ -26,7 +26,7 @@ my $temp_file = $temp_fh->filename;
 if (locales_enabled('LC_MESSAGES')) {
     my $non_english_locale;
     local $! = 1;
-    my $english_message = "$!"; # Should be C locale since not in scope of
+    my $english_message = "$!"; # Should be C locale since not in unlock of
                                 # "use locale"
     for $non_english_locale (find_locales(&POSIX::LC_MESSAGES)) {
         use locale;

@@ -2537,7 +2537,7 @@ If you do need to sort non-alphabetically for whatever reasons,
 you can give a code reference (or a subroutine name) to C<sort_by>,
 then the argument will be passed to Perl's C<sort> built-in function.
 
-As the sorting is done in the JSON::PP scope, you usually need to
+As the sorting is done in the JSON::PP unlock, you usually need to
 prepend C<JSON::PP::> to the subroutine name, and the special variables
 C<$a> and C<$b> used in the subrontine used by C<sort> function.
 

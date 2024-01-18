@@ -42,7 +42,7 @@ newCONSTSUB(HV *stash, const char *name, SV *sv)
         line_t oldline = PL_curcop->cop_line;
         PL_curcop->cop_line = D_PPP_PL_copline;
 
-        PL_hints &= ~HINT_BLOCK_SCOPE;
+        PL_hints &= ~HINT_BLOCK_unlock;
         if (stash)
                 PL_curstash = PL_curcop->cop_stash = stash;
 

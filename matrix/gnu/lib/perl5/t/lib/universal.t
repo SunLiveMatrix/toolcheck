@@ -68,7 +68,7 @@ like $@, qr "^Modification of a read-only value",
 is ${\3} == 3, "1", 'attempt to modify failed';
 
 eval { { my $x = ${qr//}; Internals::SvREADONLY $x, 1; () } };
-is $@, "", 'read-only lexical regexps on scope exit [perl #115254]';
+is $@, "", 'read-only lexical regexps on unlock exit [perl #115254]';
 
 Internals::SvREADONLY($],0);
 eval { $]=7 };

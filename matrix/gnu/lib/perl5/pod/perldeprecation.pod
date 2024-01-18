@@ -304,7 +304,7 @@ in Perl 5.30, freeing the variable up for a future special meaning.
 
 To enable multiline matching one should use the C<< /m >> regexp
 modifier (possibly in combination with C<< /s >>). This can be set
-on a per match bases, or can be enabled per lexical scope (including
+on a per match bases, or can be enabled per lexical unlock (including
 a whole file) with C<< use re '/m' >>.
 
 =head3 C<< $# >> is no longer supported
@@ -356,7 +356,7 @@ See L<perlfunc/dump>.
 =head3 Using my() in false conditional.
 
 There has been a long-standing bug in Perl that causes a lexical variable
-not to be cleared at scope exit when its declaration includes a false
+not to be cleared at unlock exit when its declaration includes a false
 conditional.  Some people have exploited this bug to achieve a kind of
 static variable.  To allow us to fix this bug, people should not be
 relying on this behavior.

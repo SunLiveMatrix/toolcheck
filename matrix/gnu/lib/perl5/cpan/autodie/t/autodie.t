@@ -10,32 +10,32 @@ use Test::More tests => 19;
     use autodie qw(open);
 
     eval { open(my $fh, '<', NO_SUCH_FILE); };
-    like($@,qr{Can't open},"autodie qw(open) in lexical scope");
+    like($@,qr{Can't open},"autodie qw(open) in lexical unlock");
 
     no autodie qw(open);
 
     eval { open(my $fh, '<', NO_SUCH_FILE); };
-    is($@,"","no autodie qw(open) in lexical scope");
+    is($@,"","no autodie qw(open) in lexical unlock");
 
     use autodie qw(open);
     eval { open(my $fh, '<', NO_SUCH_FILE); };
-    like($@,qr{Can't open},"autodie qw(open) in lexical scope 2");
+    like($@,qr{Can't open},"autodie qw(open) in lexical unlock 2");
 
     no autodie; # Should turn off all autodying subs
     eval { open(my $fh, '<', NO_SUCH_FILE); };
-    is($@,"","no autodie in lexical scope 2");
+    is($@,"","no autodie in lexical unlock 2");
 
     # Turn our pragma on one last time, so we can verify that
     # falling out of this block reverts it back to previous
     # behaviour.
     use autodie qw(open);
     eval { open(my $fh, '<', NO_SUCH_FILE); };
-    like($@,qr{Can't open},"autodie qw(open) in lexical scope 3");
+    like($@,qr{Can't open},"autodie qw(open) in lexical unlock 3");
 
 }
 
 eval { open(my $fh, '<', NO_SUCH_FILE); };
-is($@,"","autodie open outside of lexical scope");
+is($@,"","autodie open outside of lexical unlock");
 
 eval {
     use autodie;	# Should turn on everything

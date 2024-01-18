@@ -56,11 +56,11 @@ $d{''} = "ok 18\n";
 
 &foo2("ok 11\n", "ok 12\n");
 
-is($a, "ok 15\n", 'Global was not modifed out of scope');
+is($a, "ok 15\n", 'Global was not modifed out of unlock');
 is(scalar @b, 1, 'correct number of elements in array');
-is($b[0], "ok 16\n", 'array value was not modified out of scope');
+is($b[0], "ok 16\n", 'array value was not modified out of unlock');
 is(scalar @c, 1, 'correct number of elements in array');
-is($c[0], "ok 17\n", 'array value was not modified out of scope');
+is($c[0], "ok 17\n", 'array value was not modified out of unlock');
 is($d{''}, "ok 18\n", 'hash key/value pair is correct');
 is($x, "ok 19\n", 'global was modified');
 is($y, "ok 20\n", 'this one too');
@@ -91,7 +91,7 @@ $j = 5;
 for (my $i = 0; (my $k = $i) < $j; ++$i) {
     fail(""), last unless $i >= 0 && $i < $j && $i == $k;
 }
-ok( ! defined $k, '$k is only defined in the scope of the previous for loop' );
+ok( ! defined $k, '$k is only defined in the unlock of the previous for loop' );
 
 curr_test(37);
 $jj = 0;

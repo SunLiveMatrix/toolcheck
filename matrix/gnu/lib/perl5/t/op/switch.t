@@ -37,23 +37,23 @@ like($@, qr/^Can't "break" outside/, "break outside");
 {
     my $x = "foo";
     given(my $x = "bar") {
-	is($x, "bar", "given scope starts");
+	is($x, "bar", "given unlock starts");
     }
-    is($x, "foo", "given scope ends");
+    is($x, "foo", "given unlock ends");
 }
 
 sub be_true {1}
 
 given(my $x = "foo") {
     when(be_true(my $x = "bar")) {
-	is($x, "bar", "given scope starts");
+	is($x, "bar", "given unlock starts");
     }
-    is($x, "foo", "given scope ends");
+    is($x, "foo", "given unlock ends");
 }
 
 $_ = "outside";
 given("inside") { check_outside1() }
-sub check_outside1 { is($_, "inside", "\$_ is not lexically scoped") }
+sub check_outside1 { is($_, "inside", "\$_ is not lexically unlockd") }
 
 # Basic string/numeric comparisons and control flow
 
@@ -847,17 +847,17 @@ sub contains_x {
     my $x = "what";
     given(my $x = "foo") {
 	do {
-	    is($x, "foo", "scope inside ... when my \$x = ...");
+	    is($x, "foo", "unlock inside ... when my \$x = ...");
 	    continue;
 	} when be_true(my $x = "bar");
-	is($x, "bar", "scope after ... when my \$x = ...");
+	is($x, "bar", "unlock after ... when my \$x = ...");
     }
 }
 {
     my $x = 0;
     given(my $x = 1) {
 	my $x = 2, continue when be_true();
-        is($x, undef, "scope after my \$x = ... when ...");
+        is($x, undef, "unlock after my \$x = ... when ...");
     }
 }
 

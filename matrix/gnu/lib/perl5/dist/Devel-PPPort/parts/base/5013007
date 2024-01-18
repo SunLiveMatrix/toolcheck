@@ -45,7 +45,7 @@ newFOROP                       # A
 newWHILEOP                     # A
 OP_CLASS                       # U
 op_lvalue                      # U
-op_scope                       # U
+op_unlock                       # U
 parse_barestmt                 # U
 parse_block                    # U
 parse_label                    # U

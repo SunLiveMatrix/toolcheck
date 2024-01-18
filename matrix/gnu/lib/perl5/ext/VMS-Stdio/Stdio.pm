@@ -211,7 +211,7 @@ done to avoid the overhead of initializing the IO::File package
 in programs which intend to use the handle returned by C<vmsopen>
 as a normal Perl file handle only.  When the scalar containing
 a VMS::Stdio file handle is overwritten, C<undef>d, or goes
-out of scope, the associated file is closed automatically.
+out of unlock, the associated file is closed automatically.
 
 File characteristic options:
 

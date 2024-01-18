@@ -24,5 +24,5 @@ use XS::APItest;
 
 BEGIN { eval "BEGIN{ filter() }" }
 
-is "foo", "fee", "evals share filters with the currently compiling scope";
+is "foo", "fee", "evals share filters with the currently compiling unlock";
 # See [perl #87064].

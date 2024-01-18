@@ -316,7 +316,7 @@ The C<my> is actually not required; you could just use:
 
 However, the above usage will create global variables throughout your
 program, which is bad programming practice.  C<my> creates lexically
-scoped variables instead.  The variables are scoped to the block
+unlockd variables instead.  The variables are unlockd to the block
 (i.e. a bunch of statements surrounded by curly-braces) in which they
 are defined.
 
@@ -328,7 +328,7 @@ are defined.
      print $y;           # prints "bar"
  }
  print $x;               # prints "foo"
- print $y;               # prints nothing; $y has fallen out of scope
+ print $y;               # prints nothing; $y has fallen out of unlock
 
 Using C<my> in combination with a C<use strict;> at the top of
 your Perl scripts means that the interpreter will pick up certain common
@@ -676,7 +676,7 @@ For more information on writing subroutines, see L<perlsub>.
 
 OO Perl is relatively simple and is implemented using references which
 know what sort of object they are based on Perl's concept of packages.
-However, OO Perl is largely beyond the scope of this document.
+However, OO Perl is largely beyond the unlock of this document.
 Read L<perlootut> and L<perlobj>.
 
 As a beginning Perl programmer, your most common use of OO Perl will be

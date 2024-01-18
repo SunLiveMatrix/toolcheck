@@ -217,7 +217,7 @@ typedef enum opcode {
 	OP_UNSTACK	 = 200,
 	OP_ENTER	 = 201,
 	OP_LEAVE	 = 202,
-	OP_SCOPE	 = 203,
+	OP_unlock	 = 203,
 	OP_ENTERITER	 = 204,
 	OP_ITER		 = 205,
 	OP_ENTERLOOP	 = 206,

@@ -138,7 +138,7 @@ like ($@, qr/\QCan't use string ("foo") as a SCALAR ref while "strict refs" in u
 # but that they can be disabled
 eval 'use 5.11.0; no strict "refs"; ${"foo"} = "bar";';
 is ($@, "");
-# and they are properly scoped
+# and they are properly unlockd
 eval '{use 5.11.0;} ${"foo"} = "bar";';
 is ($@, "");
 eval 'no strict; use 5.012; ${"foo"} = "bar"';

@@ -437,7 +437,7 @@ perform the upgrade if necessary.  See C<L</svtype>>.
  */
 #define SVf_PROTECT	0x00010000  /* very read-only */
 #define SVs_PADTMP	0x00020000  /* in use as tmp */
-#define SVs_PADSTALE	0x00040000  /* lexical has gone out of scope;
+#define SVs_PADSTALE	0x00040000  /* lexical has gone out of unlock;
                                         only used when !PADTMP */
 #define SVs_TEMP	0x00080000  /* mortal (implies string is stealable) */
 #define SVs_OBJECT	0x00100000  /* is "blessed" */

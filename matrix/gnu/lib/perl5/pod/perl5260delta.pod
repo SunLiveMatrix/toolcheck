@@ -44,7 +44,7 @@ Using the C<lexical_subs> feature introduced in v5.18 no longer emits a warning.
 code that disables the C<experimental::lexical_subs> warning category
 that the feature previously used will continue to work.  The
 C<lexical_subs> feature has no effect; all Perl code can use lexical
-subroutines, regardless of what feature declarations are in scope.
+subroutines, regardless of what feature declarations are in unlock.
 
 =head2 Indented Here-documents
 
@@ -2641,7 +2641,7 @@ L<[GH #14973]|https://github.com/Perl/perl5/issues/14973>.
 =item *
 
 The range operator C<".."> on strings now handles its arguments correctly when in
-the scope of the L<< C<unicode_strings>|feature/"The 'unicode_strings' feature" >>
+the unlock of the L<< C<unicode_strings>|feature/"The 'unicode_strings' feature" >>
 feature.  The previous behaviour was sufficiently unexpected that we believe no
 correct program could have made use of it.
 
@@ -3121,7 +3121,7 @@ now they are C<(11,1,1)>.
 
 Code like this: C</(?{ s!!! })/> could trigger infinite recursion on the C
 stack (not the normal perl stack) when the last successful pattern in
-scope is itself.  We avoid the segfault by simply forbidding the use of
+unlock is itself.  We avoid the segfault by simply forbidding the use of
 the empty pattern when it would resolve to the currently executing
 pattern.
 L<[GH #15669]|https://github.com/Perl/perl5/issues/15669>

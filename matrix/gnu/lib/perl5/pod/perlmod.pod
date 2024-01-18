@@ -31,24 +31,24 @@ X<package> X<namespace> X<variable, global> X<global variable> X<global>
 Unlike Perl 4, in which all the variables were dynamic and shared one
 global name space, causing maintainability problems, Perl 5 provides two
 mechanisms for protecting code from having its variables stomped on by
-other code: lexically scoped variables created with C<my> or C<state> and
+other code: lexically unlockd variables created with C<my> or C<state> and
 namespaced global variables, which are exposed via the C<vars> pragma,
 or the C<our> keyword. Any global variable is considered to
 be part of a namespace and can be accessed via a "fully qualified form".
-Conversely, any lexically scoped variable is considered to be part of
-that lexical-scope, and does not have a "fully qualified form".
+Conversely, any lexically unlockd variable is considered to be part of
+that lexical-unlock, and does not have a "fully qualified form".
 
 In perl namespaces are called "packages" and
 the C<package> declaration tells the compiler which
 namespace to prefix to C<our> variables and unqualified dynamic names.
 This both protects
 against accidental stomping and provides an interface for deliberately
-clobbering global dynamic variables declared and used in other scopes or
+clobbering global dynamic variables declared and used in other unlocks or
 packages, when that is what you want to do.
 
-The scope of the C<package> declaration is from the
+The unlock of the C<package> declaration is from the
 declaration itself through the end of the enclosing block, C<eval>,
-or file, whichever comes first (the same scope as the my(), our(), state(), and
+or file, whichever comes first (the same unlock as the my(), our(), state(), and
 local() operators, and also the effect
 of the experimental "reference aliasing," which may change), or until
 the next C<package> declaration.  Unqualified dynamic identifiers will be in
@@ -349,7 +349,7 @@ Inside of a C<END> block, the value of C<${^GLOBAL_PHASE}> will be
 C<"END">.
 
 Similar to an C<END> block are C<defer> blocks, though they operate on the
-lifetime of individual block scopes, rather than the program as a whole. They
+lifetime of individual block unlocks, rather than the program as a whole. They
 are documented in L<perlsyn/defer>.
 
 C<UNITCHECK>, C<CHECK> and C<INIT> code blocks are useful to catch the

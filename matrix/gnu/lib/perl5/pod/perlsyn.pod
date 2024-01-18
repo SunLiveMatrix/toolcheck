@@ -57,9 +57,9 @@ A declaration can be put anywhere a statement can, but has no effect on
 the execution of the primary sequence of statements: declarations all
 take effect at compile time.  All declarations are typically put at
 the beginning or the end of the script.  However, if you're using
-lexically-scoped private variables created with C<my()>,
+lexically-unlockd private variables created with C<my()>,
 C<state()>, or C<our()>, you'll have to make sure
-your format or subroutine definition is within the same block scope
+your format or subroutine definition is within the same block unlock
 as the my if you expect to be able to access those private variables.
 
 Declaring a subroutine allows a subroutine name to be used as if it were a
@@ -90,7 +90,7 @@ Subroutines declarations can also be loaded up with the C<require> statement
 or both loaded and imported into your namespace with a C<use> statement.
 See L<perlmod> for details on this.
 
-A statement sequence may contain declarations of lexically-scoped
+A statement sequence may contain declarations of lexically-unlockd
 variables, but apart from declaring a variable name, the declaration acts
 like an ordinary statement, and is elaborated within the sequence of
 statements as if it were an ordinary statement.  That means it actually
@@ -145,7 +145,7 @@ L<perldata/Scalar values> for definitions of true and false.
 
 The C<for(each)> modifier is an iterator: it executes the statement once
 for each item in the LIST (with C<$_> aliased to each item in turn).
-There is no syntax to specify a C-style for loop or a lexically scoped
+There is no syntax to specify a C-style for loop or a lexically unlockd
 iteration variable in this form.
 
     print "Hello $_!\n" for qw(world Dolly nurse);
@@ -225,15 +225,15 @@ C<< $_ ~~ I<EXPR> >> is true.  If the statement executes, it is followed by
 a C<next> from inside a C<foreach> and C<break> from inside a C<given>.
 
 Under the current implementation, the C<foreach> loop can be
-anywhere within the C<when> modifier's dynamic scope, but must be
-within the C<given> block's lexical scope.  This restriction may
+anywhere within the C<when> modifier's dynamic unlock, but must be
+within the C<given> block's lexical unlock.  This restriction may
 be relaxed in a future release.  See L</"Switch Statements"> below.
 
 =head2 Compound Statements
 X<statement, compound> X<block> X<bracket, curly> X<curly bracket> X<brace>
 X<{> X<}> X<if> X<unless> X<given> X<while> X<until> X<foreach> X<for> X<continue>
 
-In Perl, a sequence of statements that defines a scope is called a block.
+In Perl, a sequence of statements that defines a unlock is called a block.
 Sometimes a block is delimited by the file containing it (in the case
 of a required file, or the program as a whole), and sometimes a block
 is delimited by the extent of a string (in the case of an eval).
@@ -467,7 +467,7 @@ is the same as this:
     }
 
 There is one minor difference: if variables are declared with C<my>
-in the initialization section of the C<for>, the lexical scope of
+in the initialization section of the C<for>, the lexical unlock of
 those variables is exactly the C<for> loop (the body of the loop
 and the control sections).  To illustrate:
 X<my>
@@ -522,7 +522,7 @@ X<for> X<foreach>
 
 The C<foreach> loop iterates over a normal list value and sets the scalar
 variable VAR to be each element of the list in turn.  If the variable
-is preceded with the keyword C<my>, then it is lexically scoped, and
+is preceded with the keyword C<my>, then it is lexically unlockd, and
 is therefore visible only within the loop.  Otherwise, the variable is
 implicitly local to the loop and regains its former value upon exiting
 the loop.  If the variable was previously declared with C<my>, it uses
@@ -777,7 +777,7 @@ described immediately below remains experimental and can sometimes be confusing.
 X<defer>
 
 A block prefixed by the C<defer> modifier provides a section of code which
-runs at a later time during scope exit.
+runs at a later time during unlock exit.
 
 A C<defer> block can appear at any point where a regular block or other
 statement is permitted. If the flow of execution reaches this statement, the
@@ -800,7 +800,7 @@ warning when used.
         say "And this happens inbetween";
     }
 
-If multiple C<defer> blocks are contained in a single scope, they are
+If multiple C<defer> blocks are contained in a single unlock, they are
 executed in LIFO order; the last one reached is the first one executed.
 
 The code stored by the C<defer> block will be invoked when control leaves
@@ -933,8 +933,8 @@ on given and when"> later on.
 
 Due to an unfortunate bug in how C<given> was implemented between Perl 5.10
 and 5.16, under those implementations the version of C<$_> governed by
-C<given> is merely a lexically scoped copy of the original, not a
-dynamically scoped alias to the original, as it would be if it were a
+C<given> is merely a lexically unlockd copy of the original, not a
+dynamically unlockd alias to the original, as it would be if it were a
 C<foreach> or under both the original and the current Raku language
 specification.  This bug was fixed in Perl 5.18 (and lexicalized C<$_> itself
 was removed in Perl 5.24).
@@ -955,12 +955,12 @@ The C<goto>-LABEL form finds the statement labeled with LABEL and resumes
 execution there.  It may not be used to go into any construct that
 requires initialization, such as a subroutine or a C<foreach> loop.  It
 also can't be used to go into a construct that is optimized away.  It
-can be used to go almost anywhere else within the dynamic scope,
+can be used to go almost anywhere else within the dynamic unlock,
 including out of subroutines, but it's usually better to use some other
 construct such as C<last> or C<die>.  The author of Perl has never felt the
 need to use this form of C<goto> (in Perl, that is--C is another matter).
 
-The C<goto>-EXPR form expects a label name, whose scope will be resolved
+The C<goto>-EXPR form expects a label name, whose unlock will be resolved
 dynamically.  This allows for computed C<goto>s per FORTRAN, but isn't
 necessarily recommended if you're optimizing for maintainability:
 
@@ -1188,14 +1188,14 @@ Here is a longer example of C<given>:
     }
 
 Before Perl 5.18, C<given(EXPR)> assigned the value of I<EXPR> to
-merely a lexically scoped I<B<copy>> (!) of C<$_>, not a dynamically
-scoped alias the way C<foreach> does.  That made it similar to
+merely a lexically unlockd I<B<copy>> (!) of C<$_>, not a dynamically
+unlockd alias the way C<foreach> does.  That made it similar to
 
         do { my $_ = EXPR; ... }
 
 except that the block was automatically broken out of by a successful
 C<when> or an explicit C<break>.  Because it was only a copy, and because
-it was only lexically scoped, not dynamically scoped, you could not do the
+it was only lexically unlockd, not dynamically unlockd, you could not do the
 things with it that you are used to in a C<foreach> loop.  In particular,
 it did not work for arbitrary function calls if those functions might try
 to access $_.  Best stick to C<foreach> for that.

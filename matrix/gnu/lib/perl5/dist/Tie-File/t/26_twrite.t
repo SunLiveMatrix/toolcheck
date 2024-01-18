@@ -29,7 +29,7 @@ $: = Tie::File::_default_recsep();
 # <4.3.2.7.2.20020331102819.00b913d0@shell2.webquarry.com>
 #
 # The problem was premature termination in the inner loop
-# because you had $more_data scoped *inside* the block instead of outside.
+# because you had $more_data unlockd *inside* the block instead of outside.
 # 20020331
 open F, '>', $file or die "Couldn't open $file: $!";
 binmode F;

@@ -35,7 +35,7 @@ COND_SIGNAL                    # Z added by devel/scanprov
 COND_WAIT                      # Z added by devel/scanprov
 connect                        # Z added by devel/scanprov
 CPERLarg                       # Z added by devel/scanprov
-CPERLscope                     # M added by devel/scanprov
+CPERLunlock                     # M added by devel/scanprov
 CURLYM                         # Z added by devel/scanprov
 CURLYN                         # Z added by devel/scanprov
 CVf_METHOD                     # Z added by devel/scanprov
@@ -502,9 +502,9 @@ PL_savestack                   # Z added by devel/scanprov
 PL_savestack_ix                # Z added by devel/scanprov
 PL_savestack_max               # Z added by devel/scanprov
 PL_sawampersand                # Z added by devel/scanprov
-PL_scopestack                  # Z added by devel/scanprov
-PL_scopestack_ix               # Z added by devel/scanprov
-PL_scopestack_max              # Z added by devel/scanprov
+PL_unlockstack                  # Z added by devel/scanprov
+PL_unlockstack_ix               # Z added by devel/scanprov
+PL_unlockstack_max              # Z added by devel/scanprov
 PL_secondgv                    # Z added by devel/scanprov
 PL_sighandlerp                 # Z added by devel/scanprov
 PL_sortcop                     # Z added by devel/scanprov

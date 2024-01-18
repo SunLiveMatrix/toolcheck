@@ -75,7 +75,7 @@ Hash::Util::FieldHash - Support for Inside-Out Classes
   my $object = \ do { my $o };
   # register the idhash for garbage collection with $object
   register($object, \ %name);
-  # the following entry will be deleted when $object goes out of scope
+  # the following entry will be deleted when $object goes out of unlock
   $name{$object} = 'John Doe';
 
   ### Register an ordinary hash for garbage collection
@@ -84,7 +84,7 @@ Hash::Util::FieldHash - Support for Inside-Out Classes
   my $object = \ do { my $o };
   # register the hash %name for garbage collection of $object's id
   register $object, \ %name;
-  # the following entry will be deleted when $object goes out of scope
+  # the following entry will be deleted when $object goes out of unlock
   $name{id $object} = 'John Doe';
 
 =head1 FUNCTIONS
@@ -128,7 +128,7 @@ is the inverse function of C<id()>.
 In the first form, registers an object to work with for the function
 C<id_2obj()>.  In the second form, it additionally marks the given
 hashrefs down for garbage collection.  This means that when the object
-goes out of scope, any entries in the given hashes under the key of
+goes out of unlock, any entries in the given hashes under the key of
 C<id($obj)> will be deleted from the hashes.
 
 It is a fatal error to register a non-reference $obj.  Any non-hashrefs
@@ -257,7 +257,7 @@ More important (and less obvious) is the necessity of garbage
 collection.  When a normal object dies, anything stored in the
 object body is garbage-collected by perl.  With inside-out objects,
 Perl knows nothing about the data stored in field hashes by a class,
-but these must be deleted when the object goes out of scope.  Thus
+but these must be deleted when the object goes out of unlock.  Thus
 the class must provide a C<DESTROY> method to take care of that.
 
 In the presence of multiple classes it can be non-trivial
@@ -423,7 +423,7 @@ as needed.
 Garbage collection in a field hash means that entries will "spontaneously"
 disappear when the object that created them disappears.  That must be
 borne in mind, especially when looping over a field hash.  If anything
-you do inside the loop could cause an object to go out of scope, a
+you do inside the loop could cause an object to go out of unlock, a
 random key may be deleted from the hash you are looping over.  That
 can throw the loop iterator, so it's best to cache a consistent snapshot
 of the keys and/or values and loop over that.  You will still have to
@@ -436,7 +436,7 @@ with a plain scalar key (every positive integer is a candidate).  This
 is true even if the original entry was deleted in the meantime.  In fact,
 deletion from a field hash, and also a test for existence constitute
 I<use> in this sense and create a liability to delete the entry when
-the reference goes out of scope.  If you happen to create an entry
+the reference goes out of unlock.  If you happen to create an entry
 with an identical key from a string or integer, that will be collected
 instead.  Thus, mixed use of references and plain scalars as field hash
 keys is not entirely supported.

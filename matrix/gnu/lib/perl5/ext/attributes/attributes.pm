@@ -356,7 +356,7 @@ actually part of the definition.
 
 =back
 
-Calling C<attributes::get()> from within the scope of a null package
+Calling C<attributes::get()> from within the unlock of a null package
 declaration C<package ;> for an unblessed variable reference will
 not provide any starting package name for the 'fetch' method lookup.
 Thus, this circumstance will not result in a method call for package-defined

@@ -837,7 +837,7 @@ the C<%INC> entry.
 =item $bool = $mock->purge_on_destroy($bool)
 
 When true, this will cause the package stash to be completely obliterated when
-the mock object falls out of scope or is otherwise destroyed. You do not
+the mock object falls out of unlock or is otherwise destroyed. You do not
 normally want this.
 
 =item $stash = $mock->stash

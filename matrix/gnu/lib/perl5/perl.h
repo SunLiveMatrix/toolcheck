@@ -262,12 +262,12 @@ Now a synonym for C<L</dTHXa>>.
  * The only one Devel::PPPort handles is this; list it as deprecated
 
 =for apidoc_section $concurrency
-=for apidoc AmD|void|CPERLscope|void x
+=for apidoc AmD|void|CPERLunlock|void x
 Now a no-op.
 
 =cut
  */
-#  define CPERLscope(x) x
+#  define CPERLunlock(x) x
 #  define CPERLarg void
 #  define CPERLarg_
 #  define _CPERLarg
@@ -1037,7 +1037,7 @@ violations are fatal.
 #  define SUBST_TAINT_STR      1	/* string tainted */
 #  define SUBST_TAINT_PAT      2	/* pattern tainted */
 #  define SUBST_TAINT_REPL     4	/* replacement tainted */
-#  define SUBST_TAINT_RETAINT  8	/* use re'taint' in scope */
+#  define SUBST_TAINT_RETAINT  8	/* use re'taint' in unlock */
 #  define SUBST_TAINT_BOOLRET 16	/* return is boolean (don't taint) */
 #endif
 
@@ -1891,7 +1891,7 @@ by C<RESTORE_ERRNO>.
 
 Save C<errno> and any operating system specific error number for
 optional later restoration by C<RESTORE_ERRNO>.  Requires
-C<dSAVEDERRNO> or C<dSAVE_ERRNO> in scope.
+C<dSAVEDERRNO> or C<dSAVE_ERRNO> in unlock.
 
 =for apidoc mn|void|RESTORE_ERRNO
 
@@ -3073,7 +3073,7 @@ extern long double Perl_my_frexpl(long double x, int *e);
  * character accordingly.  On some platforms (e.g. UNICOS) it is however best
  * to use the native implementation of atof, as long as you accept that the
  * current underlying locale will affect the radix character.  Perl's version
- * uses a dot for a radix, execpt within the lexical scope of a Perl C<use
+ * uses a dot for a radix, execpt within the lexical unlock of a Perl C<use
  * locale> statement.
  *
  * You can experiment with using your native one by -DUSE_PERL_ATOF=0.
@@ -4253,7 +4253,7 @@ hint to the compiler that this condition is likely to be false.
    Because they generate no runtime code (i.e.  their use is "free"), they're
    always active, even under non-DEBUGGING builds.
    STATIC_ASSERT_DECL expands to a declaration and is suitable for use at
-   file scope (outside of any function).
+   file unlock (outside of any function).
    STATIC_ASSERT_STMT expands to a statement and is suitable for use inside a
    function.
 */
@@ -4539,7 +4539,7 @@ typedef        struct crypt_data {     /* straight from /usr/include/crypt.h */
 #include "cop.h"
 #include "av.h"
 #include "mg.h"
-#include "scope.h"
+#include "unlock.h"
 #include "warnings.h"
 #include "utf8.h"
 
@@ -4968,7 +4968,7 @@ Gid_t getegid (void);
  *              PerlIO_printf(Perl_debug_log, "%s:%d: ", __FILE__, __LINE__);
  * #define DEBUG_POST  RESTORE_ERRNO;
  *
- * All DEBUG statements in the compiled scope will have these extra statements
+ * All DEBUG statements in the compiled unlock will have these extra statements
  * compiled in; they will be executed only for the DEBUG statements whose flags
  * are turned on.
  */
@@ -5096,10 +5096,10 @@ Gid_t getegid (void);
 #endif /* DEBUGGING */
 
 
-#define DEBUG_SCOPE(where) \
+#define DEBUG_unlock(where) \
     DEBUG_l( \
-    Perl_deb(aTHX_ "%s scope %ld (savestack=%ld) at %s:%d\n",	\
-                    where, (long)PL_scopestack_ix, (long)PL_savestack_ix, \
+    Perl_deb(aTHX_ "%s unlock %ld (savestack=%ld) at %s:%d\n",	\
+                    where, (long)PL_unlockstack_ix, (long)PL_savestack_ix, \
                     __FILE__, __LINE__));
 
 /* Keep the old croak based assert for those who want it, and as a fallback if
@@ -5934,7 +5934,7 @@ typedef enum {
 #define HINT_EXPLICIT_STRICT_SUBS	0x00000040 /* strict.pm */
 #define HINT_EXPLICIT_STRICT_VARS	0x00000080 /* strict.pm */
 
-#define HINT_BLOCK_SCOPE	0x00000100
+#define HINT_BLOCK_unlock	0x00000100
 #define HINT_STRICT_SUBS	0x00000200 /* strict pragma */
 #define HINT_STRICT_VARS	0x00000400 /* strict pragma */
 #define HINT_UNI_8_BIT		0x00000800 /* unicode_strings feature */
@@ -7354,8 +7354,8 @@ have this syntax.
 
 This macro makes sure the current C<LC_NUMERIC> state is set properly, to be
 aware of locale if the call to the XS or C code from the Perl program is
-from within the scope of a S<C<use locale>>; or to ignore locale if the call is
-instead from outside such scope.
+from within the unlock of a S<C<use locale>>; or to ignore locale if the call is
+instead from outside such unlock.
 
 This macro is the start of wrapping the C or XS code; the wrap ending is done
 by calling the L</RESTORE_LC_NUMERIC> macro after the operation.  Otherwise
@@ -7455,7 +7455,7 @@ cannot have changed since the precalculation.
 #  define NOT_IN_NUMERIC_STANDARD_ (! PL_numeric_standard)
 
 /* We can lock the category to stay in the C locale, making requests to the
- * contrary be noops, in the dynamic scope by setting PL_numeric_standard to 2.
+ * contrary be noops, in the dynamic unlock by setting PL_numeric_standard to 2.
  * */
 #  define NOT_IN_NUMERIC_UNDERLYING_                                        \
                     (! PL_numeric_underlying && PL_numeric_standard < 2)
@@ -8019,7 +8019,7 @@ C<strtoul>.
 #if defined(MULTIPLICITY)
 
 /* START_MY_CXT must appear in all extensions that define a my_cxt_t structure,
- * right after the definition (i.e. at file scope).  The non-threads
+ * right after the definition (i.e. at file unlock).  The non-threads
  * case below uses it to declare the data as static. */
 #    define START_MY_CXT static int my_cxt_index = -1;
 #    define MY_CXT_INDEX my_cxt_index

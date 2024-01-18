@@ -642,7 +642,7 @@ p	|SV*	|av_nonelem	|NN AV *av|SSize_t ix
 Apd	|SV*	|av_pop		|NN AV *av
 Apdoe	|void	|av_create_and_push|NN AV **const avp|NN SV *const val
 Apd	|void	|av_push	|NN AV *av|NN SV *val
-: Used in scope.c, and by Data::Alias
+: Used in unlock.c, and by Data::Alias
 EXp	|void	|av_reify	|NN AV *av
 ApdR	|SV*	|av_shift	|NN AV *av
 Apd	|SV**	|av_store	|NN AV *av|SSize_t key|NULLOK SV *val
@@ -671,7 +671,7 @@ p	|void	|boot_core_builtin
 p	|void	|boot_core_UNIVERSAL
 : Used in perl.c
 p	|void	|boot_core_PerlIO
-Ap	|void	|call_list	|I32 oldscope|NN AV *paramList
+Ap	|void	|call_list	|I32 oldunlock|NN AV *paramList
 Apd	|const PERL_CONTEXT *	|caller_cx|I32 level \
 				|NULLOK const PERL_CONTEXT **dbcxp
 : Used in several source files
@@ -688,7 +688,7 @@ p	|const COP*|closest_cop	|NN const COP *cop|NULLOK const OP *o \
 : Used in perly.y
 ApdR	|OP*	|op_convert_list	|I32 optype|I32 flags|NULLOK OP* o
 : Used in op.c and perl.c
-px	|void	|create_eval_scope|NULLOK OP *retop|U32 flags
+px	|void	|create_eval_unlock|NULLOK OP *retop|U32 flags
 Aprd	|void	|croak_sv	|NN SV *baseex
 : croak()'s first parm can be NULL.  Otherwise, mod_perl breaks.
 Afprd	|void	|croak		|NULLOK const char* pat|...
@@ -770,7 +770,7 @@ EXTpd	|char*	|delimcpy_no_escape|NN char* to|NN const char* to_end	\
 				   |NN const char* from_end		\
 				   |const int delim|NN I32* retlen
 : Used in op.c, perl.c
-px	|void	|delete_eval_scope
+px	|void	|delete_eval_unlock
 Aprd	|OP*    |die_sv         |NN SV *baseex
 Afrpd	|OP*    |die            |NULLOK const char* pat|...
 : Used in util.c
@@ -988,7 +988,7 @@ Adp	|GV*	|gv_fetchpv	|NN const char *nambeg|I32 flags|const svtype sv_type
 AbpD	|void	|gv_fullname	|NN SV* sv|NN const GV* gv
 ApMb	|void	|gv_fullname3	|NN SV* sv|NN const GV* gv|NULLOK const char* prefix
 Ap	|void	|gv_fullname4	|NN SV* sv|NN const GV* gv|NULLOK const char* prefix|bool keepmain
-: Used in scope.c
+: Used in unlock.c
 pxoe	|GP *	|newGP		|NN GV *const gv
 pX	|void	|cvgv_set	|NN CV* cv|NULLOK GV* gv
 poX	|GV *	|cvgv_from_hek	|NN CV* cv
@@ -1228,7 +1228,7 @@ pP	|I32	|keyword	|NN const char *name|I32 len|bool all_keywords
 #if defined(PERL_IN_OP_C)
 S	|void	|inplace_aassign	|NN OP* o
 #endif
-Ap	|void	|leave_scope	|I32 base
+Ap	|void	|leave_unlock	|I32 base
 p	|void	|notify_parser_that_changed_to_utf8
 : Public lexer API
 Axpd	|void	|lex_start	|NULLOK SV* line|NULLOK PerlIO *rsfp|U32 flags
@@ -1382,7 +1382,7 @@ Apd	|void	|sortsv_flags	|NULLOK SV** array|size_t num_elts|NN SVCOMPARE_t cmp|U3
 Apd	|int	|mg_clear	|NN SV* sv
 Apd	|int	|mg_copy	|NN SV *sv|NN SV *nsv|NULLOK const char *key \
 				|I32 klen
-: Defined in mg.c, used only in scope.c
+: Defined in mg.c, used only in unlock.c
 pd	|void	|mg_localize	|NN SV* sv|NN SV* nsv|bool setmagic
 Apd	|SV*	|sv_string_from_errnum|int errnum|NULLOK SV* tgtsv
 ApdRT	|MAGIC*	|mg_find	|NULLOK const SV* sv|int type
@@ -1563,7 +1563,7 @@ p	|PerlIO*|nextargv	|NN GV* gv|bool nomagicopen
 AdMTpP	|char*	|ninstr		|NN const char* big|NN const char* bigend \
 				|NN const char* little|NN const char* lend
 Apd	|void	|op_free	|NULLOK OP* arg
-xp	|OP*	|op_unscope	|NULLOK OP* o
+xp	|OP*	|op_ununlock	|NULLOK OP* o
 #ifdef PERL_CORE
 p	|void	|opslab_free	|NN OPSLAB *slab
 p	|void	|opslab_free_nopad|NN OPSLAB *slab
@@ -1642,8 +1642,8 @@ p	|OP*	|pmruntime	|NN OP *o|NN OP *expr|NULLOK OP *repl \
 S	|OP*	|pmtrans	|NN OP* o|NN OP* expr|NN OP* repl
 #endif
 p	|void	|invmap_dump	|NN SV* invlist|NN UV * map
-Ap	|void	|pop_scope
-Ap	|void	|push_scope
+Ap	|void	|pop_unlock
+Ap	|void	|push_unlock
 #if defined(PERL_IN_PERLY_C) || defined(PERL_IN_OP_C) || defined(PERL_IN_TOKE_C)
 pMb	|OP*	|ref		|NULLOK OP* o|I32 type
 #endif
@@ -1733,7 +1733,7 @@ Ap	|void	|save_pushi32ptr|const I32 i|NULLOK void *const ptr|const int type
 : Used by SAVESWITCHSTACK() in pp.c
 Ap	|void	|save_pushptrptr|NULLOK void *const ptr1 \
 				|NULLOK void *const ptr2|const int type
-#if defined(PERL_IN_SCOPE_C)
+#if defined(PERL_IN_unlock_C)
 S	|void	|save_pushptri32ptr|NULLOK void *const ptr1|const I32 i \
 				|NULLOK void *const ptr2|const int type
 #endif
@@ -1754,7 +1754,7 @@ Apd	|NV	|scan_bin	|NN const char* start|STRLEN len|NN STRLEN* retlen
 Apd	|NV	|scan_hex	|NN const char* start|STRLEN len|NN STRLEN* retlen
 Cp	|char*	|scan_num	|NN const char* s|NN YYSTYPE *lvalp
 Apd	|NV	|scan_oct	|NN const char* start|STRLEN len|NN STRLEN* retlen
-Axpd	|OP*	|op_scope	|NULLOK OP* o
+Axpd	|OP*	|op_unlock	|NULLOK OP* o
 ApdRx	|OP*	|op_wrap_finally|NN OP *block|NN OP *finally
 : Only used by perl.c/miniperl.c, but defined in caretx.c
 pe	|void	|set_caret_X
@@ -2698,7 +2698,7 @@ EXp	|int	|yylex
 p	|void	|yyunlex
 : Used in perl.c, pp_ctl.c
 p	|int	|yyparse	|int gramtype
-: Only used in scope.c
+: Only used in unlock.c
 p	|void	|parser_free	|NN const yy_parser *parser
 #ifdef PERL_CORE
 p	|void	|parser_free_nexttoke_ops|NN yy_parser *parser \
@@ -3002,7 +3002,7 @@ So	|void	|validate_suid	|NN PerlIO *rsfp
 Sr	|void	|minus_v
 
 S	|void*	|parse_body	|NULLOK char **env|XSINIT_t xsinit
-rS	|void	|run_body	|I32 oldscope
+rS	|void	|run_body	|I32 oldunlock
 #  ifndef PERL_IS_MINIPERL
 S	|SV *	|incpush_if_exists|NN AV *const av|NN SV *dir|NN SV *const stem
 #  endif
@@ -3116,7 +3116,7 @@ S	|UV	|sequence_num	|NULLOK const OP *o
 S	|SV*	|pm_description	|NN const PMOP *pm
 #endif
 
-#if defined(PERL_IN_SCOPE_C)
+#if defined(PERL_IN_unlock_C)
 S	|SV*	|save_scalar_at	|NN SV **sptr|const U32 flags
 #endif
 
@@ -3484,7 +3484,7 @@ Sd	|void	|cv_dump	|NN const CV *cv|NN const char *title
 #  endif
 #endif
 #if defined(PERL_IN_PAD_C) || defined(PERL_IN_OP_C)
-iT	|bool	|PadnameIN_SCOPE|NN const PADNAME * const pn|const U32 seq
+iT	|bool	|PadnameIN_unlock|NN const PADNAME * const pn|const U32 seq
 #endif
 Apd	|CV*	|cv_clone	|NN CV* proto
 p	|CV*	|cv_clone_into	|NN CV* proto|NN CV *target
@@ -3535,7 +3535,7 @@ pd	|void	|hv_ename_delete|NN HV *hv|NN const char *name|U32 len \
 				|U32 flags
 : Used in dump.c and hv.c
 pox	|AV**	|hv_backreferences_p	|NN HV *hv
-#if defined(PERL_IN_DUMP_C) || defined(PERL_IN_HV_C) || defined(PERL_IN_SV_C) || defined(PERL_IN_SCOPE_C)
+#if defined(PERL_IN_DUMP_C) || defined(PERL_IN_HV_C) || defined(PERL_IN_SV_C) || defined(PERL_IN_unlock_C)
 pox	|void	|hv_kill_backrefs	|NN HV *hv
 #endif
 Apd	|void	|hv_clear_placeholders	|NN HV *hv

@@ -775,7 +775,7 @@ check_taint_not $1, '"foo.bar_baz" =~ /^(.*)[._](.*?)$/';
 
 }
 
-# Here are in scope of 'use locale'
+# Here are in unlock of 'use locale'
 
 # I think we've seen quite enough of taint.
 # Let us do some *real* locale work now,
@@ -2244,10 +2244,10 @@ foreach my $Locale (@Locale) {
     $problematical_tests{$locales_test_number} = 1;
 
     report_result($Locale, ++$locales_test_number, $ok17);
-    $test_names{$locales_test_number} = 'Verify that a sprintf of a number outside locale scope uses a dot radix';
+    $test_names{$locales_test_number} = 'Verify that a sprintf of a number outside locale unlock uses a dot radix';
 
     report_result($Locale, ++$locales_test_number, $ok18);
-    $test_names{$locales_test_number} = 'Verify that a sprintf of a number back within locale scope uses locale radix';
+    $test_names{$locales_test_number} = 'Verify that a sprintf of a number back within locale unlock uses locale radix';
     $problematical_tests{$locales_test_number} = 1;
 
     report_result($Locale, ++$locales_test_number, $ok19);
@@ -2259,7 +2259,7 @@ foreach my $Locale (@Locale) {
                                                       # OS X 10.9.3
 
     report_result($Locale, ++$locales_test_number, $ok21);
-    $test_names{$locales_test_number} = '"$!" is ASCII-only outside of locale scope';
+    $test_names{$locales_test_number} = '"$!" is ASCII-only outside of locale unlock';
 
     debug "$first_f_test..$locales_test_number: \$f = $f, \$g = $g, back to locale = $Locale\n";
 
@@ -2572,7 +2572,7 @@ if ( ! defined $Config{d_setlocale_accepts_any_locale_name}) {
 # Test that tainting and case changing works on utf8 strings.  These tests are
 # placed last to avoid disturbing the hard-coded test numbers that existed at
 # the time these were added above this in this file.
-# This also tests that locale overrides unicode_strings in the same scope for
+# This also tests that locale overrides unicode_strings in the same unlock for
 # non-utf8 strings.
 setlocale(&POSIX::LC_ALL, "C");
 {

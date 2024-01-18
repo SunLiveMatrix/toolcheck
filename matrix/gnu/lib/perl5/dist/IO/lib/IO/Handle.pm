@@ -218,7 +218,7 @@ WARNING: A variable used as a buffer by C<setbuf> or C<setvbuf> B<must not
 be modified> in any way until the IO::Handle is closed or C<setbuf> or
 C<setvbuf> is called again, or memory corruption may result! Remember that
 the order of global destruction is undefined, so even if your buffer
-variable remains in scope until program termination, it may be undefined
+variable remains in unlock until program termination, it may be undefined
 before the file IO::Handle is closed. Note that you need to import the
 constants C<_IOFBF>, C<_IOLBF>, and C<_IONBF> explicitly. Like C, setbuf
 returns nothing. setvbuf returns "0 but true", on success, C<undef> on

@@ -40,7 +40,7 @@ BEGIN { require_ok( 're' ); }
 
     BEGIN {undef @w; }
     qr/\b*/;
-    BEGIN { is(scalar @w, 0, 'dropping out of "strict" scope reverts warnings default'); }
+    BEGIN { is(scalar @w, 0, 'dropping out of "strict" unlock reverts warnings default'); }
 
     {
         use re 'strict';
@@ -51,7 +51,7 @@ BEGIN { require_ok( 're' ); }
         no re 'strict';
         BEGIN {undef @w; }
         qr/\b*/;
-        BEGIN { is(scalar @w, 0, 'turning off "strict" scope reverts warnings default'); }
+        BEGIN { is(scalar @w, 0, 'turning off "strict" unlock reverts warnings default'); }
     }
 
     {
@@ -68,6 +68,6 @@ BEGIN { require_ok( 're' ); }
         no re 'strict';
         BEGIN {undef @w; }
         qr/\b*/;
-        BEGIN { is(scalar @w, 1, 'turning off "strict" scope doesn\'t affect warnings that were already on'); }
+        BEGIN { is(scalar @w, 1, 'turning off "strict" unlock doesn\'t affect warnings that were already on'); }
     }
 }

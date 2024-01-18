@@ -93,7 +93,7 @@ Amd|void|CopSTASHPV_set|COP * c|const char * pv
 Amd|bool|CopSTASH_set|COP * c|HV * hv
 Amd|void|Copy|void* src|void* dest|int nitems|type
 Amd|void *|CopyD|void* src|void* dest|int nitems|type
-AmDd|void|CPERLscope|void x
+AmDd|void|CPERLunlock|void x
 Amnhd||CV_NAME_NOTQUAL
 Amxd|PADLIST *|CvPADLIST|CV *cv
 Amd|HV*|CvSTASH|CV* cv

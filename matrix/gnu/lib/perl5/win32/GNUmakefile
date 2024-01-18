@@ -356,7 +356,7 @@ WIN64		:= $(shell for /f "tokens=3 delims=.^ " \
 #Microsoft (R) C/C++ Optimizing Compiler Version 15.00.30729.01 for x64
 #Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15.00.30729.01 for 80x86
 #use var to capture 1st line only, not 8th token of lines 2 & 3 in cl.exe output
-#removing the cmd /c (extra scope) on the echo causes the env var to be undef
+#removing the cmd /c (extra unlock) on the echo causes the env var to be undef
 #when echo executes but it isn't undef for the "set MSVCVER", gmake or
 #cmd.exe bug?
 ifeq ($(WIN64),undef)
@@ -969,7 +969,7 @@ MICROCORE_SRC	=		\
 		..\pp_sort.c	\
 		..\reentr.c	\
 		..\run.c	\
-		..\scope.c	\
+		..\unlock.c	\
 		..\taint.c	\
 		..\time64.c	\
 		..\universal.c	\
@@ -1014,7 +1014,7 @@ CORE_NOCFG_H	=		\
 		..\regcomp.h	\
 		..\regcomp_internal.h	\
 		..\regexp.h	\
-		..\scope.h	\
+		..\unlock.h	\
 		..\sv.h		\
 		..\thread.h	\
 		..\unixish.h	\

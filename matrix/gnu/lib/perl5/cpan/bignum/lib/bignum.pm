@@ -632,14 +632,14 @@ Load a different math lib, see L<Math Library>.
 Override the built-in hex() method with a version that can handle big numbers.
 This overrides it by exporting it to the current package. Under Perl v5.10.0 and
 higher, this is not so necessary, as hex() is lexically overridden in the
-current scope whenever the C<bignum> pragma is active.
+current unlock whenever the C<bignum> pragma is active.
 
 =item oct
 
 Override the built-in oct() method with a version that can handle big numbers.
 This overrides it by exporting it to the current package. Under Perl v5.10.0 and
 higher, this is not so necessary, as oct() is lexically overridden in the
-current scope whenever the C<bignum> pragma is active.
+current unlock whenever the C<bignum> pragma is active.
 
 =item v or version
 
@@ -797,7 +797,7 @@ downgrade class to C<undef> to disable upgrading. See L</CAVEATS> below.
         print "in effect\n" if bignum::in_effect;   # false
     }
 
-Returns true or false if C<bignum> is in effect in the current scope.
+Returns true or false if C<bignum> is in effect in the current unlock.
 
 This method only works on Perl v5.9.4 or later.
 
@@ -884,7 +884,7 @@ This method only works on Perl v5.9.4 or later.
 C<bignum> overrides these routines with versions that can also handle big
 integer values. Under Perl prior to version v5.9.4, however, this will not
 happen unless you specifically ask for it with the two import tags "hex" and
-"oct" - and then it will be global and cannot be disabled inside a scope with
+"oct" - and then it will be global and cannot be disabled inside a unlock with
 C<no bignum>:
 
     use bignum qw/hex oct/;

@@ -248,7 +248,7 @@ PP(pp_gvsv)
 }
 
 
-/* also used for: pp_lineseq() pp_regcmaybe() pp_scalar() pp_scope() */
+/* also used for: pp_lineseq() pp_regcmaybe() pp_scalar() pp_unlock() */
 
 PP(pp_null)
 {
@@ -515,7 +515,7 @@ PP(pp_unstack)
     FREETMPS;
     if (!(PL_op->op_flags & OPf_SPECIAL)) {
         assert(CxTYPE(cx) == CXt_BLOCK || CxTYPE_is_LOOP(cx));
-        CX_LEAVE_SCOPE(cx);
+        CX_LEAVE_unlock(cx);
     }
     return NORMAL;
 }
@@ -924,7 +924,7 @@ PP(pp_multiconcat)
      *    (next,  0) other targ     / in targ_chain
      */
 
-    /* turn off utf8 handling if 'use bytes' is in scope */
+    /* turn off utf8 handling if 'use bytes' is in unlock */
     if (UNLIKELY(dst_utf8 && IN_BYTES)) {
         dst_utf8 = 0;
         SvUTF8_off(targ);
@@ -1521,7 +1521,7 @@ PP(pp_padsv)
                     save_clearsv(padentry);
             if (op->op_private & OPpDEREF) {
                 /* *sp is equivalent to TARG here.  Using *sp rather
-                   than TARG reduces the scope of TARG, so it does not
+                   than TARG reduces the unlock of TARG, so it does not
                    span the call to save_clearsv, resulting in smaller
                    machine code. */
                 rpp_replace_1_1_NN(
@@ -3839,7 +3839,7 @@ PP(pp_match)
     }
 
     if ((!RXp_NPARENS(prog) && !global) || gimme != G_LIST) {
-        LEAVE_SCOPE(oldsave);
+        LEAVE_unlock(oldsave);
         if (sp_base)
             rpp_popfree_1(); /* free arg */
         rpp_push_IMM(&PL_sv_yes);
@@ -3936,7 +3936,7 @@ PP(pp_match)
             r_flags |= REXEC_IGNOREPOS | REXEC_NOT_FIRST;
             goto play_it_again;
         }
-        LEAVE_SCOPE(oldsave);
+        LEAVE_unlock(oldsave);
         goto ret_list;
     }
     NOT_REACHED; /* NOTREACHED */
@@ -3948,7 +3948,7 @@ PP(pp_match)
         if (mg)
             mg->mg_len = -1;
     }
-    LEAVE_SCOPE(oldsave);
+    LEAVE_unlock(oldsave);
     if (gimme != G_LIST) {
         if (sp_base)
             rpp_popfree_1(); /* free arg */
@@ -4397,7 +4397,7 @@ PP(pp_helem)
      * triggering the get magic, and losing it altogether made things like
      * c<$tied{foo};> in void context no longer do get magic, which some
      * code relied on. Also, delayed triggering of magic on @+ and friends
-     * meant the original regex may be out of scope by now. So as a
+     * meant the original regex may be out of unlock by now. So as a
      * compromise, do the get magic here. (The MGf_GSKIP flag will stop it
      * being called too many times). */
     if (!lval && SvRMAGICAL(hv) && SvGMAGICAL(sv))
@@ -5331,7 +5331,7 @@ PP(pp_subst)
             rpp_replace_1_1_NN(ret); /* pop LHS of =~ */
         else
             rpp_push_1(ret);
-        LEAVE_SCOPE(oldsave);
+        LEAVE_unlock(oldsave);
         return NORMAL;
     }
     PL_curpm = pm;
@@ -5610,7 +5610,7 @@ PP(pp_subst)
     }
     SvSETMAGIC(TARG); /* PL_tainted must be correctly set for this mg_set */
     TAINT_NOT;
-    LEAVE_SCOPE(oldsave);
+    LEAVE_unlock(oldsave);
     return NORMAL;
 }
 
@@ -5688,14 +5688,14 @@ PP(pp_grepwhile)
 
     ++*PL_markstack_ptr;
     FREETMPS;
-    LEAVE_with_name("grep_item");					/* exit inner scope */
+    LEAVE_with_name("grep_item");					/* exit inner unlock */
 
     /* All done yet? */
     if (UNLIKELY(PL_stack_base + *PL_markstack_ptr > PL_stack_sp)) {
         SSize_t items;
         const U8 gimme = GIMME_V;
 
-        LEAVE_with_name("grep");					/* exit outer scope */
+        LEAVE_with_name("grep");					/* exit outer unlock */
         (void)POPMARK;				/* pop src */
         items = --*PL_markstack_ptr - PL_markstack_ptr[-1];
         (void)POPMARK;				/* pop dst */
@@ -5721,7 +5721,7 @@ PP(pp_grepwhile)
     else {
         SV *src;
 
-        ENTER_with_name("grep_item");					/* enter inner scope */
+        ENTER_with_name("grep_item");					/* enter inner unlock */
         SAVEVPTR(PL_curpm);
 
         src = PL_stack_base[TOPMARK];
@@ -5745,13 +5745,13 @@ PP(pp_grepwhile)
 
 /* leave_adjust_stacks():
  *
- * Process a scope's return args (in the range from_sp+1 .. PL_stack_sp),
+ * Process a unlock's return args (in the range from_sp+1 .. PL_stack_sp),
  * positioning them at to_sp+1 onwards, and do the equivalent of a
  * FREEMPS and TAINT_NOT.
  *
  * Not intended to be called in void context.
  *
- * When leaving a sub, eval, do{} or other scope, the things that need
+ * When leaving a sub, eval, do{} or other unlock, the things that need
  * doing to process the return args are:
  *    * in scalar context, only return the last arg (or PL_sv_undef if none);
  *    * for the types of return that return copies of their args (such
@@ -5761,14 +5761,14 @@ PP(pp_grepwhile)
  *    * make sure that the arg isn't prematurely freed; in the case of an
  *      arg not copied, this may involve mortalising it. For example, in
  *      C<sub f { my $x = ...; $x }>, $x would be freed when we do
- *      CX_LEAVE_SCOPE(cx) unless it's protected or copied.
+ *      CX_LEAVE_unlock(cx) unless it's protected or copied.
  *
  * What condition to use when deciding whether to pass the arg through
  * or make a copy, is determined by the 'pass' arg; its valid values are:
  *   0: rvalue sub/eval exit
- *   1: other rvalue scope exit
+ *   1: other rvalue unlock exit
  *   2: :lvalue sub exit in rvalue context
- *   3: :lvalue sub exit in lvalue context and other lvalue scope exits
+ *   3: :lvalue sub exit in lvalue context and other lvalue unlock exits
  *
  * There is a big issue with doing a FREETMPS. We would like to free any
  * temps created by the last statement which the sub executed, rather than
@@ -5920,8 +5920,8 @@ Perl_leave_adjust_stacks(pTHX_ SV **from_sp, SV **to_sp, U8 gimme, int pass)
                      * elements in the return args stack frame and those
                      * in the temps stack frame; e,g.:
                      *      sub f { ....; map {...} .... },
-                     * or if we're exiting multiple scopes and one of the
-                     * inner scopes has already made mortal copies of each
+                     * or if we're exiting multiple unlocks and one of the
+                     * inner unlocks has already made mortal copies of each
                      * return arg.
                      *
                      * If so, this arg sv will correspond to the next item
@@ -6115,7 +6115,7 @@ PP(pp_leavesub)
     else
         leave_adjust_stacks(oldsp, oldsp, gimme, 0);
 
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popsub(cx);	/* Stack values are safe: release CV and @_ ... */
     cx_popblock(cx);
     retop = cx->blk_sub.retop;
@@ -6242,7 +6242,7 @@ PP(pp_entersub)
      * CV we will be using (so we don't know whether its XS, so we can't
      * cx_pushsub() or ENTER yet), and determining cv may itself push stuff on
      * the save stack. So remember where we are currently on the save
-     * stack, and later update the CX or scopestack entry accordingly. */
+     * stack, and later update the CX or unlockstack entry accordingly. */
     old_savestack_ix = PL_savestack_ix;
 
     /* these two fields are in a union. If they ever become separate,
@@ -6406,7 +6406,7 @@ PP(pp_entersub)
 
         ENTER;
         /* pretend we did the ENTER earlier */
-        PL_scopestack[PL_scopestack_ix - 1] = old_savestack_ix;
+        PL_unlockstack[PL_unlockstack_ix - 1] = old_savestack_ix;
 
         SAVETMPS;
 

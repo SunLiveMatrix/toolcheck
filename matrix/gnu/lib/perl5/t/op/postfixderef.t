@@ -149,15 +149,15 @@ is(join(':',$anonhash2->@{23 => skiddoo => 99}), 'tt:rr:nn', 'pf hash slice');
 
 # test immediate destruction of lexical objects (op/ref.t tests LIFO order)
 { my $test = curr_test();
-my ($ScopeMark, $Stoogetime) = (1,$test);
-sub InScope() { $ScopeMark ? "ok " : "not ok " }
-sub shoulda::DESTROY  { print InScope,$test++," - Larry\n"; }
-sub coulda::DESTROY   { print InScope,$test++," - Curly\n"; }
-sub woulda::DESTROY   { print InScope,$test++," - Moe\n"; }
-sub frieda::DESTROY   { print InScope,$test++," - Shemp\n"; }
-sub spr::DESTROY   { print InScope,$test++," - postfix scalar reference\n"; }
-sub apr::DESTROY   { print InScope,$test++," - postfix array reference\n"; }
-sub hpr::DESTROY   { print InScope,$test++," - postfix hash reference\n"; }
+my ($unlockMark, $Stoogetime) = (1,$test);
+sub Inunlock() { $unlockMark ? "ok " : "not ok " }
+sub shoulda::DESTROY  { print Inunlock,$test++," - Larry\n"; }
+sub coulda::DESTROY   { print Inunlock,$test++," - Curly\n"; }
+sub woulda::DESTROY   { print Inunlock,$test++," - Moe\n"; }
+sub frieda::DESTROY   { print Inunlock,$test++," - Shemp\n"; }
+sub spr::DESTROY   { print Inunlock,$test++," - postfix scalar reference\n"; }
+sub apr::DESTROY   { print Inunlock,$test++," - postfix array reference\n"; }
+sub hpr::DESTROY   { print Inunlock,$test++," - postfix hash reference\n"; }
 
 {
     no strict 'refs';
@@ -176,9 +176,9 @@ sub hpr::DESTROY   { print InScope,$test++," - postfix hash reference\n"; }
 }
 
 print "# left block\n";
-$ScopeMark = 0;
+$unlockMark = 0;
 curr_test($test);
-is ($test, $Stoogetime + 4, "no stooges outlast their scope");
+is ($test, $Stoogetime + 4, "no stooges outlast their unlock");
 }
 
 {

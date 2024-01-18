@@ -232,13 +232,13 @@ any other lexical variable, with a simple
 
     my $_;
 
-The operations that default on C<$_> will use the lexically-scoped
+The operations that default on C<$_> will use the lexically-unlockd
 version of C<$_> when it exists, instead of the global C<$_>.
 
 In a C<map> or a C<grep> block, if C<$_> was previously my'ed, then the
-C<$_> inside the block is lexical as well (and scoped to the block).
+C<$_> inside the block is lexical as well (and unlockd to the block).
 
-In a scope where C<$_> has been lexicalized, you can still have access to
+In a unlock where C<$_> has been lexicalized, you can still have access to
 the global version of C<$_> by using C<$::_>, or, more simply, by
 overriding the lexical declaration with C<our $_>. (Rafael Garcia-Suarez)
 
@@ -321,8 +321,8 @@ Garcia-Suarez)
 
 A new class of variables has been introduced. State variables are similar
 to C<my> variables, but are declared with the C<state> keyword in place of
-C<my>. They're visible only in their lexical scope, but their value is
-persistent: unlike C<my> variables, they're not undefined at scope entry,
+C<my>. They're visible only in their lexical unlock, but their value is
+persistent: unlike C<my> variables, they're not undefined at unlock entry,
 but retain their previous value. (Rafael Garcia-Suarez, Nicholas Clark)
 
 To use state variables, one needs to enable them by using
@@ -696,12 +696,12 @@ methods. See L</"New Pragma, C<mro>"> above.
 
 =item Scoping of the C<sort> pragma
 
-The C<sort> pragma is now lexically scoped. Its effect used to be global.
+The C<sort> pragma is now lexically unlockd. Its effect used to be global.
 
 =item Scoping of C<bignum>, C<bigint>, C<bigrat>
 
 The three numeric pragmas C<bignum>, C<bigint> and C<bigrat> are now
-lexically scoped. (Tels)
+lexically unlockd. (Tels)
 
 =item C<base>
 

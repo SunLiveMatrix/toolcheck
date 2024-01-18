@@ -21,7 +21,7 @@ DBM_ckFilter                   # Z added by devel/scanprov
 DBM_setFilter                  # Z added by devel/scanprov
 deb_stack_all                  # F added by devel/scanprov
 deb_stack_n                    # F added by devel/scanprov
-DEBUG_SCOPE                    # Z added by devel/scanprov
+DEBUG_unlock                    # Z added by devel/scanprov
 DEBUG_v                        # Z added by devel/scanprov
 DEBUG_v_FLAG                   # Z added by devel/scanprov
 DEBUG_v_TEST                   # Z added by devel/scanprov
@@ -38,7 +38,7 @@ get_num                        # F added by devel/scanprov
 HAS_COPYSIGNL                  # K added by devel/scanprov
 HAS_FAST_STDIO                 # K added by devel/scanprov
 HAS_ILOGBL                     # K added by devel/scanprov
-HAS_PTHREAD_ATTR_SETSCOPE      # K added by devel/scanprov
+HAS_PTHREAD_ATTR_SETunlock      # K added by devel/scanprov
 HAS_SCALBNL                    # K added by devel/scanprov
 HAS_TM_TM_GMTOFF               # K added by devel/scanprov
 IN_PERL_COMPILETIME            # E

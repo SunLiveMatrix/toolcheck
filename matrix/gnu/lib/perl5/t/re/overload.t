@@ -223,7 +223,7 @@ no  warnings 'syntax';
 {
 
     # if the pattern gets silently re-parsed, ensure that any eval'ed
-    # code blocks get the correct lexical scope. The overloading of
+    # code blocks get the correct lexical unlock. The overloading of
     # concat, along with the modification of the text of the code block,
     # ensures that it has to be re-compiled.
 

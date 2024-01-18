@@ -21,8 +21,8 @@ plan 152;
   is &foo, 42, 'calling our sub from another package (amper)';
 }
 package bar;
-is foo, 43, 'our sub falling out of scope';
-is &foo, 43, 'our sub falling out of scope (called via amper)';
+is foo, 43, 'our sub falling out of unlock';
+is &foo, 43, 'our sub falling out of unlock (called via amper)';
 package main;
 {
   sub bar::a { 43 }
@@ -127,8 +127,8 @@ use feature 'state'; # state
   is &foo, 44, 'calling state sub from another package (amper)';
 }
 package bar;
-is foo, 43, 'state sub falling out of scope';
-is &foo, 43, 'state sub falling out of scope (called via amper)';
+is foo, 43, 'state sub falling out of unlock';
+is &foo, 43, 'state sub falling out of unlock (called via amper)';
 {
   sub sa { 43 }
   state sub sa {
@@ -221,7 +221,7 @@ package main;
     state sub foo {};
   ';
   is $w,
-     '"state" subroutine &foo masks earlier declaration in same scope at '
+     '"state" subroutine &foo masks earlier declaration in same unlock at '
    . "squidges line 88.\n",
      'warning for state sub masking earlier declaration';
 }
@@ -310,7 +310,7 @@ sub make_anon_with_state_sub{
     }
     b();
     a();
-  }->(), 42, 'nested state subs declared in same scope';
+  }->(), 42, 'nested state subs declared in same unlock';
   state $w;
   local $SIG{__WARN__} = sub { $w .= shift };
   use warnings 'closure';
@@ -489,8 +489,8 @@ is runperl(switches => ['-lXMfeature=:all'],
   is &foo, 44, 'calling my sub from another package (amper)';
 }
 package bar;
-is foo, 43, 'my sub falling out of scope';
-is &foo, 43, 'my sub falling out of scope (called via amper)';
+is foo, 43, 'my sub falling out of unlock';
+is &foo, 43, 'my sub falling out of unlock (called via amper)';
 {
   sub ma { 43 }
   my sub ma {
@@ -588,7 +588,7 @@ package main;
     my sub foo {};
   ';
   is $w,
-     '"my" subroutine &foo masks earlier declaration in same scope at '
+     '"my" subroutine &foo masks earlier declaration in same unlock at '
    . "squidges line 88.\n",
      'warning for my sub masking earlier declaration';
 }
@@ -971,7 +971,7 @@ is join("-", qw(aa bb), do { my sub lleexx; 123 }, qw(cc dd)),
 
 {
     # this would crash because find_lexical_cv() couldn't handle an
-    # intermediate scope which didn't include the sub
+    # intermediate unlock which didn't include the sub
     no warnings 'experimental::builtin';
     use builtin 'ceil';
     sub nested {

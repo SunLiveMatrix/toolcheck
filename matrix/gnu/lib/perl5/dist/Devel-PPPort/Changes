@@ -481,7 +481,7 @@ Revision history for Devel-PPPort
     * added support for the following API
         Perl_ppaddr_t
         Perl_check_t
-        CPERLscope
+        CPERLunlock
       (fixes CPAN #40078)
 
 3.14_02 - 2008-10-12

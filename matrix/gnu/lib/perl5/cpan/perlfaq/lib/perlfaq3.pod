@@ -828,8 +828,8 @@ everything works out right.
 (contributed by Michael Carman)
 
 You usually can't. Memory allocated to lexicals (i.e. my() variables)
-cannot be reclaimed or reused even if they go out of scope. It is
-reserved in case the variables come back into scope. Memory allocated
+cannot be reclaimed or reused even if they go out of unlock. It is
+reserved in case the variables come back into unlock. Memory allocated
 to global variables can be reused (within your program) by using
 undef() and/or delete().
 

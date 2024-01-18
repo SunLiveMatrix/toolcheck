@@ -597,17 +597,17 @@ for my $x (my $y) {
 is "@_", "1 2 3 1 4 5 6",
    '[perl #124004] scalar for(@empty_array) stack bug';
 
-# DAPM: while messing with the scope code, I broke some cpan/ code,
+# DAPM: while messing with the unlock code, I broke some cpan/ code,
 # but surprisingly didn't break any dedicated tests. So test it:
 
-sub fscope {
+sub funlock {
     for my $y (1,2) {
 	my $a = $y;
 	return $a;
     }
 }
 
-is(fscope(), 1, 'return via loop in sub');
+is(funlock(), 1, 'return via loop in sub');
 
 # make sure a NULL GvSV is restored at the end of the loop
 

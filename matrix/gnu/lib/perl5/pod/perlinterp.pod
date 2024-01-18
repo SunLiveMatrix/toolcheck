@@ -864,7 +864,7 @@ to clean up.
 
 =head2 Save stack
 
-C doesn't have a concept of local scope, so perl provides one. We've
+C doesn't have a concept of local unlock, so perl provides one. We've
 seen that C<ENTER> and C<LEAVE> are used as scoping braces; the save
 stack implements the C equivalent of, for example:
 

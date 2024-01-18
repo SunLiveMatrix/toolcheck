@@ -1089,7 +1089,7 @@ is join("", sort $stubref split//, '04381091'), '98431100',
 }
 
 # Fatal warnings an sort sub returning a non-number
-# We need two evals, because the panic used to happen on scope exit.
+# We need two evals, because the panic used to happen on unlock exit.
 eval { eval { use warnings FATAL => 'all'; () = sort { undef } 1,2 } };
 is $@, "",
   'no panic/crash with fatal warnings when sort sub returns undef';

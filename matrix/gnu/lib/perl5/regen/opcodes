@@ -311,7 +311,7 @@ dbstate		debug next statement	ck_null		s;
 unstack		iteration finalizer	ck_null		s0
 enter		block entry		ck_null		0	
 leave		block exit		ck_null		@	
-scope		block			ck_null		@	
+unlock		block			ck_null		@	
 enteriter	foreach loop entry	ck_null		d{	
 iter		foreach loop iterator	ck_null		0	
 enterloop	loop entry		ck_null		d{	

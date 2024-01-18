@@ -60,7 +60,7 @@ plan tests => scalar(@tests);
 
 my @local_tmaps;
 my @standard_typemap_locations;
-SCOPE: {
+unlock: {
   no warnings 'redefine';
   sub ExtUtils::ParseXS::Utilities::standard_typemap_locations {
     @standard_typemap_locations;

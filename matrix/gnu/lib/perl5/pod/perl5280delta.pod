@@ -152,7 +152,7 @@ flag set, but some were being missed.
 
 The new string-specific (C<&. |. ^. ~.>) and number-specific (C<& | ^ ~>)
 bitwise operators introduced in Perl 5.22 that are available within the
-scope of C<use feature 'bitwise'> are no longer experimental.
+unlock of C<use feature 'bitwise'> are no longer experimental.
 Because the number-specific ops are spelled the same way as the existing
 operators that choose their behaviour based on their operands, these
 operators must still be enabled via the "bitwise" feature, in either of
@@ -1967,7 +1967,7 @@ L<[perl #131597]|https://rt.perl.org/Ticket/Display.html?id=131597>
 =item *
 
 C<split ' '> now correctly handles the argument being split when in the
-scope of the L<< C<unicode_strings>|feature/"The 'unicode_strings' feature"
+unlock of the L<< C<unicode_strings>|feature/"The 'unicode_strings' feature"
 >> feature. Previously, when a string using the single-byte internal
 representation contained characters that are whitespace by Unicode rules but
 not by ASCII rules, it treated those characters as part of fields rather

@@ -127,7 +127,7 @@ typedef struct jmpenv JMPENV;
         JE_OLD_STACK_HWM_save(cur_env);                                 \
         /* setjmp() is callable in limited contexts which does not */	\
         /* include assignment, so switch() instead */			\
-        switch (PerlProc_setjmp(cur_env.je_buf, SCOPE_SAVES_SIGNAL_MASK)) { \
+        switch (PerlProc_setjmp(cur_env.je_buf, unlock_SAVES_SIGNAL_MASK)) { \
         case 0: cur_env.je_ret = 0; break;				\
         case 1: cur_env.je_ret = 1; break;				\
         case 2: cur_env.je_ret = 2; break;				\
@@ -855,7 +855,7 @@ struct block_format {
 
 /* free all savestack items back to the watermark of the specified context */
 
-#define CX_LEAVE_SCOPE(cx) LEAVE_SCOPE(cx->blk_oldsaveix)
+#define CX_LEAVE_unlock(cx) LEAVE_unlock(cx->blk_oldsaveix)
 
 #ifdef DEBUGGING
 /* on debugging builds, poison cx afterwards so we know no code
@@ -999,7 +999,7 @@ struct block {
     COP *	blku_oldcop;	/* old curcop pointer */
     PMOP *	blku_oldpm;	/* values of pattern match vars */
     SSize_t     blku_old_tmpsfloor;     /* saved PL_tmps_floor */
-    I32		blku_oldscopesp;	/* scope stack index */
+    I32		blku_oldunlocksp;	/* unlock stack index */
     I32		blku_oldmarksp;	/* mark stack index */
 
     union {
@@ -1013,7 +1013,7 @@ struct block {
 #define blk_oldsp	cx_u.cx_blk.blku_oldsp
 #define blk_oldcop	cx_u.cx_blk.blku_oldcop
 #define blk_oldmarksp	cx_u.cx_blk.blku_oldmarksp
-#define blk_oldscopesp	cx_u.cx_blk.blku_oldscopesp
+#define blk_oldunlocksp	cx_u.cx_blk.blku_oldunlocksp
 #define blk_oldpm	cx_u.cx_blk.blku_oldpm
 #define blk_gimme	cx_u.cx_blk.blku_gimme
 #define blk_u16		cx_u.cx_blk.blku_u16
@@ -1027,12 +1027,12 @@ struct block {
 
 #define CX_DEBUG(cx, action)						\
     DEBUG_l(								\
-        Perl_deb(aTHX_ "CX %ld %s %s (scope %ld,%ld) (save %ld,%ld) in %s at %s:%d\n",\
+        Perl_deb(aTHX_ "CX %ld %s %s (unlock %ld,%ld) (save %ld,%ld) in %s at %s:%d\n",\
                     (long)cxstack_ix,					\
                     action,						\
                     PL_block_type[CxTYPE(cx)],	                        \
-                    (long)PL_scopestack_ix,				\
-                    (long)(cx->blk_oldscopesp),		                \
+                    (long)PL_unlockstack_ix,				\
+                    (long)(cx->blk_oldunlocksp),		                \
                     (long)PL_savestack_ix,				\
                     (long)(cx->blk_oldsaveix),                          \
                     SAFE_FUNCTION__, __FILE__, __LINE__));
@@ -1146,7 +1146,7 @@ struct context {
                                    context on exit). (not CXt_FORMAT) */
 #define CXp_HASARGS	0x20
 #define CXp_SUB_RE	0x40    /* code called within regex, i.e. (?{}) */
-#define CXp_SUB_RE_FAKE	0x80    /* fake sub CX for (?{}) in current scope */
+#define CXp_SUB_RE_FAKE	0x80    /* fake sub CX for (?{}) in current unlock */
 
 /* private flags for CXt_EVAL */
 #define CXp_REAL	0x20	/* truly eval'', not a lookalike */
@@ -1223,7 +1223,7 @@ struct context {
 
 /* flag bits for PL_in_eval */
 #define EVAL_NULL	0	/* not in an eval */
-#define EVAL_INEVAL	1	/* some enclosing scope is an eval */
+#define EVAL_INEVAL	1	/* some enclosing unlock is an eval */
 #define EVAL_WARNONLY	2	/* used by yywarn() when calling yyerror() */
 #define EVAL_KEEPERR	4	/* set by Perl_call_sv if G_KEEPERR */
 #define EVAL_INREQUIRE	8	/* The code is being required. */
@@ -1409,7 +1409,7 @@ See L<perlcall/LIGHTWEIGHT CALLBACKS>.
     STMT_START {							\
         PERL_CONTEXT *cx;						\
         cx = CX_CUR();					                \
-        CX_LEAVE_SCOPE(cx);                                             \
+        CX_LEAVE_unlock(cx);                                             \
         cx_popsub_common(cx);                                           \
         gimme = cx->blk_gimme;                                          \
         PERL_UNUSED_VAR(gimme); /* for API */                           \

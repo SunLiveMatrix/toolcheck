@@ -59,7 +59,7 @@ break;
 EXPECT
 Can't "break" outside a given block at - line 3.
 ########
-# switch out of scope; given should be a bareword.
+# switch out of unlock; given should be a bareword.
 use warnings; no warnings 'deprecated';
 { use feature 'switch';
   given (1) {print "Okay here\n";}
@@ -70,7 +70,7 @@ Unquoted string "given" may clash with future reserved word at - line 6.
 Okay here
 given
 ########
-# switch out of scope; when should be a bareword.
+# switch out of unlock; when should be a bareword.
 use warnings; no warnings 'deprecated';
 { use feature 'switch';
   given (1) { when(1) {print "Okay here\n";} }
@@ -81,7 +81,7 @@ Unquoted string "when" may clash with future reserved word at - line 6.
 Okay here
 when
 ########
-# switch out of scope; default should be a bareword.
+# switch out of unlock; default should be a bareword.
 use warnings; no warnings 'deprecated';
 { use feature 'switch';
   given (1) { default {print "Okay here\n";} }
@@ -92,7 +92,7 @@ Unquoted string "default" may clash with future reserved word at - line 6.
 Okay here
 default
 ########
-# switch out of scope; break should be a bareword.
+# switch out of unlock; break should be a bareword.
 use warnings; no warnings 'deprecated';
 { use feature 'switch';
   given (1) { break }  

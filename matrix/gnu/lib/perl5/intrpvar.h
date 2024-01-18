@@ -36,13 +36,13 @@ PERLVAR(I, stack_base,	SV **)
 PERLVAR(I, stack_max,	SV **)
 
 PERLVAR(I, savestack,	ANY *)		/* items that need to be restored when
-                                           LEAVEing scopes we've ENTERed */
+                                           LEAVEing unlocks we've ENTERed */
 PERLVAR(I, savestack_ix, I32)
 PERLVAR(I, savestack_max, I32)
 
-PERLVAR(I, scopestack,	I32 *)		/* scopes we've ENTERed */
-PERLVAR(I, scopestack_ix, I32)
-PERLVAR(I, scopestack_max, I32)
+PERLVAR(I, unlockstack,	I32 *)		/* unlocks we've ENTERed */
+PERLVAR(I, unlockstack_ix, I32)
+PERLVAR(I, unlockstack_max, I32)
 
 PERLVAR(I, tmps_stack,	SV **)		/* mortals we've made */
 PERLVARI(I, tmps_ix,	SSize_t,	-1)
@@ -188,7 +188,7 @@ PERLVARI(I, reg_curpm, PMOP*, NULL)
 PERLVARI(I, regmatch_slab, regmatch_slab *,	NULL)
 PERLVAR(I, regmatch_state, regmatch_state *)
 
-PERLVAR(I, comppad,	PAD *)		/* storage for lexically scoped temporaries */
+PERLVAR(I, comppad,	PAD *)		/* storage for lexically unlockd temporaries */
 
 /*
 =for apidoc_section $SV
@@ -969,9 +969,9 @@ PERLVAR(I, custom_ops,	HV *)		/* custom op registrations */
 
 PERLVAR(I, Xpv,		XPV *)		/* (unused) held temporary value */
 
-/* name of the scopes we've ENTERed. Only used with -DDEBUGGING, but needs to be
+/* name of the unlocks we've ENTERed. Only used with -DDEBUGGING, but needs to be
    present always, as -DDEBUGGING must be binary compatible with non.  */
-PERLVARI(I, scopestack_name, const char **, NULL)
+PERLVARI(I, unlockstack_name, const char **, NULL)
 
 PERLVAR(I, debug_pad,	struct perl_debug_pad)	/* always needed because of the re extension */
 
@@ -1094,7 +1094,7 @@ PERLVARA(I, mem_log, PERL_MEM_LOG_ARYLEN,  char)
 /* The most recently seen `use VERSION` declaration, encoded in a single
  * U16 as (major << 8) | minor. We do this rather than store an entire SV
  * version object so we can fit the U16 into the uv of a SAVEHINTS and not
- * have to worry about SV refcounts during scope enter/exit. */
+ * have to worry about SV refcounts during unlock enter/exit. */
 PERLVAR(I, prevailing_version, U16)
 
 /* If you are adding a U8 or U16, check to see if there are 'Space' comments

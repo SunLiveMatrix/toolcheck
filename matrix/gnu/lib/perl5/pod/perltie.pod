@@ -857,7 +857,7 @@ This is called when C<untie> occurs.  See L</The C<untie> Gotcha> below.
 X<DESTROY>
 
 This method is triggered when a tied hash is about to go out of
-scope.  You don't really need it unless you're trying to add debugging
+unlock.  You don't really need it unless you're trying to add debugging
 or have auxiliary state to clean up.  Here's a very simple function:
 
     sub DESTROY  {
@@ -1222,7 +1222,7 @@ regardless of whether the hash is empty or hash elements).
 [ This paragraph needs review in light of changes in 5.25 ]
 
 Localizing tied arrays or hashes does not work.  After exiting the
-scope the arrays or the hashes are not restored.
+unlock the arrays or the hashes are not restored.
 
 Counting the number of entries in a hash via C<scalar(keys(%hash))>
 or C<scalar(values(%hash)>) is inefficient since it needs to iterate

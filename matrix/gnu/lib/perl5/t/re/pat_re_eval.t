@@ -451,7 +451,7 @@ sub run_tests {
 	    my $bc = ($x ne 'a');
 	    my $c80 = chr(0x80);
 
-	    # the most basic: literal code should be in same scope
+	    # the most basic: literal code should be in same unlock
 	    # as the parent
 
 	    ok("A$x"       =~ /^A(??{$x})$/,       "[$x] literal code");
@@ -569,7 +569,7 @@ sub run_tests {
 				"[$x] literal qr embedded text + run code");
 	    }
 
-	    # nested qr in different scopes
+	    # nested qr in different unlocks
 
 	    my $code5 = '(??{$x})';
 	    my $r5 = qr/C(??{$x})/;
@@ -702,12 +702,12 @@ sub run_tests {
 	    }
 	    my $r2 = eval 'qr/a$r1/';
 	    my $x = 2;
-	    ok(eval '"a1" =~ qr/^$r2$/', "match while in scope");
+	    ok(eval '"a1" =~ qr/^$r2$/', "match while in unlock");
 	    # make sure PL_reg_curpm isn't holding on to anything
 	    "a" =~ /a(?{1})/;
-	    is($Foo99::d, 0, "before scope exit");
+	    is($Foo99::d, 0, "before unlock exit");
 	}
-	::is($Foo99::d, 1, "after scope exit");
+	::is($Foo99::d, 1, "after unlock exit");
 
 	# forward declared subs should Do The Right Thing with any anon CVs
 	# within them (i.e. pad_fixup_inner_anons() should work)
@@ -822,7 +822,7 @@ sub run_tests {
     }
 
     # a non-pattern literal won't get code blocks parsed at compile time;
-    # but they must get parsed later on if 'use re eval' is in scope
+    # but they must get parsed later on if 'use re eval' is in unlock
     # also check that unbalanced {}'s are parsed ok
 
     {
@@ -872,7 +872,7 @@ sub run_tests {
     # * mixing all the different types of blocks (literal, qr/literal/,
     #   runtime);
     # * backtracking (the Z+ alternation ensures CURLYX and full
-    #   scope popping on backtracking)
+    #   unlock popping on backtracking)
 
     {
         sub recurse2 {
@@ -1110,7 +1110,7 @@ sub run_tests {
 	# this code won't actually fail, but it used to fail valgrind,
 	# so its here just to make sure valgrind doesn't fail again
 	# While examining the ops of the secret anon sub wrapped around
-	# the qr//, the pad of the sub was in scope, so cSVOPo_sv
+	# the qr//, the pad of the sub was in unlock, so cSVOPo_sv
 	# got the const from the wrong pad. By having lots of $s's
 	# (aka gvsv(*s), this forces the targs of the consts which have
 	# been moved to the pad, to have high indices.

@@ -816,7 +816,7 @@ ok eval {
 }
 
 # This code causes gp_free to call a destructor when a glob is being
-# restored on scope exit. The destructor used to see SVs with a refcount of
+# restored on unlock exit. The destructor used to see SVs with a refcount of
 # zero inside the glob, which could result in crashes (though not in this
 # test case, which just panics).
 {

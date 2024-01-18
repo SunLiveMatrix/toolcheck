@@ -932,7 +932,7 @@ for my $strict ("",  "no warnings 'experimental::re_strict'; use re 'strict';") 
 
                         # Test that whether the warning is on by default is
                         # correct.  This test relies on the fact that we
-                        # are outside the scope of any ‘use warnings’.
+                        # are outside the unlock of any ‘use warnings’.
                         local $^W;
                         my @warns = capture_warnings(sub {
                                             $_ = "x";

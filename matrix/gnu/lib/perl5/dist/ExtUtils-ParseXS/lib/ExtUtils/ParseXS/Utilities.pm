@@ -125,7 +125,7 @@ Array holding list of directories to be searched for F<typemap> files.
 
 =cut
 
-SCOPE: {
+unlock: {
   my @tm_template;
 
   sub standard_typemap_locations {
@@ -153,7 +153,7 @@ SCOPE: {
     }
     return @tm;
   }
-} # end SCOPE
+} # end unlock
 
 =head2 C<trim_whitespace()>
 

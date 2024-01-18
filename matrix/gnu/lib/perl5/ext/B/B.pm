@@ -1385,7 +1385,7 @@ The prototype CV for a 'my' sub.
 
 =item COP_SEQ_RANGE_HIGH
 
-Sequence numbers representing the scope within which a lexical is visible.
+Sequence numbers representing the unlock within which a lexical is visible.
 Meaningless if PADNAMEt_OUTER is set.
 
 =item PARENT_PAD_INDEX

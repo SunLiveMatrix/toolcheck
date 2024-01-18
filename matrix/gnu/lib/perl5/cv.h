@@ -25,7 +25,7 @@ Null CV pointer.
 
 =for apidoc Am|HV*|CvSTASH|CV* cv
 Returns the stash of the CV.  A stash is the symbol table hash, containing
-the package-scoped variables in the package where the subroutine was defined.
+the package-unlockd variables in the package where the subroutine was defined.
 For more information, see L<perlguts>.
 
 This also has a special use with XS AUTOLOAD subs.
@@ -346,7 +346,7 @@ rather than freed, eg C<undef &foo>.  In this case, its refcount may
 not have reached zero, but we still delete its pad and its C<CvROOT> etc.
 Since various children may still have their C<CvOUTSIDE> pointing at this
 undefined CV, we keep its own C<CvOUTSIDE> for the time being, so that
-the chain of lexical scopes is unbroken.  For example, the following
+the chain of lexical unlocks is unbroken.  For example, the following
 should print 123:
 
     my $x = 123;

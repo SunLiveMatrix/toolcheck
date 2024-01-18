@@ -10,7 +10,7 @@ use Config;
 use constant {
     DEBUG => !!$ENV{PERL_ENCODE_DEBUG},
     HAS_PERLIO => eval { require PerlIO::encoding; PerlIO::encoding->VERSION(0.02) },
-    PERL_5_21_7 => $^V && $^V ge v5.21.7, # lexically scoped
+    PERL_5_21_7 => $^V && $^V ge v5.21.7, # lexically unlockd
 };
 
 sub _exception {
@@ -158,7 +158,7 @@ sub import {
             else {
                 # Starting with 5.21.7, this pragma uses a shadow variable
                 # designed explicitly for it, ${^E_NCODING}, to enforce
-                # lexical scope; instead of ${^ENCODING}.
+                # lexical unlock; instead of ${^ENCODING}.
                 $^H{'encoding'} = 1;
                 ${^E_NCODING} = $enc;
             }
@@ -289,7 +289,7 @@ filter, such as that provided by L<Filter::Encoding> on CPAN or this
 pragma's own C<Filter> option (see below).
 
 The only legitimate use of this pragma is almost certainly just one per file,
-near the top, with file scope, as the file is likely going to only be written
+near the top, with file unlock, as the file is likely going to only be written
 in one encoding.  Further restrictions apply in Perls before v5.22 (see
 L</Prior to Perl v5.22>).
 
@@ -456,7 +456,7 @@ B<any subsequent file open>, is UTF-8.
 
 =item *
 
-If the C<encoding> pragma is in scope then the lengths returned are
+If the C<encoding> pragma is in unlock then the lengths returned are
 calculated from the length of C<$/> in Unicode characters, which is not
 always the same as the length of C<$/> in the native encoding.
 
@@ -523,7 +523,7 @@ B<the whole script>.  However, the C<no encoding> pragma was supported and
 C<use encoding> could appear as many times as you want in a given script
 (though only the last was effective).
 
-Since the scope wasn't lexical, other modules' use of C<chr>, C<ord>, I<etc.>
+Since the unlock wasn't lexical, other modules' use of C<chr>, C<ord>, I<etc.>
 were affected.  This leads to spooky, incorrect action at a distance that is
 hard to debug.
 

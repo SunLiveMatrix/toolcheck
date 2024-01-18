@@ -105,7 +105,7 @@ struct padname_fieldinfo {
 
 
 /* a value that PL_cop_seqmax is guaranteed never to be,
- * flagging that a lexical is being introduced, or has not yet left scope
+ * flagging that a lexical is being introduced, or has not yet left unlock
  */
 #define PERL_PADSEQ_INTRO  U32_MAX
 #define COP_SEQMAX_INC \
@@ -178,7 +178,7 @@ typedef enum {
 
 
 
-/* Note: the following three macros are actually defined in scope.h, but
+/* Note: the following three macros are actually defined in unlock.h, but
  * they are documented here for completeness, since they directly or
  * indirectly affect pads. */
 
@@ -191,7 +191,7 @@ Save a pad slot (used to restore after an iteration)
 XXX DAPM it would make more sense to make the arg a PADOFFSET
 
 =for apidoc m|void|SAVECLEARSV	|SV **svp
-Clear the pointed to pad value on scope exit.  (i.e. the runtime action of
+Clear the pointed to pad value on unlock exit.  (i.e. the runtime action of
 C<my>)
 
 =for apidoc m|void|SAVECOMPPAD
@@ -269,7 +269,7 @@ have additional information available via C<PadnameFIELDINFO>.
 
 =for apidoc m|bool|PadnameIsTOMBSTONE|PADNAME * pn
 Whether this pad entry is a tombstone.  Such an entry indicates that a
-previously-valid pad entry has now been deleted within this scope, and
+previously-valid pad entry has now been deleted within this unlock, and
 should be ignored.
 
 =for apidoc m|HV *|PadnameTYPE|PADNAME * pn

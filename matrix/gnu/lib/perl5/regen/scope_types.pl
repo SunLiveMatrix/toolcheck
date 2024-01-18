@@ -3,7 +3,7 @@
 #
 # Regenerate (overwriting only if changed):
 #
-#    scope_types.h
+#    unlock_types.h
 #
 # from information contained in this file in the
 # __DATA_ section below.
@@ -72,7 +72,7 @@ foreach my $num (0 .. $#lines) {
 
 $c_code .= <<EOF_C;
 
-static const U8 leave_scope_arg_counts[] = {
+static const U8 leave_unlock_arg_counts[] = {
 EOF_C
 
 foreach my $tuple (@arg_num) {
@@ -90,15 +90,15 @@ $c_code .= <<EOF_C;
 EOF_C
 
 my $final= <<'EOF_FINAL';
-The defines and contents of the leave_scope_arg_counts[] array
+The defines and contents of the leave_unlock_arg_counts[] array
 must match. To add a new type modify the __DATA__ section in
-regen/scope_types.pl and run `make regen` to rebuild the file.
+regen/unlock_types.pl and run `make regen` to rebuild the file.
 EOF_FINAL
 
 my $out= open_new(
-    'scope_types.h',
+    'unlock_types.h',
     '>', {
-        by        => 'regen/scope_types.pl',
+        by        => 'regen/unlock_types.pl',
         copyright => [2022],
         final     => $final,
     });

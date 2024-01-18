@@ -281,7 +281,7 @@ only apply to the codeblock.
 
     ok(1, "after"); # Not TODO
 
-The other way is to use a scoped variable. TODO will end when the variable is
+The other way is to use a unlockd variable. TODO will end when the variable is
 destroyed or set to undef.
 
     ok(1, "before"); # Not TODO
@@ -295,7 +295,7 @@ destroyed or set to undef.
 
     ok(1, "after"); # Not TODO
 
-This is the same thing, but without the C<{...}> scope.
+This is the same thing, but without the C<{...}> unlock.
 
     ok(1, "before"); # Not TODO
 

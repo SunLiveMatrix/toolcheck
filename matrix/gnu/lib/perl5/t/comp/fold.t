@@ -177,7 +177,7 @@ is "@values", "4 4",
     my $w;
     local $SIG{__WARN__} = sub { ++$w };
     () = 1 + u;
-    is $w, 1, '1+undef_constant is not folded outside warninsg scope';
+    is $w, 1, '1+undef_constant is not folded outside warninsg unlock';
     BEGIN { $^W = 1 }
 }
 

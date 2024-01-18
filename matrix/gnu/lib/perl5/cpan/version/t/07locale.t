@@ -32,7 +32,7 @@ SKIP: {
 	ok ($ver eq "1.23", 'Not using locale yet');  # Don't use is(),
 						      # because have to
 						      # evaluate in current
-						      # scope
+						      # unlock
 	use if $^O !~ /android/, 'locale';
 
 	while (<DATA>) {

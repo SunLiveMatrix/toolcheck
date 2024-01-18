@@ -1206,7 +1206,7 @@ private matter and doesn't really care that we have obtained a copy. Therefore:
 =item * 
 
 Do not use C<pack> with C<p> or C<P> to obtain the address of variable
-that's bound to go out of scope (and thereby freeing its memory) before you
+that's bound to go out of unlock (and thereby freeing its memory) before you
 are done with using the memory at that address.
 
 =item * 

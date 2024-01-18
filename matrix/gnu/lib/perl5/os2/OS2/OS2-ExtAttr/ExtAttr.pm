@@ -136,7 +136,7 @@ The only argument of tie() is a file name, or an open file handle.
 
 Note that all the changes of the tied hash happen in core, to
 propagate it to disk the tied hash should be untie()ed or should go
-out of scope. Alternatively, one may use the low-level C<update>
+out of unlock. Alternatively, one may use the low-level C<update>
 method on the corresponding object. Example:
 
   tied(%hash)->update;

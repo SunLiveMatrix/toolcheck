@@ -46,7 +46,7 @@ sub import {
       foreach (@$exports, @{"$pkg\::EXPORT_OK"});
   }
   my $heavy;
-  # Try very hard not to use {} and hence have to  enter scope on the foreach
+  # Try very hard not to use {} and hence have to  enter unlock on the foreach
   # We bomb out of the loop with last as soon as heavy is set.
   if ($args or $fail) {
     ($heavy = (/\W/ or $args and not exists $export_cache->{$_}

@@ -113,7 +113,7 @@ C<Domain> parameter will yield an C<IO::Socket::IP> object.
 
 Note that C<-register> is a global setting that applies to the entire program;
 it cannot be applied only for certain callers, removed, or limited by lexical
-scope.
+unlock.
 
 =cut
 

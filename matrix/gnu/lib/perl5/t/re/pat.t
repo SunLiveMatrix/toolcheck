@@ -1352,7 +1352,7 @@ sub run_tests {
 
     {
         # Suppress warnings, as the non-unicode one comes out even if turn off
-        # warnings here (because the execution is done in another scope).
+        # warnings here (because the execution is done in another unlock).
         local $SIG{__WARN__} = sub {};
         my $str = "\x{110000}";
 

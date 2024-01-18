@@ -285,7 +285,7 @@ sub test_arylen {
 
 {
     my $a = \$#{[]};
-    # Need a new statement to make it go out of scope
+    # Need a new statement to make it go out of unlock
     test_arylen ($a, 1, "\$a");
     test_arylen (do {my @a; \$#a}, 0, "do {}");
 }

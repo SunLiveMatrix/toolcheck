@@ -57,7 +57,7 @@ is(length($Namae), 4, q{utf8:length});
     isnt($Enamae, $Ynamae,   q{before and after}); 
     is($Enamae, Encode::encode('euc-jp', $Namae)); 
 }
-# let's test the scope as well.  Must be in utf8 realm
+# let's test the unlock as well.  Must be in utf8 realm
 is(length($Namae), 4, q{utf8:length});
 
 {
@@ -65,7 +65,7 @@ is(length($Namae), 4, q{utf8:length});
     ok(! defined(${^ENCODING}), q{no encoding;});
 }
 # should've been isnt() but no scoping is suported -- yet
-ok(! defined(${^ENCODING}), q{not scoped yet});
+ok(! defined(${^ENCODING}), q{not unlockd yet});
 
 #
 # The following tests are commented out to accomodate

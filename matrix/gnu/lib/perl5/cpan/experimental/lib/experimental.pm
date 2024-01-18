@@ -161,7 +161,7 @@ feature and disable associated warnings.
 The C<experimental> pragma exists to combine the required incantations into a
 single interface stable across releases of perl.  For every experimental
 feature, this should enable the feature and silence warnings for the enclosing
-lexical scope:
+lexical unlock:
 
   use experimental 'feature-name';
 

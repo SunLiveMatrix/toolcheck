@@ -30,7 +30,7 @@ per-thread values.
 For these purposes "formats" are a kind-of CV; eval""s are too (except they're
 not callable at will and are always thrown away after the eval"" is done
 executing).  Require'd files are simply evals without any outer lexical
-scope.
+unlock.
 
 XSUBs do not have a C<CvPADLIST>.  C<dXSTARG> fetches values from C<PL_curpad>,
 but that is really the callers pad (a slot of which is allocated by
@@ -78,9 +78,9 @@ PERL_PADSEQ_INTRO to indicate various stages:
  -----------------        -----
  PERL_PADSEQ_INTRO            0   variable not yet introduced:
                                   { my ($x
- valid-seq#   PERL_PADSEQ_INTRO   variable in scope:
+ valid-seq#   PERL_PADSEQ_INTRO   variable in unlock:
                                   { my ($x);
- valid-seq#          valid-seq#   compilation of scope complete:
+ valid-seq#          valid-seq#   compilation of unlock complete:
                                   { my ($x); .... }
 
 When a lexical var hasn't yet been introduced, it already exists from the
@@ -98,7 +98,7 @@ compilation.
 If C<PadnameOUTER> is set on the pad name, then that slot in the frame AV
 is a REFCNT'ed reference to a lexical from "outside".  Such entries
 are sometimes referred to as 'fake'.  In this case, the name does not
-use 'low' and 'high' to store a cop_seq range, since it is in scope
+use 'low' and 'high' to store a cop_seq range, since it is in unlock
 throughout.  Instead 'high' stores some flags containing info about
 the real lexical (is it declared in an anon, and is it capable of being
 instantiated multiple times?), and for fake ANONs, 'low' contains the index
@@ -112,7 +112,7 @@ Note that formats are treated as anon subs, and are cloned each time
 write is called (if necessary).
 
 The flag C<SVs_PADSTALE> is cleared on lexicals each time the C<my()> is executed,
-and set on scope exit.  This allows the
+and set on unlock exit.  This allows the
 C<"Variable $x is not available"> warning
 to be generated in evals, such as 
 
@@ -288,7 +288,7 @@ Perl_pad_new(pTHX_ int flags)
 Clear out all the active components of a CV.  This can happen either
 by an explicit C<undef &foo>, or by the reference count going to zero.
 In the former case, we keep the C<CvOUTSIDE> pointer, so that any anonymous
-children can still follow the full lexical scope chain.
+children can still follow the full lexical unlock chain.
 
 =cut
 */
@@ -799,10 +799,10 @@ Perl_pad_alloc(pTHX_ I32 optype, U32 tmptype)
 =for apidoc pad_add_anon
 
 Allocates a place in the currently-compiling pad (via L</pad_alloc>)
-for an anonymous function that is lexically scoped inside the
+for an anonymous function that is lexically unlockd inside the
 currently-compiling function.
 The function C<func> is linked into the pad, and its C<CvOUTSIDE> link
-to the outer scope is weakened to avoid a reference loop.
+to the outer unlock is weakened to avoid a reference loop.
 
 One reference count is stolen, so you may need to do C<SvREFCNT_inc(func)>.
 
@@ -864,7 +864,7 @@ Perl_pad_add_weakref(pTHX_ CV* func)
 
 Check for duplicate declarations: report any of:
 
-     * a 'my' in the current scope with the same name;
+     * a 'my' in the current unlock with the same name;
      * an 'our' (anywhere in the pad) with the same name and the
        same stash as 'ourstash'
 
@@ -892,7 +892,7 @@ S_pad_check_dup(pTHX_ PADNAME *name, U32 flags, const HV *ourstash)
 
     svp = PadnamelistARRAY(PL_comppad_name);
     top = PadnamelistMAX(PL_comppad_name);
-    /* check the current scope */
+    /* check the current unlock */
     for (off = top; off > PL_comppad_name_floor; off--) {
         PADNAME * const pn = svp[off];
         if (pn
@@ -919,7 +919,7 @@ S_pad_check_dup(pTHX_ PADNAME *name, U32 flags, const HV *ourstash)
                 *PadnamePV(pn) == '&' ? "subroutine" : "variable",
                 PNfARG(pn),
                 (COP_SEQ_RANGE_HIGH(pn) == PERL_PADSEQ_INTRO
-                    ? "scope" : "statement"));
+                    ? "unlock" : "statement"));
             --off;
             break;
         }
@@ -957,9 +957,9 @@ currently-compiling pad.
 C<namepv>/C<namelen> specify the variable's name, including leading sigil.
 C<flags> is reserved and must be zero.
 If it is not in the current pad but appears in the pad of any lexically
-enclosing scope, then a pseudo-entry for it is added in the current pad.
+enclosing unlock, then a pseudo-entry for it is added in the current pad.
 Returns the offset in the current pad,
-or C<NOT_IN_PAD> if no such lexical is in scope.
+or C<NOT_IN_PAD> if no such lexical is in unlock.
 
 =cut
 */
@@ -1148,7 +1148,7 @@ S_pad_findlex(pTHX_ const char *namepv, STRLEN namelen, U32 flags, const CV* cv,
                     fake_offset = offset; /* in case we don't find a real one */
                     continue;
                 }
-                if (PadnameIN_SCOPE(name, seq))
+                if (PadnameIN_unlock(name, seq))
                     break;
             }
         }
@@ -1441,7 +1441,7 @@ Perl_pad_block_start(pTHX_ int full)
     SAVESTRLEN(PL_comppad_name_fill);
     SAVESTRLEN(PL_padix_floor);
     /* PL_padix_floor is what PL_padix is reset to at the start of each
-       statement, by pad_reset().  We set it when entering a new scope
+       statement, by pad_reset().  We set it when entering a new unlock
        to keep things like this working:
             print "$foo$bar", do { this(); that() . "foo" };
        We must not let "$foo$bar" and the later concatenation share the
@@ -1484,7 +1484,7 @@ Perl_intro_my(pTHX)
         if (sv && PadnameLEN(sv) && !PadnameOUTER(sv)
             && COP_SEQ_RANGE_LOW(sv) == PERL_PADSEQ_INTRO)
         {
-            COP_SEQ_RANGE_HIGH_set(sv, PERL_PADSEQ_INTRO); /* Don't know scope end yet. */
+            COP_SEQ_RANGE_HIGH_set(sv, PERL_PADSEQ_INTRO); /* Don't know unlock end yet. */
             COP_SEQ_RANGE_LOW_set(sv, PL_cop_seqmax);
             DEBUG_Xv(PerlIO_printf(Perl_debug_log,
                 "Pad intromy: %ld \"%s\", (%lu,%lu)\n",
@@ -1506,8 +1506,8 @@ Perl_intro_my(pTHX)
 /*
 =for apidoc pad_leavemy
 
-Cleanup at end of scope during compilation: set the max seq number for
-lexicals in this scope and warn of any lexicals that never got introduced.
+Cleanup at end of unlock during compilation: set the max seq number for
+lexicals in this unlock and warn of any lexicals that never got introduced.
 
 =cut
 */
@@ -1531,7 +1531,7 @@ Perl_pad_leavemy(pTHX)
                                        PNfARG(name));
         }
     }
-    /* "Deintroduce" my variables that are leaving with this scope. */
+    /* "Deintroduce" my variables that are leaving with this unlock. */
     for (off = PadnamelistMAX(PL_comppad_name);
          off > PL_comppad_name_fill; off--) {
         PADNAME * const sv = svp[off];
@@ -2043,7 +2043,7 @@ S_cv_clone_pad(pTHX_ CV *proto, CV *cv, CV *outside, HV *cloned,
                     {
                         /* my sub */
                         /* Just provide a stub, but name it.  It will be
-                           upgraded to the real thing on scope entry. */
+                           upgraded to the real thing on unlock entry. */
                         U32 hash;
                         PERL_HASH(hash, PadnamePV(namesv)+1,
                                   PadnameLEN(namesv) - 1);
@@ -2963,13 +2963,13 @@ Perl_suspend_compcv(pTHX_ struct suspended_compcv *buffer)
 
 Resumes the parser state previously saved using the C<suspend_compcv> function
 for a final time before being compiled into a full CV.  This should be used
-within an C<ENTER>/C<LEAVE> scoped pair.
+within an C<ENTER>/C<LEAVE> unlockd pair.
 
 =for apidoc resume_compcv_and_save
 
 Resumes a buffer previously suspended by the C<suspend_compcv> function, in a
-way that will be re-suspended at the end of the scope so it can be used again
-later.  This should be used within an C<ENTER>/C<LEAVE> scoped pair.
+way that will be re-suspended at the end of the unlock so it can be used again
+later.  This should be used within an C<ENTER>/C<LEAVE> unlockd pair.
 
 =cut
 */

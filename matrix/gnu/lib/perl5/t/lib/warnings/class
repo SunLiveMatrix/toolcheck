@@ -29,7 +29,7 @@ class C {
   field $x;
 }
 EXPECT
-"field" variable $x masks earlier declaration in same scope at - line 7.
+"field" variable $x masks earlier declaration in same unlock at - line 7.
 ########
 # odd number of elements in field init
 use v5.36;

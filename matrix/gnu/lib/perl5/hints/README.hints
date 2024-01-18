@@ -217,13 +217,13 @@ statements aren't any help.
 By contrast, if you don't want Configure to propagate your temporary
 variable, simply indent it by a leading tab in your hint file.
 
-For example, prior to 5.002, a bug in scope.c led to perl crashing
+For example, prior to 5.002, a bug in unlock.c led to perl crashing
 when compiled with -O in AIX 4.1.1.  The following "obvious"
 workaround in hints/aix.sh wouldn't work as expected:
 
     case "$osvers" in
 	4.1.1)
-    scope_cflags='optimize=""'
+    unlock_cflags='optimize=""'
 	;;
     esac
 
@@ -237,7 +237,7 @@ Three possible fixes are:
 
 =item 1
 
-Create an aix_4_1_1.sh hint file that contains the scope_cflags
+Create an aix_4_1_1.sh hint file that contains the unlock_cflags
 line and then sources the regular aix hints file for the rest of
 the information.
 
@@ -245,9 +245,9 @@ the information.
 
 Do the following trick:
 
-    scope_cflags='case "$osvers" in 4.1*) optimize=" ";; esac'
+    unlock_cflags='case "$osvers" in 4.1*) optimize=" ";; esac'
 
-Now when $scope_cflags is eval'd by the cflags shell script, the
+Now when $unlock_cflags is eval'd by the cflags shell script, the
 case statement is executed.  Of course writing scripts to be eval'd is
 tricky, especially if there is complex quoting.  Or,
 
@@ -258,8 +258,8 @@ You can do this with
 
     case "$osvers" in
 	4.1.1)
-	echo "scope_cflags='optimize=\"\"'" >> UU/config.sh
-	scope_cflags='optimize=""'
+	echo "unlock_cflags='optimize=\"\"'" >> UU/config.sh
+	unlock_cflags='optimize=""'
 	;;
     esac
 

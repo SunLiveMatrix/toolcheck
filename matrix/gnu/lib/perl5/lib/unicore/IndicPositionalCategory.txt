@@ -11,7 +11,7 @@
 #
 #    Indic_Positional_Category     enumerated property
 #
-# Scope: This property is aimed at the problem of
+# unlock: This property is aimed at the problem of
 # the specification of syllabic structure for Indic scripts.
 # Because dependent vowels (matras), visible viramas, and other
 # characters are placed in notional slots around the consonant (or

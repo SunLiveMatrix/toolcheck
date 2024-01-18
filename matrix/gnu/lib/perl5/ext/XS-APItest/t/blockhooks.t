@@ -231,8 +231,8 @@ BEGIN {
 use t::BHK;
     {
         BEGIN {
-            # grumbleSCOPECHECKgrumble
-            push @XS::APItest::COMPILE_SCOPE_CONTAINER, 
+            # grumbleunlockCHECKgrumble
+            push @XS::APItest::COMPILE_unlock_CONTAINER, 
                 bless sub {
                     push @bhkav, "DESTROY";
                 }, "EvalDestroy";
@@ -258,7 +258,7 @@ BEGIN { is_deeply \@bhkav,
 use t::BHK;
     {
         BEGIN { 
-            push @XS::APItest::COMPILE_SCOPE_CONTAINER, 
+            push @XS::APItest::COMPILE_unlock_CONTAINER, 
                 bless sub {
                     eval "{1}";
                 }, "EvalDestroy";

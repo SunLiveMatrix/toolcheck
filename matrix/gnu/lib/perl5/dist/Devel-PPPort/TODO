@@ -238,9 +238,9 @@ TODO:
     savestack_ix
     savestack_max
     sawampersand
-    scopestack
-    scopestack_ix
-    scopestack_max
+    unlockstack
+    unlockstack_ix
+    unlockstack_max
     screamfirst
     screamnext
     secondgv

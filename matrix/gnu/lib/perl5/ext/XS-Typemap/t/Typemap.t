@@ -357,7 +357,7 @@ is_approx($rv[1], 3);
 is_approx($rv[2], 2.1);
 
 # T_PACKEDARRAY
-SCOPE: {
+unlock: {
   note("T_PACKED_ARRAY");
   my @d = (
     -4, 3, 2.1,
@@ -446,7 +446,7 @@ ok( !defined$fh, 'return io in arg open failed successfully');
 
 # T_INOUT
 note("T_INOUT");
-SCOPE: {
+unlock: {
   my $buf = '';
   local $| = 1;
   open my $fh, "+<", \$buf or die $!;
@@ -463,7 +463,7 @@ SCOPE: {
 
 # T_IN
 note("T_IN");
-SCOPE: {
+unlock: {
   my $buf = "Hello!\n";
   local $| = 1;
   open my $fh, "<", \$buf or die $!;
@@ -475,7 +475,7 @@ SCOPE: {
 
 # T_OUT
 note("T_OUT");
-SCOPE: {
+unlock: {
   my $buf = '';
   local $| = 1;
   open my $fh, "+<", \$buf or die $!;

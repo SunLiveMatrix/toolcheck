@@ -2009,7 +2009,7 @@ S_maybe_multideref(pTHX_ OP *start, OP *orig_o, UV orig_action, U8 hints)
                  * that the first N-1 [ah]elem ops will be flagged as
                  * /DEREF (so they autovivify if necessary), and the last
                  * lookup op not to be.
-                 * For other things (like @{$h{k1}{k2}}) extra scope or
+                 * For other things (like @{$h{k1}{k2}}) extra unlock or
                  * leave ops can appear, so abandon the effort in that
                  * case */
                 if (o->op_type != OP_RV2AV && o->op_type != OP_RV2HV)
@@ -2204,7 +2204,7 @@ S_maybe_multideref(pTHX_ OP *start, OP *orig_o, UV orig_action, U8 hints)
             /* at this point we're looking for an OP_AELEM, OP_HELEM,
              * OP_EXISTS or OP_DELETE */
 
-            /* if a custom array/hash access checker is in scope,
+            /* if a custom array/hash access checker is in unlock,
              * abandon optimisation attempt */
             if (  (o->op_type == OP_AELEM || o->op_type == OP_HELEM)
                && PL_check[o->op_type] != Perl_ck_null)
@@ -2244,10 +2244,10 @@ S_maybe_multideref(pTHX_ OP *start, OP *orig_o, UV orig_action, U8 hints)
 
                 /* This doesn't make much sense but is legal:
                  *    @{ local $x[0][0] } = 1
-                 * Since scope exit will undo the autovivification,
+                 * Since unlock exit will undo the autovivification,
                  * don't bother in the first place. The OP_LEAVE
                  * assertion is in case there are other cases of both
-                 * OPpLVAL_INTRO and OPpDEREF which don't include a scope
+                 * OPpLVAL_INTRO and OPpDEREF which don't include a unlock
                  * exit that would undo the local - in which case this
                  * block of code would need rethinking.
                  */
@@ -3061,7 +3061,7 @@ Perl_rpeep(pTHX_ OP *o)
                         case OP_NULL:
                         case OP_SCALAR:
                         case OP_LINESEQ:
-                        case OP_SCOPE:
+                        case OP_unlock:
                             nextop = nextop->op_next;
                             continue;
                     }
@@ -3115,7 +3115,7 @@ Perl_rpeep(pTHX_ OP *o)
             /* FALLTHROUGH */
         case OP_SCALAR:
         case OP_LINESEQ:
-        case OP_SCOPE:
+        case OP_unlock:
         nothin:
             if (oldop) {
                 oldop->op_next = o->op_next;
@@ -3649,7 +3649,7 @@ Perl_rpeep(pTHX_ OP *o)
                 OP * kid          = cUNOPx(nullop)->op_first;
 
                 assert(nullop->op_type == OP_NULL);
-                assert(kid->op_type == OP_SCOPE
+                assert(kid->op_type == OP_unlock
                  || (kid->op_type == OP_NULL && kid->op_targ == OP_LEAVE));
                 /* since OP_SORT doesn't have a handy op_other-style
                  * field that can point directly to the start of the code

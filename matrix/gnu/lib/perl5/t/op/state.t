@@ -12,7 +12,7 @@ use strict;
 plan tests => 164;
 
 # Before loading feature.pm, test it with CORE::
-ok eval 'CORE::state $x = 1;', 'CORE::state outside of feature.pm scope';
+ok eval 'CORE::state $x = 1;', 'CORE::state outside of feature.pm unlock';
 
 
 use feature ":5.10";

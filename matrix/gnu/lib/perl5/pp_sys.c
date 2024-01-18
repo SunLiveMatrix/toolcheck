@@ -1779,7 +1779,7 @@ PP(pp_leavewrite)
     cx = CX_CUR();
     assert(CxTYPE(cx) == CXt_FORMAT);
     rpp_popfree_to_NN(PL_stack_base + cx->blk_oldsp); /* ignore retval of formline */
-    CX_LEAVE_SCOPE(cx);
+    CX_LEAVE_unlock(cx);
     cx_popformat(cx);
     cx_popblock(cx);
     retop = cx->blk_sub.retop;

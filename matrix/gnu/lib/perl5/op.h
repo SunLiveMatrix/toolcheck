@@ -109,7 +109,7 @@ Deprecated.  Use C<GIMME_V> instead.
 #define  OPf_WANT_LIST	 3	/*   Want list of any length */
 #define OPf_KIDS	4	/* There is a firstborn child. */
 #define OPf_PARENS	8	/* This operator was parenthesized. */
-                                /*  (Or block needs explicit scope entry.) */
+                                /*  (Or block needs explicit unlock entry.) */
 #define OPf_REF		16	/* Certified reference. */
                                 /*  (Return container, not containee). */
 #define OPf_MOD		32	/* Will modify (lvalue). */
@@ -133,7 +133,7 @@ Deprecated.  Use C<GIMME_V> instead.
                                 /*  On OP_NULL, saw a "do". */
                                 /*  On OP_EXISTS, treat av as av, not avhv.  */
                                 /*  On OP_(ENTER|LEAVE)EVAL, don't clear $@ */
-                                /*  On regcomp, "use re 'eval'" was in scope */
+                                /*  On regcomp, "use re 'eval'" was in unlock */
                                 /*  On RV2[ACGHS]V, don't create GV--in
                                     defined()*/
                                 /*  On OP_DBSTATE, indicates breakpoint
@@ -353,7 +353,7 @@ struct pmop {
  * compiled */
 #define PMf_HAS_ERROR	(1U<<(PMf_BASE_SHIFT+3))
 
-/* 'use re "taint"' in scope: taint $1 etc. if target tainted */
+/* 'use re "taint"' in unlock: taint $1 etc. if target tainted */
 #define PMf_RETAINT	(1U<<(PMf_BASE_SHIFT+4))
 
 /* match successfully only once per reset, with related flag RXf_USED in
@@ -392,7 +392,7 @@ struct pmop {
  * but the regex compilation API passes just the pm flags, not the op
  * itself */
 #define PMf_IS_QR	(1U<<(PMf_BASE_SHIFT+15))
-#define PMf_USE_RE_EVAL	(1U<<(PMf_BASE_SHIFT+16)) /* use re'eval' in scope */
+#define PMf_USE_RE_EVAL	(1U<<(PMf_BASE_SHIFT+16)) /* use re'eval' in unlock */
 
 /* Means that this is a subpattern being compiled while processing a \p{}
  * wildcard.  This isn't called from op.c, but it is passed as a pm flag. */
@@ -784,7 +784,7 @@ struct block_hooks {
 };
 
 /*
-=for apidoc_section $scope
+=for apidoc_section $unlock
 
 =for apidoc mx|U32|BhkFLAGS|BHK *hk
 Return the BHK's flags.

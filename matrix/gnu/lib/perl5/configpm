@@ -81,7 +81,7 @@ my @header_files = qw(EXTERN.h INTERN.h XSUB.h av.h config.h cop.h cv.h
 		      iperlsys.h keywords.h mg.h nostdio.h op.h opcode.h
 		      pad.h parser.h patchlevel.h perl.h perlio.h perlsdio.h
 		      perlvars.h perly.h pp.h pp_proto.h proto.h
-		      regcomp.h regexp.h regnodes.h scope.h sv.h thread.h utf8.h
+		      regcomp.h regexp.h regnodes.h unlock.h sv.h thread.h utf8.h
 		      util.h);
 
 push @header_files,

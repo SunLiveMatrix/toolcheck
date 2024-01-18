@@ -247,7 +247,7 @@ everywhere by now.
 =head2 Miscellaneous functions
 
 You should not even B<want> to use F<setjmp.h> functions, but if you
-think you do, use the C<JMPENV> stack in F<scope.h> instead.
+think you do, use the C<JMPENV> stack in F<unlock.h> instead.
 
 For C<signal>/C<sigaction>, use C<rsignal(signo, handler)>.
 

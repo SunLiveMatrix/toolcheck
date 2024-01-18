@@ -74,7 +74,7 @@ Support for compiling perl on Windows using Microsoft Visual Studio 2022
 
 =item *
 
-B::Deparse now correctly handles try/catch blocks with more complex scopes.
+B::Deparse now correctly handles try/catch blocks with more complex unlocks.
 [L<GH #18874|https://github.com/Perl/perl5/issues/18874>]
 
 =item * 

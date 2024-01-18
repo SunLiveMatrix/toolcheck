@@ -293,7 +293,7 @@ SKIP: {
 	}
 	use 5.011;  # should enable strict
 	ok !eval '$do_noT_create_a_variable_with_this_name = 1',
-	  'ambient_pragmas do not mess with compiling scope';
+	  'ambient_pragmas do not mess with compiling unlock';
    `;
 }
 
@@ -345,7 +345,7 @@ EOCODN
 # CORE::format
 $a = readpipe qq`$^X $path "-MO=Deparse" -e "use feature q|:all|;`
              .qq` my sub format; CORE::format =" -e. 2>&1`;
-like($a, qr/CORE::format/, 'CORE::format when lex format sub is in scope');
+like($a, qr/CORE::format/, 'CORE::format when lex format sub is in unlock');
 
 # literal big chars under 'use utf8'
 is($deparse->coderef2text(sub{ use utf8; /€/; }),
@@ -524,7 +524,7 @@ like runperl(stderr => 1, switches => [ '-MO=-qq,Deparse', $path ],
 like runperl(stderr => 1, switches => [ '-MO=-qq,Deparse', $path ],
              prog => 'use feature lexical_subs=>; my sub f;sub main::f{}'),
      qr/^sub main::f \{/m,
-    'sub decl when lex sub is in scope';
+    'sub decl when lex sub is in unlock';
 
 like runperl(stderr => 1, switches => [ '-MO=-qq,Deparse', $path ],
              prog => 'sub foo{foo()}'),

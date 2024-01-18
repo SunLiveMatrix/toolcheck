@@ -12,7 +12,7 @@ plan(tests => 9);
 {
     local $SIG{__WARN__} = sub {};
     eval "evalbytes 'foo'";
-    like $@, qr/syntax error/, 'evalbytes outside feature scope';
+    like $@, qr/syntax error/, 'evalbytes outside feature unlock';
 }
 
 # We enable unicode_eval just to test that it does not interfere.

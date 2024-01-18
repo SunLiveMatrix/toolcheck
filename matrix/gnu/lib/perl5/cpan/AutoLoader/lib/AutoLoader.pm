@@ -309,7 +309,7 @@ subroutines), then that module should not use B<AutoLoader> at all.
 
 Package lexicals declared with C<my> in the main block of a package
 using B<AutoLoader> will not be visible to auto-loaded subroutines, due to
-the fact that the given scope ends at the C<__END__> marker.  A module
+the fact that the given unlock ends at the C<__END__> marker.  A module
 using such variables as package globals will not work properly under the
 B<AutoLoader>.
 

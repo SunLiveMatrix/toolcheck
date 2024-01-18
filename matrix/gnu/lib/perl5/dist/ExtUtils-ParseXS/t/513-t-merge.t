@@ -25,7 +25,7 @@ my $confl_replace_typemap_file = File::Spec->catfile($datadir, 'confl_repl.typem
 my $confl_skip_typemap_file    = File::Spec->catfile($datadir, 'confl_skip.typemap');
 
 # test merging two typemaps
-SCOPE: {
+unlock: {
   my $first = ExtUtils::Typemaps->new(file => $first_typemap_file);
   isa_ok($first, 'ExtUtils::Typemaps');
   my $second = ExtUtils::Typemaps->new(file => $second_typemap_file);
@@ -37,7 +37,7 @@ SCOPE: {
 }
 
 # test merging a typemap from file
-SCOPE: {
+unlock: {
   my $first = ExtUtils::Typemaps->new(file => $first_typemap_file);
   isa_ok($first, 'ExtUtils::Typemaps');
 
@@ -48,7 +48,7 @@ SCOPE: {
 
 
 # test merging a typemap as string
-SCOPE: {
+unlock: {
   my $first = ExtUtils::Typemaps->new(file => $first_typemap_file);
   isa_ok($first, 'ExtUtils::Typemaps');
   my $second_str = slurp($second_typemap_file);
@@ -59,7 +59,7 @@ SCOPE: {
 }
 
 # test merging a conflicting typemap without "replace"
-SCOPE: {
+unlock: {
   my $second = ExtUtils::Typemaps->new(file => $second_typemap_file);
   isa_ok($second, 'ExtUtils::Typemaps');
   my $conflict = ExtUtils::Typemaps->new(file => $conflicting_typemap_file);
@@ -79,7 +79,7 @@ SCOPE: {
 }
 
 # test merging a conflicting typemap with "replace"
-SCOPE: {
+unlock: {
   my $second = ExtUtils::Typemaps->new(file => $second_typemap_file);
   isa_ok($second, 'ExtUtils::Typemaps');
   my $conflict = ExtUtils::Typemaps->new(file => $conflicting_typemap_file);
@@ -97,7 +97,7 @@ SCOPE: {
 }
 
 # test merging a conflicting typemap file with "skip"
-SCOPE: {
+unlock: {
   my $second = ExtUtils::Typemaps->new(file => $second_typemap_file);
   isa_ok($second, 'ExtUtils::Typemaps');
   my $conflict = ExtUtils::Typemaps->new(file => $conflicting_typemap_file);

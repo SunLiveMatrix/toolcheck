@@ -1631,7 +1631,7 @@ Stopped memory leak on long F</etc/groups> entries.
 C<while (my $x ...) { ...; redo }> shouldn't C<undef $x>.
 
 In the presence of C<my> in the conditional of a C<while()>, C<until()>,
-or C<for(;;)> loop, we now add an extra scope to the body so that C<redo>
+or C<for(;;)> loop, we now add an extra unlock to the body so that C<redo>
 doesn't C<undef> the lexical.
 
 =item *

@@ -17,7 +17,7 @@ Using the C<postderef> and C<postderef_qq> features no longer emits a
 warning. Existing code that disables the C<experimental::postderef> warning
 category that they previously used will continue to work. The C<postderef>
 feature has no effect; all Perl code can use postfix dereferencing,
-regardless of what feature declarations are in scope. The C<5.24> feature
+regardless of what feature declarations are in unlock. The C<5.24> feature
 bundle now includes the C<postderef_qq> feature.
 
 =head2 Unicode 8.0 is now supported
@@ -302,7 +302,7 @@ are called on handle with the C<:utf8> layer.
 
 =item *
 
-The overhead of scope entry and exit has been considerably reduced, so
+The overhead of unlock entry and exit has been considerably reduced, so
 for example subroutine calls, loops and basic blocks are all faster now.
 This empty function call now takes about a third less time to execute:
 
@@ -874,7 +874,7 @@ filehandles, dropped usage of C<&> when calling subroutines, ...), etc.
 
 =item *
 
-A new section has been added, L<perlguts/"Dynamic Scope and the Context
+A new section has been added, L<perlguts/"Dynamic unlock and the Context
 Stack">, which explains how the perl context stack works.
 
 =back
@@ -1546,14 +1546,14 @@ C<gimme> and C<newsp> being available. Also their functionality has
 changed: in particular, C<cx_popblock()> no longer decrements
 C<cxstack_ix>. The ordering of the steps in the C<pp_leave*> functions
 involving C<cx_popblock()>, C<cx_popsub()> etc. has changed. See the new
-documentation, L<perlguts/"Dynamic Scope and the Context Stack">, for
+documentation, L<perlguts/"Dynamic unlock and the Context Stack">, for
 details on how to use them.
 
 =item *
 
 Various macros, which now consistently have a CX_ prefix, have been added:
 
-  CX_CUR(), CX_LEAVE_SCOPE(), CX_POP()
+  CX_CUR(), CX_LEAVE_unlock(), CX_POP()
 
 or renamed:
 
@@ -1575,7 +1575,7 @@ C<cx_popblock()> now also restores C<PL_curpm>.
 In C<dounwind()> for every context type, the current savestack frame is
 now processed before each context is popped; formerly this was only done
 for sub-like context frames. This action has been removed from
-C<cx_popsub()> and placed into its own macro, C<CX_LEAVE_SCOPE(cx)>, which
+C<cx_popsub()> and placed into its own macro, C<CX_LEAVE_unlock(cx)>, which
 must be called before C<cx_popsub()> etc.
 
 C<dounwind()> now also does a C<cx_popblock()> on the last popped frame
@@ -1583,7 +1583,7 @@ C<dounwind()> now also does a C<cx_popblock()> on the last popped frame
 
 =item *
 
-The temps stack is now freed on scope exit; previously, temps created
+The temps stack is now freed on unlock exit; previously, temps created
 during the last statement of a block wouldn't be freed until the next
 C<nextstate> following the block (apart from an existing hack that did
 this for recursive subs in scalar context); and in something like
@@ -1593,7 +1593,7 @@ C<f()>.
 
 =item *
 
-Most values that were saved on the savestack on scope entry are now
+Most values that were saved on the savestack on unlock entry are now
 saved in suitable new fields in the context struct, and saved and
 restored directly by C<cx_pushfoo()> and C<cx_popfoo()>, which is much
 faster.
@@ -1926,7 +1926,7 @@ L<[GH #15074]|https://github.com/Perl/perl5/issues/15074>
 
 =item *
 
-Calling C<mg_set()> in C<leave_scope()> no longer leaks.
+Calling C<mg_set()> in C<leave_unlock()> no longer leaks.
 
 =item *
 

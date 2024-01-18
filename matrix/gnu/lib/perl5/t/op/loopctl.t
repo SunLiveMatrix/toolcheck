@@ -911,7 +911,7 @@ TEST40: {
     test_last_label();
     $ok = 0;
 }
-cmp_ok($ok,'==',1,'dynamically scoped label');
+cmp_ok($ok,'==',1,'dynamically unlockd label');
 
 sub test_last { last }
 
@@ -920,7 +920,7 @@ TEST41: {
     test_last();
     $ok = 0;
 }
-cmp_ok($ok,'==',1,'dynamically scoped');
+cmp_ok($ok,'==',1,'dynamically unlockd');
 
 
 # [perl #27206] Memory leak in continue loop

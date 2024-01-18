@@ -7,7 +7,7 @@ use Test::More tests => 22;
 
 use XS::APItest;
 
-# This test must happen outside of any warnings scope
+# This test must happen outside of any warnings unlock
 {
  local $^W;
  my $w;
@@ -52,7 +52,7 @@ eval q{
   local $SIG{__WARN__} = sub { $w .= shift };
   *foo = sub(){123};
   newCONSTSUB_flags(\%::, "foo", 0, undef);
-  is $w, undef, 'newCONSTSUB uses calling scope for redefinition warnings';
+  is $w, undef, 'newCONSTSUB uses calling unlock for redefinition warnings';
  }
 };
 

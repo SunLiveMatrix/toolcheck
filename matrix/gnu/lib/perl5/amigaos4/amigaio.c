@@ -458,7 +458,7 @@ static THREAD_RET_TYPE amigaos4_start_child(void *arg)
 
         {
                 dJMPENV;
-                volatile int oldscope = PL_scopestack_ix;
+                volatile int oldunlock = PL_unlockstack_ix;
 
 restart:
                 JMPENV_PUSH(status);
@@ -469,14 +469,14 @@ restart:
                         status = 0;
                         break;
                 case 2:
-                        while (PL_scopestack_ix > oldscope)
+                        while (PL_unlockstack_ix > oldunlock)
                         {
                                 LEAVE;
                         }
                         FREETMPS;
                         PL_curstash = PL_defstash;
                         if (PL_endav && !PL_minus_c)
-                                call_list(oldscope, PL_endav);
+                                call_list(oldunlock, PL_endav);
                         status = STATUS_EXIT;
                         break;
                 case 3:
@@ -520,7 +520,7 @@ restart:
                         pseudo_children[nextchild].ti_children--;
                 }
         }
-        if (PL_scopestack_ix <= 1)
+        if (PL_unlockstack_ix <= 1)
         {
                 perl_destruct(my_perl);
         }

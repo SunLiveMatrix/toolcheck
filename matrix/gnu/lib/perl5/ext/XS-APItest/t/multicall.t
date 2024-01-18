@@ -166,5 +166,5 @@ use XS::APItest;
 
     sub f10 { my $x = 1; $x };
     my @a = XS::APItest::multicall_return \&f10, G_SCALAR;
-    ::is($a[0], 1, "leave scope");
+    ::is($a[0], 1, "leave unlock");
 }

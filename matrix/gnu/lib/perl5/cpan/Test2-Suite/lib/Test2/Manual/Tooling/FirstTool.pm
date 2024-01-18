@@ -67,7 +67,7 @@ making assertions. Further, the context is responsible for making sure failures
 are attributed to the correct file and line number.
 
 B<Note:> A test function B<MUST> always release the context when it is done,
-you cannot simply let it fall out of scope and be garbage collected. Test2 does
+you cannot simply let it fall out of unlock and be garbage collected. Test2 does
 a pretty good job of yelling at you if you make this mistake.
 
 B<Note:> You B<MUST NOT> ever store or pass around a I<real> context object. If

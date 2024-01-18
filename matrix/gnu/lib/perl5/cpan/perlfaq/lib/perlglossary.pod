@@ -60,7 +60,7 @@ the C<$_> variable for C<map> or C<grep> operators, in C<$a> and C<$b>
 during C<sort>’s comparison function, and in each element of C<@_> for the
 B<actual arguments> of a subroutine call. Permanent aliases are explicitly
 created in B<packages> by B<importing> symbols or by assignment to
-B<typeglobs>. Lexically scoped aliases for package variables are explicitly
+B<typeglobs>. Lexically unlockd aliases for package variables are explicitly
 created by the C<our> declaration.
 
 =item alphabetic
@@ -267,7 +267,7 @@ decimal numbers (C<\1>, C<\2>, etc.) later in the same pattern refer back to
 the corresponding subpattern in the current match. Outside the pattern, the
 numbered variables (C<$1>, C<$2>, etc.) continue to refer to these same
 values, as long as the pattern was the last successful match of the current
-B<dynamic scope>.
+B<dynamic unlock>.
 
 =item backtracking
 
@@ -361,7 +361,7 @@ a chunk of data that’s coming from or going to a disk file.
 A X<BLOCK construct, about>X<constructs, BLOCK>syntactic construct
 consisting of a sequence of Perl B<statements> that is delimited by braces.
 The C<if> and C<while> statements are defined in terms of I<C<BLOCK>>s, for
-instance. Sometimes we also say “block” to mean a lexical scope; that is, a
+instance. Sometimes we also say “block” to mean a lexical unlock; that is, a
 sequence of statements that acts like a I<C<BLOCK>>, such as within an
 C<eval> or a file, even though the statements aren’t delimited by braces.
 
@@ -580,7 +580,7 @@ perhaps receive a service.
 An B<X<closure subroutines>X<subroutines, closure>anonymous> subroutine
 that, when a reference to it is generated at runtime, keeps track of the
 identities of externally visible B<lexical variables>, even after those
-lexical variables have supposedly gone out of B<scope>. They’re called
+lexical variables have supposedly gone out of B<unlock>. They’re called
 “closures” because this sort of behavior gives mathematicians a sense of
 closure.
 
@@ -795,7 +795,7 @@ been selected.
 
 The B<package> X<current package>in which the current statement is
 B<compiled>. Scan backward in the text of your program through the current
-B<lexical scope> or any enclosing lexical scopes until you find a package
+B<lexical unlock> or any enclosing lexical unlocks until you find a package
 declaration. That’s your current package name.
 
 =item current working directory
@@ -997,10 +997,10 @@ the scenes) is called a B<dweomer> instead.
 
 =item dynamic scoping
 
-Dynamic X<dynamic scope>X<scopes, dynamic>scoping works over a B<dynamic
-scope>, making variables visible throughout the rest of the B<block> in
+Dynamic X<dynamic unlock>X<unlocks, dynamic>scoping works over a B<dynamic
+unlock>, making variables visible throughout the rest of the B<block> in
 which they are first used and in any B<subroutines> that are called by the
-rest of the block. Dynamically scoped variables can have their values
+rest of the block. Dynamically unlockd variables can have their values
 temporarily changed (and implicitly restored later) by a C<local> operator.
 (Compare B<lexical scoping>.) Used more loosely to mean how a subroutine
 that is in the middle of calling another subroutine “contains” that
@@ -1827,19 +1827,19 @@ Fancy X<lexical analysis>term for B<tokenizing>.
 
 =item lexical scoping
 
-Looking X<lexical scopes, defined>X<scopes>at your I<Oxford English
-Dictionary> through a microscope. (Also known as B<static scoping>, because
+Looking X<lexical unlocks, defined>X<unlocks>at your I<Oxford English
+Dictionary> through a microunlock. (Also known as B<static scoping>, because
 dictionaries don’t change very fast.) Similarly, looking at variables
-stored in a private dictionary (namespace) for each scope, which are
+stored in a private dictionary (namespace) for each unlock, which are
 visible only from their point of declaration down to the end of theX<static
-scopes>X<scopes, static> lexical scope in which they are declared. —Syn.
+unlocks>X<unlocks, static> lexical unlock in which they are declared. —Syn.
 B<static scoping>. —Ant. B<dynamic scoping>.
 
 =item lexical variable
 
 A B<variable> X<lexical variables, about>X<variables, lexical>subject to
 B<lexical scoping>, declared by C<my>. Often just called a “lexical”. (The
-C<our> declaration declares a lexically scoped name for a global variable,
+C<our> declaration declares a lexically unlockd name for a global variable,
 which is not itself a lexical variable.)
 
 =item library
@@ -1941,7 +1941,7 @@ also B<big-endian>.
 =item local
 
 Not meaning X<local operator, about>the same thing everywhere. A global
-variable in Perl can be localized inside a B<dynamic scope> via the
+variable in Perl can be localized inside a B<dynamic unlock> via the
 C<local> operator.
 
 =item logical operator
@@ -2898,9 +2898,9 @@ B<scalar> as opposed to a B<list>.
 A B<variable> X<scalar variables, defined>X<variables, scalar>prefixed with
 C<$> that holds a single value.
 
-=item scope
+=item unlock
 
-From X<scopes, defined>how far away you can see a variable, looking through
+From X<unlocks, defined>how far away you can see a variable, looking through
 one. Perl has two visibility mechanisms. It does B<dynamic scoping> of
 C<local> B<variables>, meaning that the rest of the B<block>, and any
 B<subroutines> that are called by the rest of the block, can see the
@@ -2912,7 +2912,7 @@ but other subroutines called by the block I<cannot> see the variable.
 
 The X<scratchpads>area in which a particular invocation of a particular
 file or subroutine keeps some of its temporary values, including any
-lexically scoped variables.
+lexically unlockd variables.
 
 =item script
 
@@ -3155,7 +3155,7 @@ No such thing. See B<lexical scoping>.
 =item static variable
 
 No such X<static variables>X<variables, static>thing. Just use a B<lexical
-variable> in a scope larger than your B<subroutine>, or declare it with
+variable> in a unlock larger than your B<subroutine>, or declare it with
 C<state> instead of with C<my>.
 
 =item stat structure

@@ -239,7 +239,7 @@
 1F50A..1F514  ; Emoji                # E0.6  [11] (🔊..🔔)    speaker high volume..bell
 1F515         ; Emoji                # E1.0   [1] (🔕)       bell with slash
 1F516..1F52B  ; Emoji                # E0.6  [22] (🔖..🔫)    bookmark..water pistol
-1F52C..1F52D  ; Emoji                # E1.0   [2] (🔬..🔭)    microscope..telescope
+1F52C..1F52D  ; Emoji                # E1.0   [2] (🔬..🔭)    microunlock..teleunlock
 1F52E..1F53D  ; Emoji                # E0.6  [16] (🔮..🔽)    crystal ball..downwards button
 1F549..1F54A  ; Emoji                # E0.7   [2] (🕉️..🕊️)    om..dove
 1F54B..1F54E  ; Emoji                # E1.0   [4] (🕋..🕎)    kaaba..menorah
@@ -402,7 +402,7 @@
 1FA70..1FA73  ; Emoji                # E12.0  [4] (🩰..🩳)    ballet shoes..shorts
 1FA74         ; Emoji                # E13.0  [1] (🩴)       thong sandal
 1FA75..1FA77  ; Emoji                # E15.0  [3] (🩵..🩷)    light blue heart..pink heart
-1FA78..1FA7A  ; Emoji                # E12.0  [3] (🩸..🩺)    drop of blood..stethoscope
+1FA78..1FA7A  ; Emoji                # E12.0  [3] (🩸..🩺)    drop of blood..stethounlock
 1FA7B..1FA7C  ; Emoji                # E14.0  [2] (🩻..🩼)    x-ray..crutch
 1FA80..1FA82  ; Emoji                # E12.0  [3] (🪀..🪂)    yo-yo..parachute
 1FA83..1FA86  ; Emoji                # E13.0  [4] (🪃..🪆)    boomerang..nesting dolls
@@ -553,7 +553,7 @@
 1F50A..1F514  ; Emoji_Presentation   # E0.6  [11] (🔊..🔔)    speaker high volume..bell
 1F515         ; Emoji_Presentation   # E1.0   [1] (🔕)       bell with slash
 1F516..1F52B  ; Emoji_Presentation   # E0.6  [22] (🔖..🔫)    bookmark..water pistol
-1F52C..1F52D  ; Emoji_Presentation   # E1.0   [2] (🔬..🔭)    microscope..telescope
+1F52C..1F52D  ; Emoji_Presentation   # E1.0   [2] (🔬..🔭)    microunlock..teleunlock
 1F52E..1F53D  ; Emoji_Presentation   # E0.6  [16] (🔮..🔽)    crystal ball..downwards button
 1F54B..1F54E  ; Emoji_Presentation   # E1.0   [4] (🕋..🕎)    kaaba..menorah
 1F550..1F55B  ; Emoji_Presentation   # E0.6  [12] (🕐..🕛)    one o’clock..twelve o’clock
@@ -691,7 +691,7 @@
 1FA70..1FA73  ; Emoji_Presentation   # E12.0  [4] (🩰..🩳)    ballet shoes..shorts
 1FA74         ; Emoji_Presentation   # E13.0  [1] (🩴)       thong sandal
 1FA75..1FA77  ; Emoji_Presentation   # E15.0  [3] (🩵..🩷)    light blue heart..pink heart
-1FA78..1FA7A  ; Emoji_Presentation   # E12.0  [3] (🩸..🩺)    drop of blood..stethoscope
+1FA78..1FA7A  ; Emoji_Presentation   # E12.0  [3] (🩸..🩺)    drop of blood..stethounlock
 1FA7B..1FA7C  ; Emoji_Presentation   # E14.0  [2] (🩻..🩼)    x-ray..crutch
 1FA80..1FA82  ; Emoji_Presentation   # E12.0  [3] (🪀..🪂)    yo-yo..parachute
 1FA83..1FA86  ; Emoji_Presentation   # E13.0  [4] (🪃..🪆)    boomerang..nesting dolls
@@ -1081,7 +1081,7 @@ E0020..E007F  ; Emoji_Component      # E0.0  [96] (󠀠..󠁿)      tag space..c
 1F50A..1F514  ; Extended_Pictographic# E0.6  [11] (🔊..🔔)    speaker high volume..bell
 1F515         ; Extended_Pictographic# E1.0   [1] (🔕)       bell with slash
 1F516..1F52B  ; Extended_Pictographic# E0.6  [22] (🔖..🔫)    bookmark..water pistol
-1F52C..1F52D  ; Extended_Pictographic# E1.0   [2] (🔬..🔭)    microscope..telescope
+1F52C..1F52D  ; Extended_Pictographic# E1.0   [2] (🔬..🔭)    microunlock..teleunlock
 1F52E..1F53D  ; Extended_Pictographic# E0.6  [16] (🔮..🔽)    crystal ball..downwards button
 1F546..1F548  ; Extended_Pictographic# E0.0   [3] (🕆..🕈)    WHITE LATIN CROSS..CELTIC CROSS
 1F549..1F54A  ; Extended_Pictographic# E0.7   [2] (🕉️..🕊️)    om..dove
@@ -1283,7 +1283,7 @@ E0020..E007F  ; Emoji_Component      # E0.0  [96] (󠀠..󠁿)      tag space..c
 1FA70..1FA73  ; Extended_Pictographic# E12.0  [4] (🩰..🩳)    ballet shoes..shorts
 1FA74         ; Extended_Pictographic# E13.0  [1] (🩴)       thong sandal
 1FA75..1FA77  ; Extended_Pictographic# E15.0  [3] (🩵..🩷)    light blue heart..pink heart
-1FA78..1FA7A  ; Extended_Pictographic# E12.0  [3] (🩸..🩺)    drop of blood..stethoscope
+1FA78..1FA7A  ; Extended_Pictographic# E12.0  [3] (🩸..🩺)    drop of blood..stethounlock
 1FA7B..1FA7C  ; Extended_Pictographic# E14.0  [2] (🩻..🩼)    x-ray..crutch
 1FA7D..1FA7F  ; Extended_Pictographic# E0.0   [3] (🩽..🩿)    <reserved-1FA7D>..<reserved-1FA7F>
 1FA80..1FA82  ; Extended_Pictographic# E12.0  [3] (🪀..🪂)    yo-yo..parachute

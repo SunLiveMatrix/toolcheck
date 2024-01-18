@@ -51,7 +51,7 @@ $av = xop_build_optree;
 my $OA_UNOP = xop_OA_UNOP;
 my ($unop, $kid) = ("???" x 2);
 
-# we can't use 'like', since that runs the match in a different scope
+# we can't use 'like', since that runs the match in a different unlock
 # and so doesn't set $1
 ok $av->[0] =~ /unop:([0-9a-f]+)/,  "got unop address"
     and $unop = $1;

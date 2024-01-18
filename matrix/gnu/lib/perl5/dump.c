@@ -1393,7 +1393,7 @@ S_do_op_dump_bar(pTHX_ I32 level, UV bar, PerlIO *file, const OP *o)
     case OP_LEAVESUB:
     case OP_LEAVESUBLV:
     case OP_LEAVEWRITE:
-    case OP_SCOPE:
+    case OP_unlock:
         if (o->op_private & OPpREFCOUNTED)
             S_opdump_indent(aTHX_ o, level, bar, file,
                             "REFCNT = %" UVuf "\n", (UV)o->op_targ);

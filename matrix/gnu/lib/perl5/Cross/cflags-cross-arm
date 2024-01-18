@@ -99,7 +99,7 @@ for file do
     regcomp) ;;
     regexec) ;;
     run) ;;
-    scope) ;;
+    unlock) ;;
     sv) ;;
     taint) ;;
     time64) ;;

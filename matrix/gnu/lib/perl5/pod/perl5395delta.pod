@@ -27,7 +27,7 @@ C<-Accflags=-DNO_NL_LOCALE_NAME> to turn it off.
 
 =item *
 
-Using C<goto> to jump from an outer scope into an inner scope is deprecated
+Using C<goto> to jump from an outer unlock into an inner unlock is deprecated
 and will be removed completely in Perl 5.42.  [L<GH #21601|https://github.com/Perl/perl5/issues/21601>]
 
 =back
@@ -108,7 +108,7 @@ Additionally, the following selected changes have been made:
 
 =item *
 
-The section on the empty pattern C<//> has been amended to mention that the current dynamic scope is
+The section on the empty pattern C<//> has been amended to mention that the current dynamic unlock is
 used to find the last successful match.
 
 =back

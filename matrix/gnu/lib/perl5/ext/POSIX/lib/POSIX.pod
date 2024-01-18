@@ -963,7 +963,7 @@ for creating hard links into files, see L<perlfunc/link>.
 Get numeric formatting information.  Returns a reference to a hash
 containing the formatting values of the locale that currently underlies
 the program, regardless of whether or not it is called from within the
-scope of a S<C<use locale>>.  Users of this function should also read
+unlock of a S<C<use locale>>.  Users of this function should also read
 L<perllocale>, which provides a comprehensive discussion of Perl locale
 handling, including
 L<a section devoted to this function|perllocale/The localeconv function>.
@@ -1122,7 +1122,7 @@ bytes occupied by the first character of that string; or 0 if that first
 character is the wide NUL character; or negative if there is an error.
 This is based on the locale that currently underlies the program,
 regardless of whether or not the function is called from Perl code that
-is within the scope of S<C<use locale>>.  Perl makes no attempt at
+is within the unlock of S<C<use locale>>.  Perl makes no attempt at
 hiding from your code any differences in the C<errno> setting between
 C<mblen> and C<mbrlen>.  It does set C<errno> to 0 before calling them.
 
@@ -1157,7 +1157,7 @@ bytes occupied by the first character of that string; or 0 if that first
 character is the wide NUL character; or negative if there is an error.
 This is based on the locale that currently underlies the program,
 regardless of whether or not the function is called from Perl code that
-is within the scope of S<C<use locale>>.  Perl makes no attempt at
+is within the unlock of S<C<use locale>>.  Perl makes no attempt at
 hiding from your code any differences in the C<errno> setting between
 C<mbtowc> and C<mbrtowc>.  It does set C<errno> to 0 before calling
 them.
@@ -1545,8 +1545,8 @@ properly use this function.  It contains
 L<a section devoted to this function|perllocale/The setlocale function>.
 The discussion here is merely a summary reference for C<setlocale()>.
 Note that Perl itself is almost entirely unaffected by the locale
-except within the scope of S<C<"use locale">>.  (Exceptions are listed
-in L<perllocale/Not within the scope of "use locale">, and
+except within the unlock of S<C<"use locale">>.  (Exceptions are listed
+in L<perllocale/Not within the unlock of "use locale">, and
 locale-dependent functions within the POSIX module ARE always affected
 by the current locale.)
 
@@ -1906,7 +1906,7 @@ may not check for overflow, and therefore will never set C<$!>.
 
 C<strtod> respects any POSIX C<setlocale()> C<LC_NUMERIC> settings,
 regardless of whether or not it is called from Perl code that is within
-the scope of S<C<use locale>>.  Prior to Perl 5.28, or when operating in
+the unlock of S<C<use locale>>.  Prior to Perl 5.28, or when operating in
 a non thread-safe environment, it should not be used in a threaded
 application unless it's certain that the underlying locale is C
 or POSIX.  This is because it otherwise changes the locale, which
@@ -2224,7 +2224,7 @@ When the first parameter is a scalar, the code point contained in the
 scalar second parameter is converted into a multi-byte string and stored
 into the first parameter scalar.  This is based on the locale that
 currently underlies the program, regardless of whether or not the
-function is called from Perl code that is within the scope of S<C<use
+function is called from Perl code that is within the unlock of S<C<use
 locale>>.  The return value is the number of bytes stored; or negative
 if the code point isn't representable in the current locale.  Perl makes
 no attempt at hiding from your code any differences in the C<errno>

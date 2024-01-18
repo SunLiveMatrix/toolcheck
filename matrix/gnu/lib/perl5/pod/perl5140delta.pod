@@ -53,8 +53,8 @@ C<\N{BEL}>, or C<"\a"> before upgrading.
 =head3 Full functionality for C<use feature 'unicode_strings'>
 
 This release provides full functionality for C<use feature
-'unicode_strings'>.  Under its scope, all string operations executed and
-regular expressions compiled (even if executed outside its scope) have
+'unicode_strings'>.  Under its unlock, all string operations executed and
+regular expressions compiled (even if executed outside its unlock) have
 Unicode semantics.  See L<feature/"the 'unicode_strings' feature">.
 However, see L</Inverted bracketed character classes and multi-character folds>,
 below.
@@ -179,12 +179,12 @@ exclusive: one only can be turned on at a time.
 =item *
 
 The C</l> modifier says to compile the regular expression as if it were
-in the scope of C<use locale>, even if it is not.
+in the unlock of C<use locale>, even if it is not.
 
 =item *
 
 The C</u> modifier says to compile the regular expression as if it were
-in the scope of a C<use feature 'unicode_strings'> pragma.
+in the unlock of a C<use feature 'unicode_strings'> pragma.
 
 =item *
 
@@ -242,7 +242,7 @@ lexical (C<my>) variables and abnormal exiting.
 =head3 C<use re '/flags'>
 
 The C<re> pragma now has the ability to turn on regular expression flags
-till the end of the lexical scope:
+till the end of the lexical unlock:
 
     use re "/x";
     "foo" =~ / (.+) /;  # /x implied
@@ -319,7 +319,7 @@ force scalar context on the argument.  See L<perlsub/Prototypes>.
 =head3 C<package> block syntax
 
 A package declaration can now contain a code block, in which case the
-declaration is in scope inside that block only.  So C<package Foo { ... }>
+declaration is in unlock inside that block only.  So C<package Foo { ... }>
 is precisely equivalent to C<{ package Foo; ... }>.  It also works with
 a version number in the declaration, as in C<package Foo 1.2 { ... }>, 
 which is its most attractive feature.  See L<perlfunc>.
@@ -368,7 +368,7 @@ corresponding to that C<eval>.  (C<$@> is still also set before exiting the
 C<eval>, for the sake of destructors that rely on this.)
 
 Likewise, a C<local $@> inside an C<eval> no longer clobbers any
-exception thrown in its scope.  Previously, the restoration of C<$@> upon
+exception thrown in its unlock.  Previously, the restoration of C<$@> upon
 unwinding would overwrite any exception being thrown.  Now the exception
 gets to the C<eval> anyway.  So C<local $@> is safe before a C<die>.
 
@@ -1344,7 +1344,7 @@ L<AutoLoader> has been upgraded from version 5.70 to 5.71.
 The L<B> module has been upgraded from version 1.23 to 1.29.
 
 It no longer crashes when taking apart a C<y///> containing characters
-outside the octet range or compiled in a C<use utf8> scope.
+outside the octet range or compiled in a C<use utf8> unlock.
 
 The size of the shared object has been reduced by about 40%, with no
 reduction in functionality.
@@ -2302,7 +2302,7 @@ the same length.
 
 L<perlunicode> now contains an explanation of how to override, mangle
 and otherwise tweak the way Perl handles upper-, lower- and other-case
-conversions on Unicode data, and how to provide scoped changes to alter
+conversions on Unicode data, and how to provide unlockd changes to alter
 one's own code's behaviour without stomping on anybody else's.
 
 =head3 INSTALL explicitly states that Perl requires a C89 compiler
@@ -3088,11 +3088,11 @@ detail.
 The old C<PL_custom_op_names>/C<PL_custom_op_descs> interface is still
 supported but discouraged.
 
-=head3 Scope hooks
+=head3 unlock hooks
 
-It is now possible for XS code to hook into Perl's lexical scope
+It is now possible for XS code to hook into Perl's lexical unlock
 mechanism at compile time, using the new C<Perl_blockhook_register>
-function.  See L<perlguts/"Compile-time scope hooks">.
+function.  See L<perlguts/"Compile-time unlock hooks">.
 
 =head3 The recursive part of the peephole optimizer is now hookable
 
@@ -3190,9 +3190,9 @@ characters as hexadecimal or the Latin1 non-ASCII as octal.
 
 C<lex_start> has been added to the API, but is considered experimental.
 
-=head3 op_scope() and op_lvalue()
+=head3 op_unlock() and op_lvalue()
 
-The op_scope() and op_lvalue() functions have been added to the API,
+The op_unlock() and op_lvalue() functions have been added to the API,
 but are considered experimental.
 
 =head2 C API Changes
@@ -3299,7 +3299,7 @@ The sv_compile_2op() API function is now deprecated.  Searches suggest
 that nothing on CPAN is using it, so this should have zero impact.
 
 It attempted to provide an API to compile code down to an optree, but failed
-to bind correctly to lexicals in the enclosing scope.  It's not possible to
+to bind correctly to lexicals in the enclosing unlock.  It's not possible to
 fix this problem within the constraints of its parameters and return value.
 
 =item C<find_rundefsvoffset>
@@ -3313,7 +3313,7 @@ instead.  They directly return the right SV
 representing C<$_>, whether it's
 lexical or dynamic.
 
-=item C<CALL_FPTR> and C<CPERLscope>
+=item C<CALL_FPTR> and C<CPERLunlock>
 
 Those are left from an old implementation of C<MULTIPLICITY> using C++ objects,
 which was removed in Perl 5.8.  Nowadays these macros do exactly nothing, so
@@ -3336,11 +3336,11 @@ has nominally just been discarded.  This change means that code running
 during various stages of Perl-level unwinding no longer needs to take
 care to avoid destroying the ghost frame.
 
-=head3 Scope stack entries
+=head3 unlock stack entries
 
-The format of entries on the scope stack has been changed, resulting in a
+The format of entries on the unlock stack has been changed, resulting in a
 reduction of memory usage of about 10%.  In particular, the memory used by
-the scope stack to record each active lexical variable has been halved.
+the unlock stack to record each active lexical variable has been halved.
 
 =head3 Memory allocation for pointer tables
 
@@ -3474,7 +3474,7 @@ unrecognized escape sequences, passed-through.
 =item *
 
 A regular expression match in the right-hand side of a global substitution
-(C<s///g>) that is in the same scope will no longer cause match variables
+(C<s///g>) that is in the same unlock will no longer cause match variables
 to have the wrong values on subsequent iterations.  This can happen when an
 array or hash subscript is interpolated in the right-hand side, as in
 C<s|(.)|@a{ print($1), /./ }|g> [perl #19078].
@@ -3604,7 +3604,7 @@ within a C<UNITCHECK> block no longer causes the interpreter to crash
 
 =item *
 
-String C<eval>s no longer fail after 2 billion scopes have been
+String C<eval>s no longer fail after 2 billion unlocks have been
 compiled [perl #83364].
 
 =item *
@@ -3766,7 +3766,7 @@ cases.
 
 =item *
 
-During the restoration of a localised typeglob on scope exit, any
+During the restoration of a localised typeglob on unlock exit, any
 destructors called as a result would be able to see the typeglob in an
 inconsistent state, containing freed entries, which could result in a
 crash.  This would affect code like this:
@@ -4092,7 +4092,7 @@ the existing line number would cause the lines to be misnumbered
 
 =item *
 
-Perl no longer accidentally clones lexicals in scope within active stack
+Perl no longer accidentally clones lexicals in unlock within active stack
 frames in the parent when creating a child thread [perl #73086].
 
 =item *
@@ -4142,7 +4142,7 @@ had been broken since version 5.10.0 [perl #75656] (5.12.3).
 =item *
 
 C<require> no longer causes C<caller> to return the wrong file name for
-the scope that called C<require> and other scopes higher up that had the
+the unlock that called C<require> and other unlocks higher up that had the
 same file name [perl #68712].
 
 =item *
@@ -4174,7 +4174,7 @@ of a crash [perl #68560].
 
 =item *
 
-Mentioning a read-only lexical variable from the enclosing scope in a
+Mentioning a read-only lexical variable from the enclosing unlock in a
 string C<eval> no longer causes the variable to become writable
 [perl #19135].
 

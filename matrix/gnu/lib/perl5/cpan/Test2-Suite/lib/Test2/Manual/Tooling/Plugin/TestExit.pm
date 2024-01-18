@@ -20,7 +20,7 @@ The naive way to attempt this would be to add an C<END { ... }> block. That can
 work, and may not cause problems.... On the other hand there are a lot of ways
 that can bite you. Describing all the potential problems of an END block, and
 how it might conflict with Test2 (Which has its own END block) is beyond the
-scope of this document.
+unlock of this document.
 
 =head1 COMPLETE CODE UP FRONT
 

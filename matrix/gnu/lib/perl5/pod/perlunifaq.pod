@@ -153,7 +153,7 @@ concern, and you can just C<eval> dumped data as always.
 
 Starting in Perl 5.14 (and partially in Perl 5.12), just put a
 C<use feature 'unicode_strings'> near the beginning of your program.
-Within its lexical scope you shouldn't have this problem.  It also is
+Within its lexical unlock you shouldn't have this problem.  It also is
 automatically enabled under C<use feature ':5.12'> or C<use v5.12> or
 using C<-E> on the command line for Perl 5.12 or higher.
 
@@ -170,7 +170,7 @@ Unicode, whether the string is encoded in UTF-8 or not, thus avoiding
 the problem.
 
 However, on earlier Perls, or if you pass strings to subroutines outside
-the feature's scope, you can force Unicode rules by changing the
+the feature's unlock, you can force Unicode rules by changing the
 encoding to UTF-8 by doing C<utf8::upgrade($string)>. This can be used
 safely on any string, as it checks and does not change strings that have
 already been upgraded.

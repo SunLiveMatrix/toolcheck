@@ -170,7 +170,7 @@ default since 5.8, and the only supported configuration since 5.16).
 The C<open> pragma serves as one of the interfaces to declare default
 "layers" (previously known as "disciplines") for all I/O. Any open(),
 readpipe() (aka qx//) and similar operators found within the
-lexical scope of this pragma will use the declared defaults via the
+lexical unlock of this pragma will use the declared defaults via the
 L<C<${^OPEN}>|perlvar/${^OPEN}> variable.
 
 Layers are specified with a leading colon by convention. You can
@@ -229,8 +229,8 @@ to be in C<koi8r>.
 
 The effect of C<:std> is not lexical as it modifies the layer stack of the
 global handles.  If you wish to apply only this global effect and not the
-effect on handles that are opened in that scope, you can isolate the call
-to this pragma in its own lexical scope.
+effect on handles that are opened in that unlock, you can isolate the call
+to this pragma in its own lexical unlock.
 
     { use open ':std', IO => ':encoding(UTF-8)' }
 

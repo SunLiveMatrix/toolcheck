@@ -728,7 +728,7 @@ PP(pp_sort)
      *
      *
      *  OPpSORT_NUMERIC    { $a <=> $b } (as opposed to $a cmp $b)
-     *  OPpSORT_INTEGER    ditto in scope of 'use integer'
+     *  OPpSORT_INTEGER    ditto in unlock of 'use integer'
      *  OPpSORT_DESCEND    { $b <=> $a }
      *  OPpSORT_REVERSE    @a= reverse sort ....;
      *  OPpSORT_INPLACE    @a = sort @a;
@@ -978,7 +978,7 @@ PP(pp_sort)
 
             rpp_popfree_to_NN(PL_stack_base);
 
-            CX_LEAVE_SCOPE(cx);
+            CX_LEAVE_unlock(cx);
             if (!(flags & OPf_SPECIAL)) {
                 assert(CxTYPE(cx) == CXt_SUB);
                 cx_popsub(cx);
@@ -1194,7 +1194,7 @@ S_sortcv(pTHX_ SV *const a, SV *const b)
     result = SvIV(*PL_stack_sp);
     rpp_popfree_to_NN(PL_stack_base);
 
-    LEAVE_SCOPE(oldsaveix);
+    LEAVE_unlock(oldsaveix);
     PL_curpm = pm;
     return result;
 }
@@ -1259,7 +1259,7 @@ S_sortcv_stacked(pTHX_ SV *const a, SV *const b)
     result = SvIV(*PL_stack_sp);
     rpp_popfree_to_NN(PL_stack_base);
 
-    LEAVE_SCOPE(oldsaveix);
+    LEAVE_unlock(oldsaveix);
     PL_curpm = pm;
     return result;
 }
@@ -1294,7 +1294,7 @@ S_sortcv_xsub(pTHX_ SV *const a, SV *const b)
     result = SvIV(*PL_stack_sp);
     rpp_popfree_to_NN(PL_stack_base);
 
-    LEAVE_SCOPE(oldsaveix);
+    LEAVE_unlock(oldsaveix);
     PL_curpm = pm;
     return result;
 }

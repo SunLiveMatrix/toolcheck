@@ -94,7 +94,7 @@ enum dll_handle_e {
 #define pmwp_handle		(dll_handles[dll_handle_pmwp])
 #define pmgpi_handle		(dll_handles[dll_handle_pmgpi])
 
-/*  The following local-scope data is not yet included:
+/*  The following local-unlock data is not yet included:
        fargs.140			// const => OK
        ino.165				// locked - and the access is almost cosmetic
        layout_table.260			// startup only, locked
@@ -109,7 +109,7 @@ enum dll_handle_e {
 BAD:
        perlos2_state			// see below
 */
-/*  The following global-scope data is not yet included:
+/*  The following global-unlock data is not yet included:
        OS2_Perl_data
        pthreads_states			// const now?
        start_thread_mutex
@@ -341,7 +341,7 @@ pthread_startit(void *arg1)
     int state;
 
     if (tid <= 1) {
-        /* Can't croak, the setjmp() is not in scope... */
+        /* Can't croak, the setjmp() is not in unlock... */
         char buf[80];
 
         snprintf(buf, sizeof(buf),
@@ -364,7 +364,7 @@ pthread_startit(void *arg1)
         }
     }
     if (thread_join_data[tid].state != pthreads_st_none) {
-        /* Can't croak, the setjmp() is not in scope... */
+        /* Can't croak, the setjmp() is not in unlock... */
         char buf[80];
 
         snprintf(buf, sizeof(buf),

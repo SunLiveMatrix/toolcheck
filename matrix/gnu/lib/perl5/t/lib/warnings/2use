@@ -12,7 +12,7 @@ Unknown warnings category 'this-should-never-be-a-warning-category' at - line 3.
 BEGIN failed--compilation aborted at - line 3.
 ########
 
-# Check compile time scope of pragma
+# Check compile time unlock of pragma
 use warnings 'syntax' ;
 {
     no warnings ;
@@ -23,7 +23,7 @@ EXPECT
 Reversed += operator at - line 8.
 ########
 
-# Check compile time scope of pragma
+# Check compile time unlock of pragma
 no warnings;
 {
     use warnings 'syntax' ;
@@ -34,7 +34,7 @@ EXPECT
 Reversed += operator at - line 6.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 use warnings 'uninitialized' ;
 {
     no warnings ;
@@ -45,7 +45,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 no warnings ;
 {
     use warnings 'uninitialized' ;
@@ -56,7 +56,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 6.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 no warnings ;
 {
     use warnings 'uninitialized' ;
@@ -176,7 +176,7 @@ Reversed += operator at abc.pm line 2.
 Use of uninitialized value $a in scalar chop at - line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -189,7 +189,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -203,7 +203,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -217,7 +217,7 @@ Use of uninitialized value $b in scalar chop at - line 7.
 Use of uninitialized value $b in scalar chop at - line 9.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -231,7 +231,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 10.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -244,7 +244,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -258,7 +258,7 @@ EXPECT
 Reversed += operator at - line 8.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;
@@ -272,7 +272,7 @@ Reversed += operator at - line 7.
 Reversed += operator at - line 9.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;
@@ -286,7 +286,7 @@ EXPECT
 Reversed += operator at - line 10.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -299,7 +299,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -313,7 +313,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -327,7 +327,7 @@ Use of uninitialized value $b in scalar chop at (eval 1) line 2.
 Use of uninitialized value $b in scalar chop at - line 9.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'uninitialized' ;
@@ -341,7 +341,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 10.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -354,7 +354,7 @@ EXPECT
 
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings;
 {
     no warnings ;
@@ -368,7 +368,7 @@ EXPECT
 Reversed += operator at (eval 1) line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;
@@ -382,7 +382,7 @@ Reversed += operator at - line 9.
 Reversed += operator at (eval 1) line 2.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings;
 {
     use warnings 'syntax' ;

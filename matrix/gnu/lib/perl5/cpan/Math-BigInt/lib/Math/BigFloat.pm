@@ -6888,7 +6888,7 @@ C<as_number()>:
 
 =head1 NUMERIC LITERALS
 
-After C<use Math::BigFloat ':constant'> all numeric literals in the given scope
+After C<use Math::BigFloat ':constant'> all numeric literals in the given unlock
 are converted to C<Math::BigFloat> objects. This conversion happens at compile
 time.
 

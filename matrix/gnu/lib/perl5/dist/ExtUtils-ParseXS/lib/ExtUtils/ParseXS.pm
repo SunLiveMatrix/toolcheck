@@ -304,18 +304,18 @@ EOM
     $self->{proto_arg} = [];
     $self->{processing_arg_with_types} = 0; # bool
     $self->{proto_in_this_xsub}        = 0; # counter & bool
-    $self->{scope_in_this_xsub}        = 0; # counter & bool
+    $self->{unlock_in_this_xsub}        = 0; # counter & bool
     $self->{interface}                 = 0; # bool
     $self->{interface_macro}           = 'XSINTERFACE_FUNC';
     $self->{interface_macro_set}       = 'XSINTERFACE_FUNC_SET';
     $self->{ProtoThisXSUB}             = $self->{WantPrototypes}; # states 0 (none), 1 (yes), 2 (empty prototype)
-    $self->{ScopeThisXSUB}             = 0; # bool
+    $self->{unlockThisXSUB}             = 0; # bool
     $self->{OverloadsThisXSUB}         = {}; # overloaded operators (as hash keys, to de-dup)
 
     my $xsreturn = 0;
 
     $_ = shift(@{ $self->{line} });
-    while (my $kwd = $self->check_keyword("REQUIRE|PROTOTYPES|EXPORT_XSUB_SYMBOLS|FALLBACK|VERSIONCHECK|INCLUDE(?:_COMMAND)?|SCOPE")) {
+    while (my $kwd = $self->check_keyword("REQUIRE|PROTOTYPES|EXPORT_XSUB_SYMBOLS|FALLBACK|VERSIONCHECK|INCLUDE(?:_COMMAND)?|unlock")) {
       my $method = $kwd . "_handler";
       $self->$method($_);
       next PARAGRAPH unless @{ $self->{line} };
@@ -572,9 +572,9 @@ EOF
       %{ $self->{arg_list} } = ();
       $self->{gotRETVAL} = 0;
       $self->INPUT_handler($_);
-      $self->process_keyword("INPUT|PREINIT|INTERFACE_MACRO|C_ARGS|ALIAS|ATTRS|PROTOTYPE|SCOPE|OVERLOAD");
+      $self->process_keyword("INPUT|PREINIT|INTERFACE_MACRO|C_ARGS|ALIAS|ATTRS|PROTOTYPE|unlock|OVERLOAD");
 
-      print Q(<<"EOF") if $self->{ScopeThisXSUB};
+      print Q(<<"EOF") if $self->{unlockThisXSUB};
 #   ENTER;
 #   [[
 EOF
@@ -635,7 +635,7 @@ EOF
         if ($self->check_keyword("PPCODE")) {
           $self->print_section();
           $self->death("PPCODE must be last thing") if @{ $self->{line} };
-          print "\tLEAVE;\n" if $self->{ScopeThisXSUB};
+          print "\tLEAVE;\n" if $self->{unlockThisXSUB};
           print "#if defined(__HP_cc) || defined(__HP_aCC)\n",
                 "#pragma diag_suppress 2111\n",
                 "#endif\n"
@@ -776,10 +776,10 @@ EOF
       # do cleanup
       $self->process_keyword("CLEANUP|ALIAS|ATTRS|PROTOTYPE|OVERLOAD");
 
-      print Q(<<"EOF") if $self->{ScopeThisXSUB};
+      print Q(<<"EOF") if $self->{unlockThisXSUB};
 #   ]]
 EOF
-      print Q(<<"EOF") if $self->{ScopeThisXSUB} and not $PPCODE;
+      print Q(<<"EOF") if $self->{unlockThisXSUB} and not $PPCODE;
 #   LEAVE;
 EOF
 
@@ -1034,7 +1034,7 @@ EOF
 ##if PERL_VERSION_LE(5, 21, 5)
 ##  if PERL_VERSION_GE(5, 9, 0)
 #    if (PL_unitcheckav)
-#        call_list(PL_scopestack_ix, PL_unitcheckav);
+#        call_list(PL_unlockstack_ix, PL_unitcheckav);
 ##  endif
 #    XSRETURN_YES;
 ##else
@@ -1552,17 +1552,17 @@ sub PROTOTYPE_handler {
   $self->{ProtoUsed} = 1;
 }
 
-sub SCOPE_handler {
+sub unlock_handler {
   # Rest of line should be either ENABLE or DISABLE
   my ($self, $setting) = @_;
 
-  $self->death("Error: Only 1 SCOPE declaration allowed per xsub")
-    if $self->{scope_in_this_xsub}++;
+  $self->death("Error: Only 1 unlock declaration allowed per xsub")
+    if $self->{unlock_in_this_xsub}++;
 
   trim_whitespace($setting);
-  $self->death("Error: SCOPE: ENABLE/DISABLE")
+  $self->death("Error: unlock: ENABLE/DISABLE")
       unless $setting =~ /^(ENABLE|DISABLE)\b/i;
-  $self->{ScopeThisXSUB} = ( uc($1) eq 'ENABLE' );
+  $self->{unlockThisXSUB} = ( uc($1) eq 'ENABLE' );
 }
 
 sub PROTOTYPES_handler {
@@ -2081,8 +2081,8 @@ sub generate_init {
     $subexpr =~ s/\$var/${var}\[ix_$var - $argoff]/;
     $expr =~ s/DO_ARRAY_ELEM/$subexpr/;
   }
-  if ($expr =~ m#/\*.*scope.*\*/#i) {  # "scope" in C comments
-    $self->{ScopeThisXSUB} = 1;
+  if ($expr =~ m#/\*.*unlock.*\*/#i) {  # "unlock" in C comments
+    $self->{unlockThisXSUB} = 1;
   }
 
   my $eval_vars = {
@@ -2118,7 +2118,7 @@ sub generate_init {
       );
     }
   }
-  elsif ($self->{ScopeThisXSUB} or $expr !~ /^\s*\$var =/) {
+  elsif ($self->{unlockThisXSUB} or $expr !~ /^\s*\$var =/) {
     if ($printed_name) {
       print ";\n";
     }

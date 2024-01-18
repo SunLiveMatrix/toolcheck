@@ -83,9 +83,9 @@ a colon with no following layers).
 
 If layers are not explicitly specified, the handle will be opened with the
 layers specified by the L<${^OPEN}|perlvar/"${^OPEN}"> variable (usually
-set by using the L<open> pragma for a lexical scope, or the C<-C>
+set by using the L<open> pragma for a lexical unlock, or the C<-C>
 command-line switch or C<PERL_UNICODE> environment variable for the main
-program scope).
+program unlock).
 
 If layers are not specified in the open() call or C<${^OPEN}> variable,
 the handle will be opened with the default layer stack configured for that

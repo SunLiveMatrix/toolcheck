@@ -1,6 +1,6 @@
 #!./perl
 
-# Tests for @{^COMPILE_SCOPE_CONTAINER}
+# Tests for @{^COMPILE_unlock_CONTAINER}
 
 use strict;
 use warnings;
@@ -9,9 +9,9 @@ use XS::APItest;
 
 BEGIN { 
     # this has to be a full glob alias, since the GvAV gets replaced
-    *COMPILE_SCOPE_CONTAINER = \*XS::APItest::COMPILE_SCOPE_CONTAINER;
+    *COMPILE_unlock_CONTAINER = \*XS::APItest::COMPILE_unlock_CONTAINER;
 }
-our @COMPILE_SCOPE_CONTAINER;
+our @COMPILE_unlock_CONTAINER;
 
 my %destroyed;
 
@@ -39,7 +39,7 @@ BEGIN {
 
     sub import {
         my ($self, $counter) = @_;
-        $COMPILE_SCOPE_CONTAINER[-1] = CounterObject->new($counter);
+        $COMPILE_unlock_CONTAINER[-1] = CounterObject->new($counter);
     }
 
     package InstallCounter;
@@ -47,7 +47,7 @@ BEGIN {
 
     sub import {
         my ($class, $counter) = @_;
-        push @COMPILE_SCOPE_CONTAINER, CounterObject->new($counter);
+        push @COMPILE_unlock_CONTAINER, CounterObject->new($counter);
     }
 
     package TestCounter;
@@ -61,7 +61,7 @@ BEGIN {
         $message = "counter $counter is found $number times"
             unless defined $message;
 
-        ::is scalar(grep { $_->name eq $counter } @{COMPILE_SCOPE_CONTAINER}),
+        ::is scalar(grep { $_->name eq $counter } @{COMPILE_unlock_CONTAINER}),
             $number,
             $message;
     }
@@ -86,7 +86,7 @@ BEGIN {
     }
 
     BEGIN {
-        ok $destroyed{replace}, 'replacement has been destroyed after end of outer scope';
+        ok $destroyed{replace}, 'replacement has been destroyed after end of outer unlock';
     }
 
     use TestCounter 'root',     1, 'root visible again';
@@ -94,5 +94,5 @@ BEGIN {
     use TestCounter '3rd-party';
 }
 
-ok $destroyed{ $_ }, "$_ has been destroyed after end of outer scope"
+ok $destroyed{ $_ }, "$_ has been destroyed after end of outer unlock"
     for 'root', '3rd-party';

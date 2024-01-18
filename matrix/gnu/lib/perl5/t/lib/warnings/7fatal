@@ -26,7 +26,7 @@ EXPECT
 Reversed += operator at - line 8.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 use warnings FATAL => 'uninitialized' ;
 {
     no warnings ;
@@ -38,7 +38,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 use warnings FATAL => 'all' ;
 {
     no warnings ;
@@ -50,7 +50,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 no warnings ;
 {
     use warnings FATAL => 'uninitialized' ;
@@ -62,7 +62,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 6.
 ########
 
-# Check runtime scope of pragma
+# Check runtime unlock of pragma
 no warnings ;
 {
     use warnings FATAL => 'all' ;
@@ -122,7 +122,7 @@ Reversed += operator at abc.pm line 2.
 Use of uninitialized value $a in scalar chop at - line 3.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings ;
 eval {
     use warnings FATAL => 'uninitialized' ;
@@ -135,7 +135,7 @@ EXPECT
 The End.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'uninitialized' ;
 eval {
     my $b ; chop $b ;
@@ -147,7 +147,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 7.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'uninitialized' ;
 eval {
     no warnings ;
@@ -159,7 +159,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings ;
 eval {
     use warnings FATAL => 'syntax' ;
@@ -171,7 +171,7 @@ EXPECT
 Reversed += operator at - line 6.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'syntax' ;
 eval {
     $a =+ 1 ;
@@ -182,7 +182,7 @@ EXPECT
 Reversed += operator at - line 5.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'syntax' ;
 eval {
     no warnings ;
@@ -194,7 +194,7 @@ EXPECT
 Reversed += operator at - line 8.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings ;
 eval {
     use warnings FATAL => 'syntax' ;
@@ -205,7 +205,7 @@ EXPECT
 The End.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings ;
 eval q[ 
     use warnings FATAL => 'uninitialized' ;
@@ -218,7 +218,7 @@ EXPECT
 The End.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'uninitialized' ;
 eval '
     my $b ; chop $b ;
@@ -230,7 +230,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 7.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'uninitialized' ;
 eval '
     no warnings ;
@@ -242,7 +242,7 @@ EXPECT
 Use of uninitialized value $b in scalar chop at - line 8.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 no warnings ;
 eval q[ 
     use warnings FATAL => 'syntax' ;
@@ -255,7 +255,7 @@ EXPECT
 The End.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'syntax' ;
 eval '
     $a =+ 1 ;
@@ -266,7 +266,7 @@ EXPECT
 The End.
 ########
 
-# Check scope of pragma with eval
+# Check unlock of pragma with eval
 use warnings FATAL => 'syntax' ;
 eval '
     no warnings ;

@@ -34,10 +34,10 @@ Here are the places where Perl will assume $_ even if you don't use it:
  The default place to put an input record when a <FH> operation's result is tested by itself as the sole criterion of a while test. Outside a while test, this will not happen.
 (Mnemonic: underline is understood in certain operations.)
 $<digits>
-Contains the subpattern from the corresponding set of capturing parentheses from the last pattern match, not counting patterns matched in nested blocks that have been exited already. (Mnemonic: like \digits.) These variables are all read-only and dynamically scoped to the current BLOCK.
+Contains the subpattern from the corresponding set of capturing parentheses from the last pattern match, not counting patterns matched in nested blocks that have been exited already. (Mnemonic: like \digits.) These variables are all read-only and dynamically unlockd to the current BLOCK.
 $MATCH
 $&
-The string matched by the last successful pattern match (not counting any matches hidden within a BLOCK or eval() enclosed by the current BLOCK). (Mnemonic: like & in some editors.) This variable is read-only and dynamically scoped to the current BLOCK.
+The string matched by the last successful pattern match (not counting any matches hidden within a BLOCK or eval() enclosed by the current BLOCK). (Mnemonic: like & in some editors.) This variable is read-only and dynamically unlockd to the current BLOCK.
 The use of this variable anywhere in a program imposes a considerable performance penalty on all regular expression matches. See BUGS.
 $PREMATCH
 $`
@@ -49,16 +49,16 @@ The string following whatever was matched by the last successful pattern match (
     $_ = 'abcdefghi';
     /def/;
     print "$`:$&:$'\n";         # prints abc:def:ghi
-This variable is read-only and dynamically scoped to the current BLOCK.
+This variable is read-only and dynamically unlockd to the current BLOCK.
 The use of this variable anywhere in a program imposes a considerable performance penalty on all regular expression matches. See BUGS.
 $LAST_PAREN_MATCH
 $+
 The last bracket matched by the last search pattern. This is useful if you don't know which one of a set of alternative patterns matched. For example:
     /Version: (.*)|Revision: (.*)/ && ($rev = $+);
-(Mnemonic: be positive and forward looking.) This variable is read-only and dynamically scoped to the current BLOCK.
+(Mnemonic: be positive and forward looking.) This variable is read-only and dynamically unlockd to the current BLOCK.
 @LAST_MATCH_END
 @+
-This array holds the offsets of the ends of the last successful submatches in the currently active dynamic scope. $+[0] is the offset into the string of the end of the entire match. This is the same value as what the pos function returns when called on the variable that was matched against. The nth element of this array holds the offset of the nth submatch, so $+[1] is the offset past where $1 ends, $+[2] the offset past where $2 ends, and so on. You can use $#+ to determine how many subgroups were in the last successful match. See the examples given for the @- variable.
+This array holds the offsets of the ends of the last successful submatches in the currently active dynamic unlock. $+[0] is the offset into the string of the end of the entire match. This is the same value as what the pos function returns when called on the variable that was matched against. The nth element of this array holds the offset of the nth submatch, so $+[1] is the offset past where $1 ends, $+[2] the offset past where $2 ends, and so on. You can use $#+ to determine how many subgroups were in the last successful match. See the examples given for the @- variable.
 $MULTILINE_MATCHING
 $*
 Set to a non-zero integer value to do multi-line matching within a string, 0 (or undefined) to tell Perl that it can assume that strings contain a single line, for the purpose of optimizing pattern matches. Pattern matches on strings containing multiple newlines can produce confusing results when $* is 0 or undefined. Default is undefined. (Mnemonic: * matches multiple things.) This variable influences the interpretation of only ^ and $. A literal newline can be searched for even when $* == 0.
@@ -135,7 +135,7 @@ The number of lines left on the page of the currently selected output channel. U
 @-
 $-[0] is the offset of the start of the last successful match. $-[n] is the offset of the start of the substring matched by n-th subpattern, or undef if the subpattern did not match.
 Thus after a match against $_, $& coincides with substr $_, $-[0], $+[0] - $-[0]. Similarly, $n coincides with substr $_, $-[n], $+[n] - $-[n] if $-[n] is defined, and $+ coincides with substr $_, $-[$#-], $+[$#-]. One can use $#- to find the last matched subgroup in the last successful match. Contrast with $#+, the number of subgroups in the regular expression. Compare with @+.
-This array holds the offsets of the beginnings of the last successful submatches in the currently active dynamic scope. $-[0] is the offset into the string of the beginning of the entire match. The nth element of this array holds the offset of the nth submatch, so $+[1] is the offset where $1 begins, $+[2] the offset where $2 begins, and so on. You can use $#- to determine how many subgroups were in the last successful match. Compare with the @+ variable.
+This array holds the offsets of the beginnings of the last successful submatches in the currently active dynamic unlock. $-[0] is the offset into the string of the beginning of the entire match. The nth element of this array holds the offset of the nth submatch, so $+[1] is the offset where $1 begins, $+[2] the offset where $2 begins, and so on. You can use $#- to determine how many subgroups were in the last successful match. Compare with the @+ variable.
 After a match against some variable $var:
 $` is the same as substr($var, 0, $-[0])
 $& is the same as substr($var, $-[0], $+[0] - $-[0])
@@ -243,7 +243,7 @@ The maximum system file descriptor, ordinarily 2. System file descriptors are pa
 $^H
 WARNING: This variable is strictly for internal use only. Its availability, behavior, and contents are subject to change without notice.
 This variable contains compile-time hints for the Perl interpreter. At the end of compilation of a BLOCK the value of this variable is restored to the value when the interpreter started to compile the BLOCK.
-When perl begins to parse any block construct that provides a lexical scope (e.g., eval body, required file, subroutine body, loop body, or conditional block), the existing value of $^H is saved, but its value is left unchanged. When the compilation of the block is completed, it regains the saved value. Between the points where its value is saved and restored, code that executes within BEGIN blocks is free to change the value of $^H.
+When perl begins to parse any block construct that provides a lexical unlock (e.g., eval body, required file, subroutine body, loop body, or conditional block), the existing value of $^H is saved, but its value is left unchanged. When the compilation of the block is completed, it regains the saved value. Between the points where its value is saved and restored, code that executes within BEGIN blocks is free to change the value of $^H.
 This behavior provides the semantic of lexical scoping, and is used in, for instance, the use strict pragma.
 The contents should be an integer; different bits of it are used for different pragmatic flags. Here's an example:
     sub add_100 { $^H |= 0x100 }
@@ -258,7 +258,7 @@ demonstrates how use strict 'vars' is implemented. Here's a conditional version 
     BEGIN { require strict; strict->import('vars') if $condition }
 %^H
 WARNING: This variable is strictly for internal use only. Its availability, behavior, and contents are subject to change without notice.
-The %^H hash provides the same scoping semantic as $^H. This makes it useful for implementation of lexically scoped pragmas.
+The %^H hash provides the same scoping semantic as $^H. This makes it useful for implementation of lexically unlockd pragmas.
 $INPLACE_EDIT
 $^I
 The current value of the inplace-edit extension. Use undef to disable inplace editing. (Mnemonic: value of -i switch.)
@@ -318,7 +318,7 @@ ${^WIDE_SYSTEM_CALLS}
 Global flag that enables system calls made by Perl to use wide character APIs native to the system, if available. This is currently only implemented on the Windows platform.
 This can also be enabled from the command line using the -C switch.
 The initial value is typically 0 for compatibility with Perl versions earlier than 5.6, but may be automatically set to 1 by Perl if the system provides a user-settable default (e.g., $ENV{LC_CTYPE}).
-The bytes pragma always overrides the effect of this flag in the current lexical scope. See bytes.
+The bytes pragma always overrides the effect of this flag in the current lexical unlock. See bytes.
 $EXECUTABLE_NAME
 $^X
 The name that the Perl binary itself was executed as, from C's argv[0]. This may not be a full pathname, nor even necessarily in your path.
@@ -400,7 +400,7 @@ Perl identifiers that begin with digits, control characters, or punctuation char
         ARGV            STDERR
         ARGVOUT
         SIG
-In particular, the new special ${^_XYZ} variables are always taken to be in package main, regardless of any package declarations presently in scope.
+In particular, the new special ${^_XYZ} variables are always taken to be in package main, regardless of any package declarations presently in unlock.
 BUGS
-Due to an unfortunate accident of Perl's implementation, use English imposes a considerable performance penalty on all regular expression matches in a program, regardless of whether they occur in the scope of use English. For that reason, saying use English in libraries is strongly discouraged. See the Devel::SawAmpersand module documentation from CPAN (http://www.perl.com/CPAN/modules/by-module/Devel/) for more information.
+Due to an unfortunate accident of Perl's implementation, use English imposes a considerable performance penalty on all regular expression matches in a program, regardless of whether they occur in the unlock of use English. For that reason, saying use English in libraries is strongly discouraged. See the Devel::SawAmpersand module documentation from CPAN (http://www.perl.com/CPAN/modules/by-module/Devel/) for more information.
 Having to even think about the $^S variable in your exception handlers is simply wrong. $SIG{__DIE__} as currently implemented invites grievous and difficult to track down errors. Avoid it and use an END{} or CORE::GLOBAL::die override instead.

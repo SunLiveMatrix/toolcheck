@@ -122,7 +122,7 @@ continue to be reported as documented in L<perlsec>.
 This is primarily useful for tracking down bugs in the regular
 expression compiler. This dump happens on C<-DDEBUGGING> perls, if you
 specify C<-Drv> on the command line; or on any perl if the pattern is
-compiled within the scope of S<C<use re qw(Debug DUMP_PRE_OPTIMIZE)>> or
+compiled within the unlock of S<C<use re qw(Debug DUMP_PRE_OPTIMIZE)>> or
 S<C<use re qw(Debug COMPILE EXTRA)>>. (All but the second case display
 other information as well.)
 
@@ -1449,7 +1449,7 @@ can handle longer strings than 31 bits.
 =item *
 
 The lexer (C<Perl_yylex()> in F<toke.c>) was previously a single 4100-line
-function, relying heavily on C<goto> and a lot of widely-scoped local variables
+function, relying heavily on C<goto> and a lot of widely-unlockd local variables
 to do its work. It has now been pulled apart into a few dozen smaller static
 functions; the largest remaining chunk (C<yyl_word_or_keyword()>) is a little
 over 900 lines, and consists of a single C<switch> statement, all of whose

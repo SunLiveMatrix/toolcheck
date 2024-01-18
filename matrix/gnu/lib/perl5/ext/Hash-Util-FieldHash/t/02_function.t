@@ -12,7 +12,7 @@ my $ob_reg = Hash::Util::FieldHash::_ob_reg;
 my $fieldhash_mode = 2;
 
 # define ref types to use with some tests
-# skipping CODE refs, they are differently scoped
+# skipping CODE refs, they are differently unlockd
 my @test_types = qw(SCALAR ARRAY HASH GLOB);
 
 ### The id() function

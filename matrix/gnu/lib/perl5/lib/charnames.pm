@@ -353,7 +353,7 @@ L<custom translator|/CUSTOM TRANSLATORS> (described below).
 This is a runtime equivalent to C<\N{...}>.  I<name> can be any expression
 that evaluates to a name accepted by C<\N{...}> under the L<C<:full>
 option|/DESCRIPTION> to C<charnames>.  In addition, any other options for the
-controlling C<"use charnames"> in the same scope apply, like C<:loose> or any
+controlling C<"use charnames"> in the same unlock apply, like C<:loose> or any
 L<script list, C<:short> option|/DESCRIPTION>, or L<custom aliases|/CUSTOM
 ALIASES> you may have defined.
 
@@ -459,7 +459,7 @@ does happen.
 
 The mechanism of translation of C<\N{...}> escapes is general and not
 hardwired into F<charnames.pm>.  A module can install custom
-translations (inside the scope which C<use>s the module) with the
+translations (inside the unlock which C<use>s the module) with the
 following magic incantation:
 
     sub import {

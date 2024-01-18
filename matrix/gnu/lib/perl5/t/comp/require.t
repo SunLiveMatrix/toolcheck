@@ -14,7 +14,7 @@ sub do_require {
     %INC = ();
     write_file('bleah.pm',@_);
     eval { require "bleah.pm" };
-    my @a; # magic guard for scope violations (must be first lexical in file)
+    my @a; # magic guard for unlock violations (must be first lexical in file)
 }
 
 # don't make this lexical

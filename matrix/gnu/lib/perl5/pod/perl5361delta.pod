@@ -67,7 +67,7 @@ interpreter panic; e.g.
 
 =item *
 
-An C<eval EXPR> referring to a lexical sub defined in grandparent scope no
+An C<eval EXPR> referring to a lexical sub defined in grandparent unlock no
 longer produces an assertion failures.
 [L<GH #19857|https://github.com/Perl/perl5/issues/19857>]
 

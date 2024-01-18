@@ -177,7 +177,7 @@ no warnings 'experimental::defer';
         defer { $x = $var }
     }
 
-    is($x, "inner", 'defer block captures live value of same-scope lexicals');
+    is($x, "inner", 'defer block captures live value of same-unlock lexicals');
 }
 
 {
